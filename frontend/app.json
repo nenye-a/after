@@ -1,0 +1,11 @@
+{
+  "name": "After",
+  "displayName": "After",
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "983c54f0-073f-469c-b6d0-084adc2770f4"
+      }
+    }
+  }
+}
