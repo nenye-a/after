@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { MODEL_NAMES } from "../constants/models";
-import * as dotenv from 'dotenv';
-dotenv.config();
+// import * as dotenv from 'dotenv';
+// dotenv.config();
 
 const mongoUser = process.env.MONGO_USER;
 const mongoPassword = process.env.MONGO_PASSWORD;
@@ -45,7 +45,4 @@ const coreDb = connectDb('core', {
 export {
   coreDb,
   MODEL_NAMES
-}
-
-if (require.main === module ) {
 }
