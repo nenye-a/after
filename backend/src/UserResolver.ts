@@ -13,6 +13,7 @@ import {
 } from 'type-graphql'
 import { Post } from './Post'
 import { User } from './User'
+import { User as MUser } from './models/User' // Temoirary name to avoid conflict with User from type-graphql
 import { Context } from './context'
 import { PostCreateInput } from './PostResolver'
 @InputType()
@@ -53,19 +54,14 @@ export class UserResolver {
   async signupUser(
     @Arg('data') data: UserCreateInput,
     @Ctx() ctx: Context,
-  ): Promise<User> {
+  ): Promise<MUser> {
     const postData = data.posts?.map((post) => {
       return { title: post.title, content: post.content || undefined }
     })
 
-    return ctx.prisma.user.create({
-      data: {
-        email: data.email,
-        name: data.name,
-        posts: {
-          create: postData,
-        },
-      },
+    return await ctx.models.user.create({
+      email: data.email,
+      name: data.name,
     })
   }
 
