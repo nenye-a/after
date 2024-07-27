@@ -1,5 +1,6 @@
 {
   "include": [
+    "environment.d.ts",
     "src/**/*"
   ],
   "compilerOptions": {
