@@ -20,7 +20,9 @@ npm install
 ```
 
 ```html
-<details><summary><strong>Alternative:</strong> Clone the entire repo</summary>
+<details>
+  <summary><strong>Alternative:</strong> Clone the entire repo</summary>
+</details>
 ```
 
 Clone this repository:
@@ -47,7 +49,6 @@ npx prisma migrate dev --name init
 ```
 
 When `npx prisma migrate dev` is executed against a newly created database, seeding is also triggered. The seed file in [`prisma/seed.ts`](./prisma/seed.ts) will be executed and your database will be populated with the sample data.
-
 
 ### 3. Start the GraphQL server
 
@@ -93,18 +94,16 @@ query {
 ```
 
 ```html
-<Details><Summary><strong>See more API operations</strong></Summary>
+<details>
+  <summary><strong>See more API operations</strong></summary>
+</details>
 ```
 
 ### Create a new user
 
 ```graphql
 mutation {
-  signupUser(data: {
-    name: "Sarah",
-    email: "sarah@prisma.io"
-    }
-  ) {
+  signupUser(data: { name: "Sarah", email: "sarah@prisma.io" }) {
     id
   }
 }
@@ -116,7 +115,7 @@ mutation {
 mutation {
   createDraft(
     data: {
-      title: "Join the Prisma Discord",
+      title: "Join the Prisma Discord"
       content: "https://pris.ly/discord"
       email: "alice@prisma.io"
     }
@@ -338,11 +337,14 @@ Run the following mutation to create a user with a profile:
 
 ```graphql
 mutation {
-  signupUser(data: {
-    email:"katla@prisma.io",
-    profile: { bio: "Sometimes I'm an Icelandic volcano, sometimes I'm a dragon from a book."}
-  })
-  {
+  signupUser(
+    data: {
+      email: "katla@prisma.io"
+      profile: {
+        bio: "Sometimes I'm an Icelandic volcano, sometimes I'm a dragon from a book."
+      }
+    }
+  ) {
     id
     email
     posts {
@@ -422,7 +424,6 @@ const userWithUpdatedProfile = await prisma.user.update({
 });
 ```
 
-
 ## Switch to another database (e.g. PostgreSQL, MySQL, SQL Server, MongoDB)
 
 If you want to try this example with another database than SQLite, you can adjust the the database connection in [`prisma/schema.prisma`](./prisma/schema.prisma) by reconfiguring the `datasource` block.
@@ -430,7 +431,11 @@ If you want to try this example with another database than SQLite, you can adjus
 Learn more about the different connection configurations in the [docs](https://www.prisma.io/docs/reference/database-reference/connection-urls).
 
 ```html
-<details><summary>Expand for an overview of example configurations with different databases</summary>
+<details>
+  <summary>
+    Expand for an overview of example configurations with different databases
+  </summary>
+</details>
 ```
 
 ### PostgreSQL

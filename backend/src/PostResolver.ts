@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import "reflect-metadata";
 import {
   Resolver,
   Query,
@@ -10,28 +10,28 @@ import {
   Int,
   InputType,
   Field,
-} from 'type-graphql'
-import { Post } from './Post'
-import { User } from './User'
-import { Context } from './context'
+} from "type-graphql";
+import { Post } from "./Post";
+import { User } from "./User";
+import { Context } from "./context";
 @InputType()
 export class PostCreateInput {
   @Field()
-  title: string
+  title: string;
 
   @Field({ nullable: true })
-  content: string
+  content: string;
 }
 
 @InputType()
 class PostOrderByUpdatedAtInput {
   @Field((type) => SortOrder)
-  updatedAt: SortOrder
+  updatedAt: SortOrder;
 }
 
 export enum SortOrder {
-  asc = 'asc',
-  desc = 'desc',
+  asc = "asc",
+  desc = "desc",
 }
 
 @Resolver(Post)
@@ -44,22 +44,22 @@ export class PostResolver {
           id: post.id,
         },
       })
-      .author()
+      .author();
   }
 
   @Query((returns) => Post, { nullable: true })
-  async postById(@Arg('id') id: number, @Ctx() ctx: Context) {
+  async postById(@Arg("id") id: number, @Ctx() ctx: Context) {
     return ctx.prisma.post.findUnique({
       where: { id },
-    })
+    });
   }
 
   @Query((returns) => [Post])
   async feed(
-    @Arg('searchString', { nullable: true }) searchString: string,
-    @Arg('skip', (type) => Int, { nullable: true }) skip: number,
-    @Arg('take', (type) => Int, { nullable: true }) take: number,
-    @Arg('orderBy', { nullable: true }) orderBy: PostOrderByUpdatedAtInput,
+    @Arg("searchString", { nullable: true }) searchString: string,
+    @Arg("skip", (type) => Int, { nullable: true }) skip: number,
+    @Arg("take", (type) => Int, { nullable: true }) take: number,
+    @Arg("orderBy", { nullable: true }) orderBy: PostOrderByUpdatedAtInput,
     @Ctx() ctx: Context,
   ) {
     const or = searchString
@@ -69,7 +69,7 @@ export class PostResolver {
             { content: { contains: searchString } },
           ],
         }
-      : {}
+      : {};
 
     return ctx.prisma.post.findMany({
       where: {
@@ -79,13 +79,13 @@ export class PostResolver {
       take: take || undefined,
       skip: skip || undefined,
       orderBy: orderBy || undefined,
-    })
+    });
   }
 
   @Mutation((returns) => Post)
   async createDraft(
-    @Arg('data') data: PostCreateInput,
-    @Arg('authorEmail') authorEmail: string,
+    @Arg("data") data: PostCreateInput,
+    @Arg("authorEmail") authorEmail: string,
 
     @Ctx() ctx: Context,
   ) {
@@ -97,12 +97,12 @@ export class PostResolver {
           connect: { email: authorEmail },
         },
       },
-    })
+    });
   }
 
   @Mutation((returns) => Post, { nullable: true })
   async togglePublishPost(
-    @Arg('id', (type) => Int) id: number,
+    @Arg("id", (type) => Int) id: number,
     @Ctx() ctx: Context,
   ) {
     const post = await ctx.prisma.post.findUnique({
@@ -110,17 +110,17 @@ export class PostResolver {
       select: {
         published: true,
       },
-    })
+    });
 
     return ctx.prisma.post.update({
       where: { id: id || undefined },
       data: { published: !post?.published },
-    })
+    });
   }
 
   @Mutation((returns) => Post, { nullable: true })
   async incrementPostViewCount(
-    @Arg('id', (type) => Int) id: number,
+    @Arg("id", (type) => Int) id: number,
     @Ctx() ctx: Context,
   ) {
     return ctx.prisma.post.update({
@@ -130,15 +130,15 @@ export class PostResolver {
           increment: 1,
         },
       },
-    })
+    });
   }
 
   @Mutation((returns) => Post, { nullable: true })
-  async deletePost(@Arg('id', (type) => Int) id: number, @Ctx() ctx: Context) {
+  async deletePost(@Arg("id", (type) => Int) id: number, @Ctx() ctx: Context) {
     return ctx.prisma.post.delete({
       where: {
         id,
       },
-    })
+    });
   }
 }

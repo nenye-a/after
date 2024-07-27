@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import "reflect-metadata";
 import {
   Resolver,
   Query,
@@ -10,31 +10,31 @@ import {
   Int,
   InputType,
   Field,
-} from 'type-graphql'
-import { Post } from './Post'
-import { User } from './User'
-import { User as MUser } from './models/User' // Temoirary name to avoid conflict with User from type-graphql
-import { Context } from './context'
-import { PostCreateInput } from './PostResolver'
+} from "type-graphql";
+import { Post } from "./Post";
+import { User } from "./User";
+import { User as MUser } from "./models/User"; // Temoirary name to avoid conflict with User from type-graphql
+import { Context } from "./context";
+import { PostCreateInput } from "./PostResolver";
 @InputType()
 class UserUniqueInput {
   @Field({ nullable: true })
-  id: number
+  id: number;
 
   @Field({ nullable: true })
-  email: string
+  email: string;
 }
 
 @InputType()
 class UserCreateInput {
   @Field()
-  email: string
+  email: string;
 
   @Field({ nullable: true })
-  name: string
+  name: string;
 
   @Field((type) => [PostCreateInput], { nullable: true })
-  posts: [PostCreateInput]
+  posts: [PostCreateInput];
 }
 
 @Resolver(User)
@@ -47,32 +47,32 @@ export class UserResolver {
           id: user.id,
         },
       })
-      .posts()
+      .posts();
   }
 
   @Mutation((returns) => User)
   async signupUser(
-    @Arg('data') data: UserCreateInput,
+    @Arg("data") data: UserCreateInput,
     @Ctx() ctx: Context,
   ): Promise<MUser> {
     const postData = data.posts?.map((post) => {
-      return { title: post.title, content: post.content || undefined }
-    })
+      return { title: post.title, content: post.content || undefined };
+    });
 
     return await ctx.models.user.create({
       email: data.email,
       name: data.name,
-    })
+    });
   }
 
   @Query(() => [User])
   async allUsers(@Ctx() ctx: Context) {
-    return ctx.prisma.user.findMany()
+    return ctx.prisma.user.findMany();
   }
 
   @Query((returns) => [Post], { nullable: true })
   async draftsByUser(
-    @Arg('userUniqueInput') userUniqueInput: UserUniqueInput,
+    @Arg("userUniqueInput") userUniqueInput: UserUniqueInput,
     @Ctx() ctx: Context,
   ) {
     return ctx.prisma.user
@@ -86,6 +86,6 @@ export class UserResolver {
         where: {
           published: false,
         },
-      })
+      });
   }
 }
