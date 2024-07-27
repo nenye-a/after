@@ -1,7 +1,5 @@
 const MODEL_NAMES = {
   user: 'User',
-}
-
-export {
-  MODEL_NAMES
 };
+
+export { MODEL_NAMES };

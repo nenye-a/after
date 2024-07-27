@@ -1,6 +1,6 @@
 # After
 
-The application for determining the next location to go to! 
+The application for determining the next location to go to!
 
 ## Overview
 

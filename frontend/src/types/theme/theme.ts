@@ -10,15 +10,15 @@ import type { Backgrounds } from './backgrounds';
 import type { Borders } from './borders';
 
 export type Theme = {
-	colors: Colors;
-	variant: Variant;
-	layout: typeof layout;
-	gutters: Gutters;
-	fonts: Fonts;
-	backgrounds: Backgrounds;
-	borders: Borders;
-	navigationTheme: NavigationTheme;
-	components: ReturnType<typeof componentGenerators>;
+  colors: Colors;
+  variant: Variant;
+  layout: typeof layout;
+  gutters: Gutters;
+  fonts: Fonts;
+  backgrounds: Backgrounds;
+  borders: Borders;
+  navigationTheme: NavigationTheme;
+  components: ReturnType<typeof componentGenerators>;
 };
 
 export type ComponentTheme = Omit<Theme, 'components' | 'navigationTheme'>;

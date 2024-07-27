@@ -20,7 +20,9 @@ npm install
 ```
 
 ```html
-<details><summary><strong>Alternative:</strong> Clone the entire repo</summary>
+<details>
+  <summary><strong>Alternative:</strong> Clone the entire repo</summary>
+</details>
 ```
 
 Clone this repository:
@@ -47,7 +49,6 @@ npx prisma migrate dev --name init
 ```
 
 When `npx prisma migrate dev` is executed against a newly created database, seeding is also triggered. The seed file in [`prisma/seed.ts`](./prisma/seed.ts) will be executed and your database will be populated with the sample data.
-
 
 ### 3. Start the GraphQL server
 
@@ -93,18 +94,16 @@ query {
 ```
 
 ```html
-<Details><Summary><strong>See more API operations</strong></Summary>
+<details>
+  <summary><strong>See more API operations</strong></summary>
+</details>
 ```
 
 ### Create a new user
 
 ```graphql
 mutation {
-  signupUser(data: {
-    name: "Sarah",
-    email: "sarah@prisma.io"
-    }
-  ) {
+  signupUser(data: { name: "Sarah", email: "sarah@prisma.io" }) {
     id
   }
 }
@@ -116,7 +115,7 @@ mutation {
 mutation {
   createDraft(
     data: {
-      title: "Join the Prisma Discord",
+      title: "Join the Prisma Discord"
       content: "https://pris.ly/discord"
       email: "alice@prisma.io"
     }
@@ -250,9 +249,9 @@ You can now use your `PrismaClient` instance to perform operations against the n
 You can use TypeGraphQL to expose the new `Profile` model. Create a new file named `src\Profile.ts` and add the following code:
 
 ```ts
-import "reflect-metadata";
-import { ObjectType, Field, ID } from "type-graphql";
-import { User } from "./User";
+import 'reflect-metadata';
+import { ObjectType, Field, ID } from 'type-graphql';
+import { User } from './User';
 
 @ObjectType()
 export class Profile {
@@ -270,9 +269,9 @@ export class Profile {
 Create a new file named `src\ProfileCreateInput.ts` with the following code:
 
 ```ts
-import "reflect-metadata";
-import { ObjectType, Field, ID, InputType } from "type-graphql";
-import { User } from "./User";
+import 'reflect-metadata';
+import { ObjectType, Field, ID, InputType } from 'type-graphql';
+import { User } from './User';
 
 @InputType()
 export class ProfileCreateInput {
@@ -338,11 +337,14 @@ Run the following mutation to create a user with a profile:
 
 ```graphql
 mutation {
-  signupUser(data: {
-    email:"katla@prisma.io",
-    profile: { bio: "Sometimes I'm an Icelandic volcano, sometimes I'm a dragon from a book."}
-  })
-  {
+  signupUser(
+    data: {
+      email: "katla@prisma.io"
+      profile: {
+        bio: "Sometimes I'm an Icelandic volcano, sometimes I'm a dragon from a book."
+      }
+    }
+  ) {
     id
     email
     posts {
@@ -383,9 +385,9 @@ As the Prisma Client API was updated, you can now also invoke "raw" operations v
 ```ts
 const profile = await prisma.profile.create({
   data: {
-    bio: "Hello World",
+    bio: 'Hello World',
     user: {
-      connect: { email: "alice@prisma.io" },
+      connect: { email: 'alice@prisma.io' },
     },
   },
 });
@@ -396,11 +398,11 @@ const profile = await prisma.profile.create({
 ```ts
 const user = await prisma.user.create({
   data: {
-    email: "john@prisma.io",
-    name: "John",
+    email: 'john@prisma.io',
+    name: 'John',
     profile: {
       create: {
-        bio: "Hello World",
+        bio: 'Hello World',
       },
     },
   },
@@ -411,17 +413,16 @@ const user = await prisma.user.create({
 
 ```ts
 const userWithUpdatedProfile = await prisma.user.update({
-  where: { email: "alice@prisma.io" },
+  where: { email: 'alice@prisma.io' },
   data: {
     profile: {
       update: {
-        bio: "Hello Friends",
+        bio: 'Hello Friends',
       },
     },
   },
 });
 ```
-
 
 ## Switch to another database (e.g. PostgreSQL, MySQL, SQL Server, MongoDB)
 
@@ -430,7 +431,11 @@ If you want to try this example with another database than SQLite, you can adjus
 Learn more about the different connection configurations in the [docs](https://www.prisma.io/docs/reference/database-reference/connection-urls).
 
 ```html
-<details><summary>Expand for an overview of example configurations with different databases</summary>
+<details>
+  <summary>
+    Expand for an overview of example configurations with different databases
+  </summary>
+</details>
 ```
 
 ### PostgreSQL

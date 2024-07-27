@@ -1,30 +1,30 @@
-import 'reflect-metadata'
-import { ObjectType, Field, ID, Int } from 'type-graphql'
-import { User } from './User'
+import 'reflect-metadata';
+import { ObjectType, Field, ID, Int } from 'type-graphql';
+import { User } from './User';
 
 @ObjectType()
 export class Post {
   @Field((type) => ID)
-  id: number
+  id: number;
 
   @Field((type) => Date)
-  createdAt: Date
+  createdAt: Date;
 
   @Field((type) => Date)
-  updatedAt: Date
+  updatedAt: Date;
 
   @Field()
-  title: string
+  title: string;
 
   @Field((type) => String, { nullable: true })
-  content: string | null
+  content: string | null;
 
   @Field((type) => Boolean, { nullable: true })
-  published?: boolean | null
+  published?: boolean | null;
 
   @Field((type) => Int)
-  viewCount: number
+  viewCount: number;
 
   @Field((type) => User, { nullable: true })
-  author?: User | null
+  author?: User | null;
 }

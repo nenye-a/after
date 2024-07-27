@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import 'reflect-metadata';
 import {
   Resolver,
   Query,
@@ -10,23 +10,23 @@ import {
   Int,
   InputType,
   Field,
-} from 'type-graphql'
-import { Post } from './Post'
-import { User } from './User'
-import { Context } from './context'
+} from 'type-graphql';
+import { Post } from './Post';
+import { User } from './User';
+import { Context } from './context';
 @InputType()
 export class PostCreateInput {
   @Field()
-  title: string
+  title: string;
 
   @Field({ nullable: true })
-  content: string
+  content: string;
 }
 
 @InputType()
 class PostOrderByUpdatedAtInput {
   @Field((type) => SortOrder)
-  updatedAt: SortOrder
+  updatedAt: SortOrder;
 }
 
 export enum SortOrder {
@@ -44,14 +44,14 @@ export class PostResolver {
           id: post.id,
         },
       })
-      .author()
+      .author();
   }
 
   @Query((returns) => Post, { nullable: true })
   async postById(@Arg('id') id: number, @Ctx() ctx: Context) {
     return ctx.prisma.post.findUnique({
       where: { id },
-    })
+    });
   }
 
   @Query((returns) => [Post])
@@ -69,7 +69,7 @@ export class PostResolver {
             { content: { contains: searchString } },
           ],
         }
-      : {}
+      : {};
 
     return ctx.prisma.post.findMany({
       where: {
@@ -79,7 +79,7 @@ export class PostResolver {
       take: take || undefined,
       skip: skip || undefined,
       orderBy: orderBy || undefined,
-    })
+    });
   }
 
   @Mutation((returns) => Post)
@@ -97,7 +97,7 @@ export class PostResolver {
           connect: { email: authorEmail },
         },
       },
-    })
+    });
   }
 
   @Mutation((returns) => Post, { nullable: true })
@@ -110,12 +110,12 @@ export class PostResolver {
       select: {
         published: true,
       },
-    })
+    });
 
     return ctx.prisma.post.update({
       where: { id: id || undefined },
       data: { published: !post?.published },
-    })
+    });
   }
 
   @Mutation((returns) => Post, { nullable: true })
@@ -130,7 +130,7 @@ export class PostResolver {
           increment: 1,
         },
       },
-    })
+    });
   }
 
   @Mutation((returns) => Post, { nullable: true })
@@ -139,6 +139,6 @@ export class PostResolver {
       where: {
         id,
       },
-    })
+    });
   }
 }
