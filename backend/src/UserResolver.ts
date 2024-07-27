@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import {
   Resolver,
   Query,
@@ -10,12 +10,12 @@ import {
   Int,
   InputType,
   Field,
-} from "type-graphql";
-import { Post } from "./Post";
-import { User } from "./User";
-import { User as MUser } from "./models/User"; // Temoirary name to avoid conflict with User from type-graphql
-import { Context } from "./context";
-import { PostCreateInput } from "./PostResolver";
+} from 'type-graphql';
+import { Post } from './Post';
+import { User } from './User';
+import { User as MUser } from './models/User'; // Temoirary name to avoid conflict with User from type-graphql
+import { Context } from './context';
+import { PostCreateInput } from './PostResolver';
 @InputType()
 class UserUniqueInput {
   @Field({ nullable: true })
@@ -52,7 +52,7 @@ export class UserResolver {
 
   @Mutation((returns) => User)
   async signupUser(
-    @Arg("data") data: UserCreateInput,
+    @Arg('data') data: UserCreateInput,
     @Ctx() ctx: Context,
   ): Promise<MUser> {
     const postData = data.posts?.map((post) => {
@@ -72,7 +72,7 @@ export class UserResolver {
 
   @Query((returns) => [Post], { nullable: true })
   async draftsByUser(
-    @Arg("userUniqueInput") userUniqueInput: UserUniqueInput,
+    @Arg('userUniqueInput') userUniqueInput: UserUniqueInput,
     @Ctx() ctx: Context,
   ) {
     return ctx.prisma.user

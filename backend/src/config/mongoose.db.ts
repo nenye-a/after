@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { MODEL_NAMES } from "../constants/models";
+import mongoose from 'mongoose';
+import { MODEL_NAMES } from '../constants/models';
 // import * as dotenv from 'dotenv';
 // dotenv.config();
 
@@ -22,15 +22,15 @@ const connectDb = (dbName: string, { ...connectionOptions }) => {
   const uri = createURI(dbName);
   const connection = mongoose.createConnection(uri, connectionOptions);
 
-  connection.on("connected", () => {
+  connection.on('connected', () => {
     console.log(`Connected to ${connection.name} database.`);
   });
 
-  connection.on("error", (error) => {
+  connection.on('error', (error) => {
     console.error(`Error connecting to ${connection.name} database:`, error);
   });
 
-  connection.on("close", () => {
+  connection.on('close', () => {
     console.log(
       `Closed connection to${connection.name} - attmepting to reconnect.`,
     );
@@ -41,7 +41,7 @@ const connectDb = (dbName: string, { ...connectionOptions }) => {
 
 // Main core database. Might split into different databases for better organization
 // later.
-const coreDb = connectDb("core", {
+const coreDb = connectDb('core', {
   autoIndex: false,
 });
 

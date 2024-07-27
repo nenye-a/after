@@ -1,7 +1,7 @@
-import { TextStyle } from "react-native";
-import type { FontColors, FontSizes } from "@/types/theme/fonts";
-import type { UnionConfiguration } from "@/types/theme/config";
-import { config } from "@/theme/_config";
+import { TextStyle } from 'react-native';
+import type { FontColors, FontSizes } from '@/types/theme/fonts';
+import type { UnionConfiguration } from '@/types/theme/config';
+import { config } from '@/theme/_config';
 
 export const generateFontColors = (configuration: UnionConfiguration) => {
   return Object.entries(configuration.fonts.colors ?? {}).reduce(
@@ -28,15 +28,15 @@ export const generateFontSizes = () => {
 
 export const staticFontStyles = {
   bold: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   uppercase: {
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
   capitalize: {
-    textTransform: "capitalize",
+    textTransform: 'capitalize',
   },
   alignCenter: {
-    textAlign: "center",
+    textAlign: 'center',
   },
 } as const satisfies Record<string, TextStyle>;

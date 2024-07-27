@@ -1,7 +1,7 @@
-import { config } from "@/theme/_config";
+import { config } from '@/theme/_config';
 
-import type { Gutters } from "@/types/theme/gutters";
-import type { ViewStyle } from "react-native";
+import type { Gutters } from '@/types/theme/gutters';
+import type { ViewStyle } from 'react-native';
 
 export const generateGutters = (): Gutters => {
   return config.gutters.reduce((acc, curr) => {

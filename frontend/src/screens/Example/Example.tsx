@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   View,
   ActivityIndicator,
@@ -6,25 +6,25 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-} from "react-native";
-import i18next from "i18next";
-import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
+} from 'react-native';
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 
-import { ImageVariant } from "@/components/atoms";
-import { Brand } from "@/components/molecules";
-import { SafeScreen } from "@/components/template";
-import { useTheme } from "@/theme";
-import { fetchOne } from "@/services/users";
+import { ImageVariant } from '@/components/atoms';
+import { Brand } from '@/components/molecules';
+import { SafeScreen } from '@/components/template';
+import { useTheme } from '@/theme';
+import { fetchOne } from '@/services/users';
 
-import { isImageSourcePropType } from "@/types/guards/image";
+import { isImageSourcePropType } from '@/types/guards/image';
 
-import SendImage from "@/theme/assets/images/send.png";
-import ColorsWatchImage from "@/theme/assets/images/colorswatch.png";
-import TranslateImage from "@/theme/assets/images/translate.png";
+import SendImage from '@/theme/assets/images/send.png';
+import ColorsWatchImage from '@/theme/assets/images/colorswatch.png';
+import TranslateImage from '@/theme/assets/images/translate.png';
 
 function Example() {
-  const { t } = useTranslation(["example", "welcome"]);
+  const { t } = useTranslation(['example', 'welcome']);
 
   const {
     colors,
@@ -40,7 +40,7 @@ function Example() {
   const [currentId, setCurrentId] = useState(-1);
 
   const { isSuccess, data, isFetching } = useQuery({
-    queryKey: ["example", currentId],
+    queryKey: ['example', currentId],
     queryFn: () => {
       return fetchOne(currentId);
     },
@@ -49,15 +49,15 @@ function Example() {
 
   useEffect(() => {
     if (isSuccess) {
-      Alert.alert(t("example:welcome", data.name));
+      Alert.alert(t('example:welcome', data.name));
     }
   }, [isSuccess, data]);
 
   const onChangeTheme = () => {
-    changeTheme(variant === "default" ? "dark" : "default");
+    changeTheme(variant === 'default' ? 'dark' : 'default');
   };
 
-  const onChangeLanguage = (lang: "fr" | "en") => {
+  const onChangeLanguage = (lang: 'fr' | 'en') => {
     void i18next.changeLanguage(lang);
   };
 
@@ -66,7 +66,7 @@ function Example() {
     !isImageSourcePropType(ColorsWatchImage) ||
     !isImageSourcePropType(TranslateImage)
   ) {
-    throw new Error("Image source is not valid");
+    throw new Error('Image source is not valid');
   }
 
   return (
@@ -91,7 +91,7 @@ function Example() {
         <View style={[gutters.paddingHorizontal_32, gutters.marginTop_40]}>
           <View style={[gutters.marginTop_40]}>
             <Text style={[fonts.size_40, fonts.gray800, fonts.bold]}>
-              {t("welcome:title")}
+              {t('welcome:title')}
             </Text>
             <Text
               style={[
@@ -101,12 +101,12 @@ function Example() {
                 gutters.marginBottom_32,
               ]}
             >
-              {t("welcome:subtitle")}
+              {t('welcome:subtitle')}
             </Text>
             <Text
               style={[fonts.size_16, fonts.gray200, gutters.marginBottom_40]}
             >
-              {t("welcome:description")}
+              {t('welcome:description')}
             </Text>
           </View>
 
@@ -148,7 +148,7 @@ function Example() {
               testID="change-language-button"
               style={[components.buttonCircle, gutters.marginBottom_16]}
               onPress={() =>
-                onChangeLanguage(i18next.language === "fr" ? "en" : "fr")
+                onChangeLanguage(i18next.language === 'fr' ? 'en' : 'fr')
               }
             >
               <ImageVariant

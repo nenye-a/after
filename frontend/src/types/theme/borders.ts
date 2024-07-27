@@ -1,15 +1,15 @@
-import { config } from "@/theme/_config";
-import { staticBorderStyles } from "@/theme/borders";
+import { config } from '@/theme/_config';
+import { staticBorderStyles } from '@/theme/borders';
 
-import type { ArrayValue, RemoveBeforeSeparator, ToNumber } from "./common";
-import type { UnionConfiguration } from "./config";
+import type { ArrayValue, RemoveBeforeSeparator, ToNumber } from './common';
+import type { UnionConfiguration } from './config';
 
-type BorderColorKeys = keyof UnionConfiguration["borders"]["colors"];
+type BorderColorKeys = keyof UnionConfiguration['borders']['colors'];
 
 export type BorderColors = {
-  [key in BorderColorKeys]: RemoveBeforeSeparator<key> extends keyof UnionConfiguration["borders"]["colors"]
+  [key in BorderColorKeys]: RemoveBeforeSeparator<key> extends keyof UnionConfiguration['borders']['colors']
     ? {
-        borderColor: UnionConfiguration["borders"]["colors"][RemoveBeforeSeparator<key>];
+        borderColor: UnionConfiguration['borders']['colors'][RemoveBeforeSeparator<key>];
       }
     : never;
 };

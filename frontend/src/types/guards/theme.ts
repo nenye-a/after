@@ -1,10 +1,10 @@
-import type { HasProperty } from "@/types/theme/common";
+import type { HasProperty } from '@/types/theme/common';
 
 export function hasProperty<Config, KeyPath extends string>(
   configuration: Config,
   property: KeyPath,
 ): configuration is HasProperty<Config, KeyPath> & Config {
-  const parts = property.split(".");
+  const parts = property.split('.');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let currentObj: any = configuration;
 

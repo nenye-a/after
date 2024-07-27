@@ -1,4 +1,4 @@
-import { config } from "@/theme/_config";
+import { config } from '@/theme/_config';
 
 import type {
   BorderColors,
@@ -6,9 +6,9 @@ import type {
   BorderRadius,
   BorderTopRadius,
   BorderBottomRadius,
-} from "@/types/theme/borders";
-import type { UnionConfiguration } from "@/types/theme/config";
-import type { ViewStyle } from "react-native";
+} from '@/types/theme/borders';
+import type { UnionConfiguration } from '@/types/theme/config';
+import type { ViewStyle } from 'react-native';
 
 /**
  * Generates border color styles from configuration

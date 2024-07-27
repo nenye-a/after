@@ -1,21 +1,21 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
-import { GraphQLScalarType } from "graphql";
-import { DateTimeResolver } from "graphql-scalars";
-import * as tq from "type-graphql";
-import * as dotenv from "dotenv";
-import { Context, context } from "./context";
-import { PostCreateInput, PostResolver, SortOrder } from "./PostResolver";
-import { UserResolver } from "./UserResolver";
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { GraphQLScalarType } from 'graphql';
+import { DateTimeResolver } from 'graphql-scalars';
+import * as tq from 'type-graphql';
+import * as dotenv from 'dotenv';
+import { Context, context } from './context';
+import { PostCreateInput, PostResolver, SortOrder } from './PostResolver';
+import { UserResolver } from './UserResolver';
 
 // Configures environment variables from .env file. See more: https://www.npmjs.com/package/dotenv
 dotenv.config();
 
 const app = async () => {
   tq.registerEnumType(SortOrder, {
-    name: "SortOrder",
+    name: 'SortOrder',
   });
 
   const schema = await tq.buildSchema({

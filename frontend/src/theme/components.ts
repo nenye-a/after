@@ -1,5 +1,5 @@
-import { ImageStyle, TextStyle, ViewStyle } from "react-native";
-import type { ComponentTheme } from "@/types/theme/theme";
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import type { ComponentTheme } from '@/types/theme/theme';
 
 interface AllStyle
   extends Record<string, AllStyle | ImageStyle | TextStyle | ViewStyle> {}

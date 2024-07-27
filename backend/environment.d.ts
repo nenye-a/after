@@ -3,7 +3,7 @@ declare global {
     interface ProcessEnv {
       MONGO_USER: string;
       MONGO_PASSWORD: string;
-      NODE_ENV: "development" | "production" | "staging";
+      NODE_ENV: 'development' | 'production' | 'staging';
     }
   }
 }

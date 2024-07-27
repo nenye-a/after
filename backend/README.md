@@ -249,9 +249,9 @@ You can now use your `PrismaClient` instance to perform operations against the n
 You can use TypeGraphQL to expose the new `Profile` model. Create a new file named `src\Profile.ts` and add the following code:
 
 ```ts
-import "reflect-metadata";
-import { ObjectType, Field, ID } from "type-graphql";
-import { User } from "./User";
+import 'reflect-metadata';
+import { ObjectType, Field, ID } from 'type-graphql';
+import { User } from './User';
 
 @ObjectType()
 export class Profile {
@@ -269,9 +269,9 @@ export class Profile {
 Create a new file named `src\ProfileCreateInput.ts` with the following code:
 
 ```ts
-import "reflect-metadata";
-import { ObjectType, Field, ID, InputType } from "type-graphql";
-import { User } from "./User";
+import 'reflect-metadata';
+import { ObjectType, Field, ID, InputType } from 'type-graphql';
+import { User } from './User';
 
 @InputType()
 export class ProfileCreateInput {
@@ -385,9 +385,9 @@ As the Prisma Client API was updated, you can now also invoke "raw" operations v
 ```ts
 const profile = await prisma.profile.create({
   data: {
-    bio: "Hello World",
+    bio: 'Hello World',
     user: {
-      connect: { email: "alice@prisma.io" },
+      connect: { email: 'alice@prisma.io' },
     },
   },
 });
@@ -398,11 +398,11 @@ const profile = await prisma.profile.create({
 ```ts
 const user = await prisma.user.create({
   data: {
-    email: "john@prisma.io",
-    name: "John",
+    email: 'john@prisma.io',
+    name: 'John',
     profile: {
       create: {
-        bio: "Hello World",
+        bio: 'Hello World',
       },
     },
   },
@@ -413,11 +413,11 @@ const user = await prisma.user.create({
 
 ```ts
 const userWithUpdatedProfile = await prisma.user.update({
-  where: { email: "alice@prisma.io" },
+  where: { email: 'alice@prisma.io' },
   data: {
     profile: {
       update: {
-        bio: "Hello Friends",
+        bio: 'Hello Friends',
       },
     },
   },

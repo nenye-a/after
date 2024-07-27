@@ -1,4 +1,4 @@
-import { config } from "@/theme/_config";
+import { config } from '@/theme/_config';
 
 export type ArrayValue<T extends readonly unknown[]> = T[number];
 
@@ -13,7 +13,7 @@ export type RemoveBeforeSeparator<S extends string> =
 export type ToNumber<
   S extends string,
   T extends unknown[] = [],
-> = S extends `${T["length"]}` ? T["length"] : ToNumber<S, [...T, ""]>;
+> = S extends `${T['length']}` ? T['length'] : ToNumber<S, [...T, '']>;
 
 export type AllPartial<T> = {
   [K in keyof T]?: T[K] extends Record<string, unknown>

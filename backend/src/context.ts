@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import mongoose from "mongoose";
-import * as models from "./models";
+import { PrismaClient } from '@prisma/client';
+import mongoose from 'mongoose';
+import * as models from './models';
 
 const prisma = new PrismaClient();
 

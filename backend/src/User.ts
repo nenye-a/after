@@ -1,7 +1,7 @@
-import "reflect-metadata";
-import { ObjectType, Field, ID } from "type-graphql";
-import { IsEmail } from "class-validator";
-import { Post } from "./Post";
+import 'reflect-metadata';
+import { ObjectType, Field, ID } from 'type-graphql';
+import { IsEmail } from 'class-validator';
+import { Post } from './Post';
 
 @ObjectType()
 export class User {

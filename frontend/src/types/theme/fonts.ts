@@ -1,8 +1,8 @@
-import { config } from "@/theme/_config";
-import { staticFontStyles } from "@/theme/fonts";
+import { config } from '@/theme/_config';
+import { staticFontStyles } from '@/theme/fonts';
 
-import type { ArrayValue, RemoveBeforeSeparator, ToNumber } from "./common";
-import type { UnionConfiguration } from "./config";
+import type { ArrayValue, RemoveBeforeSeparator, ToNumber } from './common';
+import type { UnionConfiguration } from './config';
 
 type FontSizesKeys = `size_${ArrayValue<typeof config.fonts.sizes>}`;
 
@@ -12,12 +12,12 @@ export type FontSizes = {
   };
 };
 
-type FontColorsKeys = `${keyof UnionConfiguration["fonts"]["colors"]}`;
+type FontColorsKeys = `${keyof UnionConfiguration['fonts']['colors']}`;
 
 export type FontColors = {
-  [key in FontColorsKeys]: RemoveBeforeSeparator<key> extends keyof UnionConfiguration["fonts"]["colors"]
+  [key in FontColorsKeys]: RemoveBeforeSeparator<key> extends keyof UnionConfiguration['fonts']['colors']
     ? {
-        color: UnionConfiguration["fonts"]["colors"][RemoveBeforeSeparator<key>];
+        color: UnionConfiguration['fonts']['colors'][RemoveBeforeSeparator<key>];
       }
     : never;
 };

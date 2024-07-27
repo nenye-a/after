@@ -1,5 +1,5 @@
-import { coreDb, MODEL_NAMES } from "../config/mongoose.db";
-import { Schema, Types, model } from "mongoose";
+import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
+import { Schema, Types, model } from 'mongoose';
 
 interface User {
   email: string;

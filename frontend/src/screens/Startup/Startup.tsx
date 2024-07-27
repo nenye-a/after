@@ -1,21 +1,21 @@
-import { useEffect } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
-import { useQuery } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-import { CommonActions } from "@react-navigation/native";
+import { useEffect } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import { CommonActions } from '@react-navigation/native';
 
-import { useTheme } from "@/theme";
-import { Brand } from "@/components/molecules";
-import { SafeScreen } from "@/components/template";
+import { useTheme } from '@/theme';
+import { Brand } from '@/components/molecules';
+import { SafeScreen } from '@/components/template';
 
-import type { RootScreenProps } from "@/types/navigation";
+import type { RootScreenProps } from '@/types/navigation';
 
-function Startup({ navigation }: RootScreenProps<"Startup">) {
+function Startup({ navigation }: RootScreenProps<'Startup'>) {
   const { layout, gutters, fonts } = useTheme();
-  const { t } = useTranslation(["startup"]);
+  const { t } = useTranslation(['startup']);
 
   const { isSuccess, isFetching, isError } = useQuery({
-    queryKey: ["startup"],
+    queryKey: ['startup'],
     queryFn: () => {
       return Promise.resolve(true);
     },
@@ -26,7 +26,7 @@ function Startup({ navigation }: RootScreenProps<"Startup">) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: "Example" }],
+          routes: [{ name: 'Example' }],
         }),
       );
     }
@@ -48,7 +48,7 @@ function Startup({ navigation }: RootScreenProps<"Startup">) {
         )}
         {isError && (
           <Text style={[fonts.size_16, fonts.red500]}>
-            {t("startup:error")}
+            {t('startup:error')}
           </Text>
         )}
       </View>

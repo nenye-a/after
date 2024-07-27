@@ -4,31 +4,31 @@ import {
   useEffect,
   useMemo,
   useState,
-} from "react";
+} from 'react';
 
-import { config } from "@/theme/_config";
+import { config } from '@/theme/_config';
 import {
   generateFontSizes,
   generateFontColors,
   staticFontStyles,
-} from "@/theme/fonts";
+} from '@/theme/fonts';
 import {
   generateBorderColors,
   generateBorderRadius,
   generateBorderWidths,
-} from "@/theme/borders";
-import layout from "@/theme/layout";
-import componentsGenerator from "@/theme/components";
-import { generateBackgrounds } from "@/theme/backgrounds";
-import { generateGutters } from "@/theme/gutters";
-import generateConfig from "@/theme/ThemeProvider/generateConfig";
+} from '@/theme/borders';
+import layout from '@/theme/layout';
+import componentsGenerator from '@/theme/components';
+import { generateBackgrounds } from '@/theme/backgrounds';
+import { generateGutters } from '@/theme/gutters';
+import generateConfig from '@/theme/ThemeProvider/generateConfig';
 
-import type { MMKV } from "react-native-mmkv";
-import type { ComponentTheme, Theme } from "@/types/theme/theme";
+import type { MMKV } from 'react-native-mmkv';
+import type { ComponentTheme, Theme } from '@/types/theme/theme';
 import type {
   FulfilledThemeConfiguration,
   Variant,
-} from "@/types/theme/config";
+} from '@/types/theme/config';
 
 // Types
 
@@ -45,21 +45,21 @@ type Props = PropsWithChildren<{
 function ThemeProvider({ children = false, storage }: Props) {
   // Current theme variant
   const [variant, setVariant] = useState(
-    (storage.getString("theme") as Variant) || "default",
+    (storage.getString('theme') as Variant) || 'default',
   );
 
   // Initialize theme at default if not defined
   useEffect(() => {
-    const appHasThemeDefined = storage.contains("theme");
+    const appHasThemeDefined = storage.contains('theme');
     if (!appHasThemeDefined) {
-      storage.set("theme", "default");
-      setVariant("default");
+      storage.set('theme', 'default');
+      setVariant('default');
     }
   }, []);
 
   const changeTheme = (nextVariant: Variant) => {
     setVariant(nextVariant);
-    storage.set("theme", nextVariant);
+    storage.set('theme', nextVariant);
   };
 
   // Flatten config with current variant
@@ -89,7 +89,7 @@ function ThemeProvider({ children = false, storage }: Props) {
 
   const navigationTheme = useMemo(() => {
     return {
-      dark: variant === "dark",
+      dark: variant === 'dark',
       colors: fullConfig.navigationColors,
     };
   }, [variant, fullConfig.navigationColors]);

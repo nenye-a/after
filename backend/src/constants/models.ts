@@ -1,5 +1,5 @@
 const MODEL_NAMES = {
-  user: "User",
+  user: 'User',
 };
 
 export { MODEL_NAMES };

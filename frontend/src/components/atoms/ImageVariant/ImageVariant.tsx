@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import { Image, ImageProps, ImageSourcePropType } from "react-native";
+import { useMemo } from 'react';
+import { Image, ImageProps, ImageSourcePropType } from 'react-native';
 
-import { useTheme } from "@/theme";
+import { useTheme } from '@/theme';
 
-import type { Variant } from "@/types/theme/config";
+import type { Variant } from '@/types/theme/config';
 
-type VariantSource = `source${Capitalize<Exclude<Variant, "default">>}`;
+type VariantSource = `source${Capitalize<Exclude<Variant, 'default'>>}`;
 
 type Props = ImageProps & {
   [variant in VariantSource]?: ImageSourcePropType;
@@ -19,7 +19,7 @@ function ImageVariant({ source: defaultSource, ...props }: Props) {
       .charAt(0)
       .toUpperCase()}${variant.slice(1)}` as VariantSource;
 
-    if (variant !== "default" && props[sourceVariant]) {
+    if (variant !== 'default' && props[sourceVariant]) {
       try {
         return props[sourceVariant];
       } catch (e) {
