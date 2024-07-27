@@ -1,3 +1,5 @@
+// NOTE: Prisma is currently not actively used, but is setup so that we can easily connect and manage relational
+// database data via prisma later.
 generator client {
   provider = "prisma-client-js"
 }

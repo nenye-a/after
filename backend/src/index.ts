@@ -7,19 +7,14 @@ import { DateTimeResolver } from 'graphql-scalars';
 import * as tq from 'type-graphql';
 import * as dotenv from 'dotenv';
 import { Context, context } from './context';
-import { PostCreateInput, PostResolver, SortOrder } from './PostResolver';
-import { UserResolver } from './UserResolver';
+import { UserResolver } from './gql/resolvers/UserResolver';
 
 // Configures environment variables from .env file. See more: https://www.npmjs.com/package/dotenv
 dotenv.config();
 
 const app = async () => {
-  tq.registerEnumType(SortOrder, {
-    name: 'SortOrder',
-  });
-
   const schema = await tq.buildSchema({
-    resolvers: [PostResolver, UserResolver, PostCreateInput],
+    resolvers: [UserResolver],
     scalarsMap: [{ type: GraphQLScalarType, scalar: DateTimeResolver }],
     validate: { forbidUnknownValues: false },
   });
