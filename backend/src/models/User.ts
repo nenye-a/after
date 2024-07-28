@@ -2,19 +2,23 @@ import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
 import { Schema, Types, model } from 'mongoose';
 
 interface User {
+  // Personal information
   email: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   phone: string;
-  homeAddress: string;
+  photo_url: String;
+  home_address: string;
+  // Perferences
+  after_preferences: {};
 }
 
 const userSchema = new Schema<User>({
-  email: { type: String, required: true },
-  firstName: String,
-  lastName: String,
+  email: { type: String, required: true, unique: true },
+  first_name: String,
+  last_name: String,
   phone: String,
-  homeAddress: String,
+  home_address: String,
 });
 
 const users = coreDb.model<User>(MODEL_NAMES.user, userSchema);
