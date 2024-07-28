@@ -1,9 +1,10 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      NODE_ENV: 'development' | 'production' | 'staging';
       MONGO_USER: string;
       MONGO_PASSWORD: string;
-      NODE_ENV: 'development' | 'production' | 'staging';
+      OPENAI_API_KEY: string;
     }
   }
 }
