@@ -17,6 +17,8 @@ interface User {
   // Preferences
   after_preferences: {
     default_mood: string; // TODO: Convert to enum, or reference to another model.
+    default_radius_miles: number;
+    price_range: number;
   };
   app_preferences: {
     ui_theme: string; // TODO: Convert to enum, or reference to another model.
@@ -38,6 +40,9 @@ const userSchema = new Schema<User>({
   interests: [String],
   after_preferences: {
     default_mood: String,
+    default_radius_miles: Number,
+    price_range: Number,
+    ticket_price_limit: Number,
   },
   app_preferences: {
     ui_theme: String,
