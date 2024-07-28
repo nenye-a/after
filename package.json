@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "dev:backend": "yarn --cwd backend dev"
   },
   "devDependencies": {
     "eslint": "^9.8.0",
