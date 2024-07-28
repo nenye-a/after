@@ -9,8 +9,21 @@ interface User {
   phone: string;
   photo_url: String;
   home_address: string;
-  // Perferences
-  after_preferences: {};
+  work_address: string;
+  // Advanced user information
+  date_of_birth: Date;
+  ethnicity: string; // TODO: Convert to enum, or reference to another model
+  interests: string[]; // TODO: Convert to enum, or reference to another model
+  // Preferences
+  after_preferences: {
+    default_mood: string; // TODO: Convert to enum, or reference to another model.
+  };
+  app_preferences: {
+    ui_theme: string; // TODO: Convert to enum, or reference to another model.
+  };
+  // Billing information & connection. TODO: determine the correct support for iOS and Android
+  stripe_id: string;
+  apple_id: string;
 }
 
 const userSchema = new Schema<User>({
@@ -19,6 +32,18 @@ const userSchema = new Schema<User>({
   last_name: String,
   phone: String,
   home_address: String,
+  work_address: String,
+  date_of_birth: Date,
+  ethnicity: String,
+  interests: [String],
+  after_preferences: {
+    default_mood: String,
+  },
+  app_preferences: {
+    ui_theme: String,
+  },
+  stripe_id: String,
+  apple_id: String,
 });
 
 const users = coreDb.model<User>(MODEL_NAMES.user, userSchema);
