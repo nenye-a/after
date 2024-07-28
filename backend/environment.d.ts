@@ -5,6 +5,7 @@ declare global {
       MONGO_USER: string;
       MONGO_PASSWORD: string;
       OPENAI_API_KEY: string;
+      EVENTBRITE_PRIVATE_TOKEN: string;
     }
   }
 }
