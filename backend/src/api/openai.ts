@@ -11,7 +11,18 @@ export interface ChatCompletionMessage {
   name?: string;
 }
 
-const chat = async (messages: string[], model: string & {} = 'gpt-4o-mini') => {
+/**
+ * Example open AI chat function. This will take in any messages and respond with the most default chat GPT support,
+ * using the model provided. We need to make more functions that are more specific to our usecase, or work well.
+ *
+ * @param messages
+ * @param model
+ * @returns
+ */
+const exampleChat = async (
+  messages: string[],
+  model: string & {} = 'gpt-4o-mini',
+) => {
   let formattedMessages: ChatCompletionMessage[] = messages.map(
     (message: string) => ({
       role: 'user',
@@ -21,30 +32,16 @@ const chat = async (messages: string[], model: string & {} = 'gpt-4o-mini') => {
 
   formattedMessages.unshift({
     role: 'system',
-    content:
-      'You are an bot powering a site that helps people find the next places. You provide top 3 answers by default, and give 2 additionals as helpers.',
+    content: `You are a helpful assistant.`,
   });
 
   const response = await openai.chat.completions.create({
     messages: formattedMessages,
     model,
-    response_format: { type: 'json_object' },
   });
 
   return response.choices;
 };
 
 export default openai;
-export { chat };
-
-// if (require.main === module) {
-//   chat(
-//     [
-//       "I'm at Toca Madera, looking for the next best place to go. I'm in a festive mood. What do you recommend?",
-//       'Location: The Reserve, Mood: Come down from current, Radius: within 10 miles, Neihborhood: Downtown, Price: $ - Response: Json',
-//     ],
-//     'gpt-4o-mini',
-//   )
-//     .then((results) => console.log(results))
-//     .catch((err) => console.error(err));
-// }
+export { exampleChat as chat };

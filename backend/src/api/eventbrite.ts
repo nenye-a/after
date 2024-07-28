@@ -6,6 +6,7 @@
 
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
 // TODO: Convert to using OAuth once releasing the product.
