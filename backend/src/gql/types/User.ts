@@ -12,15 +12,15 @@ export class UserType {
   email: string;
 
   @Field((type) => String, { nullable: true })
-  firstName?: string | null;
+  first_name?: string | null;
 
   @Field((type) => String, { nullable: true })
-  lastName?: string | null;
+  last_name?: string | null;
 
   @IsPhoneNumber()
   @Field((type) => String, { nullable: true })
   phone?: string | null;
 
   @Field((type) => String, { nullable: true })
-  homeAddress?: string | null;
+  home_address?: string | null;
 }

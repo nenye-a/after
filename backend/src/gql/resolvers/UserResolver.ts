@@ -23,16 +23,16 @@ class UserCreateInput {
   email: string;
 
   @Field({ nullable: true })
-  firstName: string;
+  first_name: string;
 
   @Field({ nullable: true })
-  lastName: string;
+  last_name: string;
 
   @Field({ nullable: true })
   phone: string;
 
   @Field({ nullable: true })
-  homeAddress: string;
+  home_address: string;
 }
 
 @Resolver(UserType)
