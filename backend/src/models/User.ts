@@ -12,11 +12,11 @@ interface User {
   work_address: string;
   // Advanced user information
   date_of_birth: Date;
-  ethnicity: string; // TODO: Convert to enum, or reference to another model
+  culture: string; // TODO: Convert to enum, or reference to another model
   interests: string[]; // TODO: Convert to enum, or reference to another model
   // Preferences
   after_preferences: {
-    default_mood: string; // TODO: Convert to enum, or reference to another model.
+    default_vibe: string; // TODO: Convert to enum, or reference to another model.
     default_radius_miles: number;
     price_range: number;
   };
@@ -36,11 +36,12 @@ const userSchema = new Schema<User>({
   home_address: String,
   work_address: String,
   date_of_birth: Date,
-  ethnicity: String,
+  culture: String,
   interests: [String],
   after_preferences: {
-    default_mood: String,
+    default_vibe: String,
     default_radius_miles: Number,
+    default_radius_in_minutes: Number,
     price_range: Number,
     ticket_price_limit: Number,
   },

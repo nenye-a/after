@@ -1,15 +1,10 @@
 import OpenAI from 'openai';
 import * as dotenv from 'dotenv';
+import { ChatCompletionMessageParam } from 'openai/resources';
 dotenv.config();
 
 // This will automatically authenticate using the environment variable.
 const openai = new OpenAI();
-
-export interface ChatCompletionMessage {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-  name?: string;
-}
 
 /**
  * Example open AI chat function. This will take in any messages and respond with the most default chat GPT support,
@@ -23,7 +18,7 @@ const exampleChat = async (
   messages: string[],
   model: string & {} = 'gpt-4o-mini',
 ) => {
-  let formattedMessages: ChatCompletionMessage[] = messages.map(
+  let formattedMessages: ChatCompletionMessageParam[] = messages.map(
     (message: string) => ({
       role: 'user',
       content: message,
