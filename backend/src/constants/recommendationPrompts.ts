@@ -128,7 +128,7 @@ For each destination, provide:
 - address - jsonkey: address
 - open/close times - jsonkey: open_close_times
 - price level - jsonkey: price_level
-- destination type (venue or event) - jsonkey: destination_type
+- destination type (bar, restaurant, or club) - jsonkey: destination_type
 - vibe (list of vibes this place has that match the user's mood. If there are other vibes, list them as well) - jsonkey: vibe
 - travel time (in minutes, both walk and car) - jsonkey: travel_time
 - short description (tone should be casual and explanatory, describing the venue/event and why it's a good match) - jsonkey: description

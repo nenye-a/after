@@ -1,0 +1,227 @@
+[
+  {
+    "venue_name": "Mo's Place",
+    "event_name": null,
+    "address": "21940 Kingsland Blvd, Katy, TX 77450",
+    "open_close_times": {
+      "open": "11:00 AM",
+      "close": "2:00 AM"
+    },
+    "price_level": "$$",
+    "destination_type": "bar",
+    "vibe": [
+      "lit",
+      "social",
+      "playful"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 10
+    },
+    "description": "Mo's Place is a lively bar in Katy with a dynamic atmosphere, perfect for partying and socializing. They often have live music and a spirited crowd, making it a great spot to have fun.",
+    "score": 95,
+    "notes": "Known for its high-energy environment and great nightlife scene."
+  },
+  {
+    "venue_name": "The Cellar Door",
+    "event_name": null,
+    "address": "829 S Mason Rd #280, Katy, TX 77450",
+    "open_close_times": {
+      "open": "4:00 PM",
+      "close": "12:00 AM"
+    },
+    "price_level": "$$",
+    "destination_type": "restaurant",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 15
+    },
+    "description": "The Cellar Door offers a vibrant dining experience with a social vibe. Ideal for those looking to mingle with others while enjoying delicious food and cocktails.",
+    "score": 90,
+    "notes": "They have a great selection of wines and a spirited crowd."
+  },
+  {
+    "venue_name": "No Label Brewing Co.",
+    "event_name": null,
+    "address": "5351 1st St, Katy, TX 77493",
+    "open_close_times": {
+      "open": "12:00 PM",
+      "close": "10:00 PM"
+    },
+    "price_level": "$$",
+    "destination_type": "bar",
+    "vibe": [
+      "lit",
+      "social",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 15
+    },
+    "description": "No Label Brewing Co. is a fantastic local brewery with a vibrant atmosphere. They have plenty of space for socializing and often host fun events, making it a great place to party.",
+    "score": 88,
+    "notes": "Check out their event schedule; they often have live music and food trucks."
+  },
+  {
+    "venue_name": "Bar Louie LaCenterra",
+    "event_name": null,
+    "address": "23501 Cinco Ranch Blvd Ste. D140, Katy, TX 77494",
+    "open_close_times": {
+      "open": "11:00 AM",
+      "close": "2:00 AM"
+    },
+    "price_level": "$$",
+    "destination_type": "bar",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 18
+    },
+    "description": "Bar Louie at LaCenterra offers a lit and social atmosphere, perfect for partying. They have excellent happy hours, vibrant energy, and a friendly crowd.",
+    "score": 85,
+    "notes": "Great spot for both eating and drinking with friends. Large outdoor seating area available."
+  },
+  {
+    "venue_name": "Whiskey Cake Kitchen & Bar",
+    "event_name": null,
+    "address": "23139 Grand Circle Blvd, Katy, TX 77450",
+    "open_close_times": {
+      "open": "11:00 AM",
+      "close": "12:00 AM"
+    },
+    "price_level": "$$",
+    "destination_type": "restaurant",
+    "vibe": [
+      "lit",
+      "social",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 10
+    },
+    "description": "Whiskey Cake Kitchen & Bar features a high-energy dining environment with fantastic modern American cuisine and inventive cocktails. It's a perfect spot to start your night with a lively meal.",
+    "score": 83,
+    "notes": "Their whiskey selection is extensive and definitely worth sampling."
+  },
+  {
+    "venue_name": "Baker St. Pub & Grill",
+    "event_name": null,
+    "address": "23501 Cinco Ranch Blvd Ste. D100, Katy, TX 77494",
+    "open_close_times": {
+      "open": "11:00 AM",
+      "close": "2:00 AM"
+    },
+    "price_level": "$$",
+    "destination_type": "bar",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 18
+    },
+    "description": "Baker St. Pub & Grill delivers a lively British pub experience with a social atmosphere. Great for gathering with friends and enjoying a laid-back yet energetic nightlife.",
+    "score": 80,
+    "notes": "They often have live music or pub quizzes."
+  },
+  {
+    "venue_name": "Hat Creek Burger Company",
+    "event_name": null,
+    "address": "24025 Katy Fwy, Katy, TX 77494",
+    "open_close_times": {
+      "open": "11:00 AM",
+      "close": "10:00 PM"
+    },
+    "price_level": "$$",
+    "destination_type": "restaurant",
+    "vibe": [
+      "social",
+      "lit",
+      "playful"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 20
+    },
+    "description": "Hat Creek Burger Company offers a playful and social environment great for kicking off a night of fun. Enjoy their famous burgers and outdoor seating.",
+    "score": 75,
+    "notes": "Family-friendly but lively enough for groups of friends."
+  },
+  {
+    "venue_name": "BreWingZ Restaurant and Bar",
+    "event_name": null,
+    "address": "24445 Katy Fwy, Katy, TX 77494",
+    "open_close_times": {
+      "open": "11:00 AM",
+      "close": "12:00 AM"
+    },
+    "price_level": "$$",
+    "destination_type": "bar",
+    "vibe": [
+      "social",
+      "lit"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 20
+    },
+    "description": "BreWingZ is a sports bar with a social and lit atmosphere, perfect for gatherings and casual partying. They serve up great wings and pitchers of beer.",
+    "score": 70,
+    "notes": "Ideal for a more relaxed yet spirited evening."
+  },
+  {
+    "venue_name": "Willie's Grill & Icehouse",
+    "event_name": null,
+    "address": "19905 Katy Fwy l, Katy, TX 77450",
+    "open_close_times": {
+      "open": "11:00 AM",
+      "close": "11:00 PM"
+    },
+    "price_level": "$$",
+    "destination_type": "restaurant",
+    "vibe": [
+      "social",
+      "adventurous",
+      "lit"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 10
+    },
+    "description": "Willie's Grill & Icehouse provides a vibrant dining experience with a fun and spirited crowd. Known for its great Tex-Mex and seafood dishes.",
+    "score": 68,
+    "notes": "A great spot to get the night started with hearty food and a bustling atmosphere."
+  },
+  {
+    "venue_name": "El Asador Mexican Restaurant & Bar",
+    "event_name": null,
+    "address": "3750 S Mason Rd, Katy, TX 77450",
+    "open_close_times": {
+      "open": "11:00 AM",
+      "close": "2:00 AM"
+    },
+    "price_level": "$$",
+    "destination_type": "restaurant",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": null,
+      "car": 8
+    },
+    "description": "El Asador offers a lively Mexican dining experience with a social vibe. Perfect for those looking to enjoy vibrant music and great margaritas.",
+    "score": 65,
+    "notes": "Often has live music and the margaritas are highly recommended."
+  }
+]

@@ -1,6 +1,7 @@
 import {
   ChatCompletionAssistantMessageParam,
   ChatCompletionSystemMessageParam,
+  ChatModel,
 } from 'openai/resources';
 import openai from '../api/openai';
 import fs from 'fs';
@@ -13,6 +14,7 @@ import {
 interface RecommendationsSettings {
   setupSystemMessages?: string[];
   setupAssistantMessages?: string[];
+  model?: ChatModel;
 }
 
 enum Intent {
@@ -81,8 +83,6 @@ const recommend = async (
   request: RecommendationsInput,
   options?: RecommendationsSettings,
 ) => {
-  let { setupSystemMessages = SYSTEM_MESSAGES_V2, setupAssistantMessages } =
-    options ?? {};
   let {
     currentLocation,
     intent,
@@ -94,6 +94,11 @@ const recommend = async (
     costContext,
     userContext,
   } = request;
+  let {
+    setupSystemMessages = SYSTEM_MESSAGES_V2,
+    setupAssistantMessages,
+    model = 'gpt-4o',
+  } = options ?? {};
 
   // TODO: Convert coordinates to address if not provided.
   let address = currentLocation.address;
@@ -132,7 +137,7 @@ const recommend = async (
         : []),
       { role: 'user', content: userMessageContent },
     ],
-    model: 'gpt-4o',
+    model,
     response_format: { type: 'json_object' },
     max_tokens: 4000,
   });
@@ -164,21 +169,26 @@ if (require.main === module) {
   (async () => {
     let start = new Date();
     console.log('Running the recommendation engine...');
-    let recommendations = await recommend({
-      currentLocation: {
-        address: '1010 Banks St, Houston, TX 77006',
-        name: 'Grand Prize',
+    let recommendations = await recommend(
+      {
+        currentLocation: {
+          address: '22758 Westheimer Pkwy #270, Katy, TX 77450',
+          name: 'The Public House',
+        },
+        intent: Intent.party,
+        additionalIntents: [Intent.socialize, Intent.eat],
+        vibe: [Vibe.lit, Vibe.social],
+        distanceContext: {
+          maxTravelTimeMinutes: 25,
+        },
+        costContext: {
+          priceLevels: [PriceLevel.moderate, PriceLevel.expensive],
+        },
       },
-      intent: Intent.eat,
-      vibe: [Vibe.lit],
-      distanceContext: {
-        searchRadiusMiles: 10,
-        maxTravelTimeMinutes: 20,
+      {
+        model: 'gpt-4o-mini',
       },
-      costContext: {
-        priceLevels: [PriceLevel.moderate],
-      },
-    });
+    );
     let end = new Date();
 
     console.log(
@@ -187,7 +197,7 @@ if (require.main === module) {
 
     console.log(recommendations);
     fs.writeFileSync(
-      'examples/recommendations.json',
+      'examples/recommendations-party-socialize-eat-mini.json',
       JSON.stringify(recommendations, null, 2),
     );
   })();

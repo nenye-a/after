@@ -1,0 +1,183 @@
+[
+  {
+    "venue_name": "The Rustic",
+    "address": "1836 Polk St, Houston, TX 77003",
+    "open_close_times": "11:00 AM - 11:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": 20,
+      "car": 10
+    },
+    "description": "The Rustic is a high-energy eatery with a great outdoor space. Known for its live music and vibrant atmosphere, it's perfect for enjoying delicious food while soaking up the lively vibes.",
+    "score": 95,
+    "notes": "Popular spot, make sure to check for any events!"
+  },
+  {
+    "venue_name": "BB's Tex-Orleans",
+    "address": "2400 W Loop N Fwy, Houston, TX 77092",
+    "open_close_times": "11:00 AM - 9:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": 30,
+      "car": 15
+    },
+    "description": "BB's Tex-Orleans mixes the flavors of Texas and New Orleans in a vibrant setting. It's a fun place to grab a bite, with exciting dishes that won't disappoint you!",
+    "score": 90,
+    "notes": "Good for some bold flavors!"
+  },
+  {
+    "venue_name": "Chivo Taqueria",
+    "address": "1201 W 14th St, Houston, TX 77008",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": 25,
+      "car": 10
+    },
+    "description": "Chivo Taqueria brings a lively atmosphere with its authentic tacos and upbeat vibe. It's a perfect place to eat up and let the good times roll!",
+    "score": 88,
+    "notes": "Great for casual hangouts with friends."
+  },
+  {
+    "venue_name": "Pallotta's Italian Grill",
+    "address": "5505 Woodway Dr # 100, Houston, TX 77057",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": 30,
+      "car": 15
+    },
+    "description": "Pallotta's offers an electric setting for those craving Italian cuisine. With a busy atmosphere and a lively crowd, it’s a fun place to dig into delicious dishes.",
+    "score": 85,
+    "notes": "A variety of Italian options await you!"
+  },
+  {
+    "venue_name": "Ragin' Cajun",
+    "address": "2500 W Loop N Fwy, Houston, TX 77027",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": 35,
+      "car": 15
+    },
+    "description": "Ragin' Cajun offers a vibrant Cajun dining experience. Delicious seafood and a lively setting make this a great place for flavorful eats!",
+    "score": 83,
+    "notes": "Ideal for seafood lovers!"
+  },
+  {
+    "venue_name": "Food Trucks at the Boardwalk",
+    "address": "The Boardwalk at Towne Lake, 17201 Towne Lake Parkway, Cypress, TX 77433",
+    "open_close_times": "4:00 PM - 11:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "social",
+      "playful"
+    ],
+    "travel_time": {
+      "walk": 40,
+      "car": 20
+    },
+    "description": "A fun dining experience with a variety of food trucks offering gastronomic delights! A perfect place to hang with friends and enjoy a festive atmosphere.",
+    "score": 80,
+    "notes": "Check the schedule for food truck participation."
+  },
+  {
+    "venue_name": "Cuchara",
+    "address": "214 Fairview St, Houston, TX 77006",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": 20,
+      "car": 8
+    },
+    "description": "Cuchara serves up vibrant Mexican dishes in an energetic setting. Perfect for those looking to enjoy flavorful meals with a lively crowd.",
+    "score": 78,
+    "notes": "Lovely interior design adds to the experience."
+  },
+  {
+    "venue_name": "K новым местам.",
+    "address": "6704 Washington Ave, Houston, TX 77007",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": 30,
+      "car": 20
+    },
+    "description": "A trendy spot with a modern twist on comfort food, K новым местам is all about a high-energy vibe and delicious offerings.",
+    "score": 75,
+    "notes": "Expect a unique menu and ambiance!"
+  },
+  {
+    "venue_name": "Liberty Kitchen & Oysterette",
+    "address": "2707 Allen Pkwy, Houston, TX 77019",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": 30,
+      "car": 10
+    },
+    "description": "This vibrant restaurant serves fresh oysters and Southern comfort food. An upbeat vibe ensures a fun dining experience.",
+    "score": 72,
+    "notes": "Their brunch is also popular!"
+  },
+  {
+    "venue_name": "Brasserie 19",
+    "address": "3600 E. 2nd St, Houston, TX 77005",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": 35,
+      "car": 20
+    },
+    "description": "Brasserie 19 offers both energetic dining and a great selection of French-inspired cuisine in a vibrant setting. Perfect for enjoying some fine dishes whilst soaking up a lively atmosphere.",
+    "score": 70,
+    "notes": "A nice spot for date nights too!"
+  }
+]
