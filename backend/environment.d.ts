@@ -6,6 +6,7 @@ declare global {
       MONGO_PASSWORD: string;
       OPENAI_API_KEY: string;
       EVENTBRITE_PRIVATE_TOKEN: string;
+      GOOGL_API_KEY: string;
     }
   }
 }
