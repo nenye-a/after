@@ -1,10 +1,10 @@
-export type GooglePlacesIdFields =
+export type GooglePlacesIdField =
   | 'id'
   | 'name'
   | 'attributions'
   | 'nextPageToken';
 
-export type GooglePlacesBasicFields =
+export type GooglePlacesBasicField =
   | 'accessibilityOptions'
   | 'addressComponents'
   | 'adrFormatAddress'
@@ -25,7 +25,7 @@ export type GooglePlacesBasicFields =
   | 'utcOffsetMinutes'
   | 'viewport';
 
-export type GooglePlacesAdvancedFields =
+export type GooglePlacesAdvancedField =
   | 'currentOpeningHours'
   | 'currentSecondaryOpeningHours'
   | 'internationalPhoneNumber'
@@ -37,7 +37,7 @@ export type GooglePlacesAdvancedFields =
   | 'userRatingCount'
   | 'websiteUri';
 
-export type GooglePlacesPreferredFields =
+export type GooglePlacesPreferredField =
   | 'allowsDogs'
   | 'curbsidePickup'
   | 'delivery'
@@ -68,12 +68,12 @@ export type GooglePlacesPreferredFields =
   | 'servesWine'
   | 'takeout';
 
-export type GooglePlaceFields =
+export type GooglePlaceField =
   | '*'
-  | GooglePlacesIdFields
-  | GooglePlacesBasicFields
-  | GooglePlacesAdvancedFields
-  | GooglePlacesPreferredFields;
+  | GooglePlacesIdField
+  | GooglePlacesBasicField
+  | GooglePlacesAdvancedField
+  | GooglePlacesPreferredField;
 
 export type GooglePlaceAutomotiveType =
   | 'car_dealer'
@@ -358,3 +358,82 @@ export interface GoogleSearchResult {
   places: any[];
   contextualContents: any[];
 }
+
+export type GooglePlaceDetailsIDField =
+  | 'attributions'
+  | 'id'
+  | 'name'
+  | 'photos';
+
+export type GooglePlaceDetailsLocationField =
+  | 'addressComponents'
+  | 'adrFormatAddress'
+  | 'formattedAddress'
+  | 'location'
+  | 'plusCode'
+  | 'shortFormattedAddress'
+  | 'types'
+  | 'viewport';
+
+export type GooglePlaceDetailsBasicField =
+  | 'accessibilityOptions'
+  | 'businessStatus'
+  | 'displayName'
+  | 'googleMapsUri'
+  | 'iconBackgroundColor'
+  | 'iconMaskBaseUri'
+  | 'primaryType'
+  | 'primaryTypeDisplayName'
+  | 'subDestinations'
+  | 'utcOffsetMinutes';
+
+export type GooglePlaceDetailsAdvancedField =
+  | 'currentOpeningHours'
+  | 'currentSecondaryOpeningHours'
+  | 'internationalPhoneNumber'
+  | 'nationalPhoneNumber'
+  | 'priceLevel'
+  | 'rating'
+  | 'regularOpeningHours'
+  | 'regularSecondaryOpeningHours'
+  | 'userRatingCount'
+  | 'websiteUri';
+
+export type GooglePlaceDetailsPreferredField =
+  | 'allowsDogs'
+  | 'curbsidePickup'
+  | 'delivery'
+  | 'dineIn'
+  | 'editorialSummary'
+  | 'evChargeOptions'
+  | 'fuelOptions'
+  | 'goodForChildren'
+  | 'goodForGroups'
+  | 'goodForWatchingSports'
+  | 'liveMusic'
+  | 'menuForChildren'
+  | 'parkingOptions'
+  | 'paymentOptions'
+  | 'outdoorSeating'
+  | 'reservable'
+  | 'restroom'
+  | 'reviews'
+  | 'servesBeer'
+  | 'servesBreakfast'
+  | 'servesBrunch'
+  | 'servesCocktails'
+  | 'servesCoffee'
+  | 'servesDessert'
+  | 'servesDinner'
+  | 'servesLunch'
+  | 'servesVegetarianFood'
+  | 'servesWine'
+  | 'takeout';
+
+export type GooglePlaceDetailsField =
+  | '*'
+  | GooglePlaceDetailsIDField
+  | GooglePlaceDetailsLocationField
+  | GooglePlaceDetailsBasicField
+  | GooglePlaceDetailsAdvancedField
+  | GooglePlaceDetailsPreferredField;
