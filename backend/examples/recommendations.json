@@ -1,0 +1,192 @@
+[
+  {
+    "venue_name": "Hugo's",
+    "address": "1600 Westheimer Rd, Houston, TX 77006",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "festive",
+      "social"
+    ],
+    "travel_time": {
+      "walk": 20,
+      "car": 5
+    },
+    "description": "Hugo's is an energetic Mexican restaurant known for its vibrant atmosphere and delicious dishes. You'll feel the buzz as soon as you walk in, making it a perfect spot if you're looking for a lively dining experience.",
+    "score": 95,
+    "notes": "Excellent spot for brunch or dinner, not far from your current location."
+  },
+  {
+    "venue_name": "Present Company",
+    "address": "1318 Westheimer Rd, Houston, TX 77006",
+    "open_close_times": "4:00 PM - 2:00 AM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "social",
+      "playful"
+    ],
+    "travel_time": {
+      "walk": 15,
+      "car": 3
+    },
+    "description": "Present Company blends a high-energy vibe with a playful twist. It has a colorful, fun décor and a rooftop patio, making it great for dining and socializing.",
+    "score": 92,
+    "notes": "The rooftop seating is a highlight here."
+  },
+  {
+    "venue_name": "Better Luck Tomorrow",
+    "address": "544 Yale St, Houston, TX 77007",
+    "open_close_times": "12:00 PM - 12:00 AM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "chill",
+      "social"
+    ],
+    "travel_time": {
+      "walk": 45,
+      "car": 10
+    },
+    "description": "Better Luck Tomorrow is a casual yet high-energy spot perfect for a dynamic dining experience. It offers a blend of delicious food and cocktails, with an atmosphere that provides a bit of buzz.",
+    "score": 88,
+    "notes": "Good mix of indoor and outdoor seating."
+  },
+  {
+    "venue_name": "La Grange",
+    "address": "2517 Ralph St, Houston, TX 77006",
+    "open_close_times": "4:00 PM - 2:00 AM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "festive",
+      "playful"
+    ],
+    "travel_time": {
+      "walk": 20,
+      "car": 5
+    },
+    "description": "La Grange is a high-energy spot with a festive vibe, serving up great food and drinks. The patio area adds a playful twist to your dining experience.",
+    "score": 85,
+    "notes": "A fun spot with tiki-inspired drinks."
+  },
+  {
+    "venue_name": "The Classic",
+    "address": "5922 Washington Ave, Houston, TX 77007",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "chill",
+      "social"
+    ],
+    "travel_time": {
+      "walk": 60,
+      "car": 12
+    },
+    "description": "The Classic offers a high-energy dining experience with a touch of laid-back charm. Their varied menu and buzzing ambiance make it ideal for an exciting meal.",
+    "score": 82,
+    "notes": "Great spot for a lively lunch or dinner."
+  },
+  {
+    "venue_name": "Urban Eats",
+    "address": "3414 Washington Ave, Houston, TX 77007",
+    "open_close_times": "10:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "adventurous",
+      "social"
+    ],
+    "travel_time": {
+      "walk": 60,
+      "car": 12
+    },
+    "description": "Urban Eats blends a high-energy atmosphere with an adventurous menu. Their bustling space makes it a great spot to try something new while enjoying a vibrant environment.",
+    "score": 80,
+    "notes": "Multiple levels and a nice patio area."
+  },
+  {
+    "venue_name": "Boheme",
+    "address": "307 Fairview St, Houston, TX 77006",
+    "open_close_times": "4:00 PM - 2:00 AM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "chill",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": 10,
+      "car": 2
+    },
+    "description": "Boheme offers a unique high-energy vibe with an eclectic décor and adventurous menu. Known for its inventive cocktails and energetic crowd, it's perfect for a lively meal.",
+    "score": 78,
+    "notes": "Great cocktail selection alongside the food."
+  },
+  {
+    "venue_name": "BB Lemon",
+    "address": "1809 Washington Ave, Houston, TX 77007",
+    "open_close_times": "11:00 AM - 10:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "chill",
+      "social"
+    ],
+    "travel_time": {
+      "walk": 50,
+      "car": 10
+    },
+    "description": "BB Lemon brings a casually high-energy vibe, perfect for enjoying American fare in a social setting. Their outdoor seating areas are quite popular.",
+    "score": 75,
+    "notes": "Known for their great burgers and laid-back vibe."
+  },
+  {
+    "venue_name": "Brennan's of Houston",
+    "address": "3300 Smith St, Houston, TX 77006",
+    "open_close_times": "11:30 AM - 9:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "romantic",
+      "festive"
+    ],
+    "travel_time": {
+      "walk": 15,
+      "car": 3
+    },
+    "description": "Brennan's offers a high-energy dining experience with a romantic and festive touch. Perfect for couples wanting a lively yet intimate meal.",
+    "score": 70,
+    "notes": "A bit of a splurge within your price range, known for its Cajun-Creole cuisine."
+  },
+  {
+    "venue_name": "Eugene's Gulf Coast Cuisine",
+    "address": "1985 Welch St, Houston, TX 77019",
+    "open_close_times": "11:00 AM - 9:00 PM",
+    "price_level": "$$",
+    "destination_type": "venue",
+    "vibe": [
+      "lit",
+      "social",
+      "adventurous"
+    ],
+    "travel_time": {
+      "walk": 40,
+      "car": 8
+    },
+    "description": "Eugene's offers a high-energy Gulf Coast dining experience that's both social and adventurous. Their seafood dishes are a hit, perfect for an exciting meal.",
+    "score": 68,
+    "notes": "Great option for seafood lovers."
+  }
+]

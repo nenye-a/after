@@ -16,7 +16,7 @@ const openai = new OpenAI();
  */
 const exampleChat = async (
   messages: string[],
-  model: string & {} = 'gpt-4o-mini',
+  model: string & {} = 'gpt-4o',
 ) => {
   let formattedMessages: ChatCompletionMessageParam[] = messages.map(
     (message: string) => ({
