@@ -1,5 +1,10 @@
 import axios from 'axios'; // TODO: Leverage safe request custom library.
 import * as dotenv from 'dotenv';
+import {
+  GooglePlaceFields,
+  GoogleSearchParams,
+  GoogleSearchResult,
+} from './types';
 
 dotenv.config();
 
@@ -14,22 +19,18 @@ const placesAxiosInstance = axios.create({
   },
 });
 
-enum GooglePlaceFields {}
-
-interface GoogleSearchParams {
-  fields: GooglePlaceFields[];
-}
-
-interface GoogleSearchResult {
-  places: any[];
-  contextualContents: any[];
-}
-
-const googleSearch = async (
+export const googleSearch = async (
   searchText: string,
-  fields: string,
+  fields: GooglePlaceFields[] | '*',
   otherParams?: GoogleSearchParams,
 ): Promise<GoogleSearchResult | null> => {
+  let formattedFields;
+  if (fields === '*' || fields.includes('*')) {
+    formattedFields = '*';
+  } else {
+    formattedFields = fields.map((field) => `places.${field}`).join(',');
+  }
+
   return await placesAxiosInstance
     .post(
       `places:searchText`,
@@ -38,7 +39,7 @@ const googleSearch = async (
       },
       {
         params: {
-          fields,
+          fields: formattedFields,
         },
       },
     )
@@ -51,15 +52,13 @@ const googleSearch = async (
     });
 };
 
-export { googleSearch };
-
 if (require.main === module) {
   const searchText = 'restaurants in New York';
   console.log('searching');
-  googleSearch(searchText, '*')
+  googleSearch(searchText, ['name', 'displayName', 'formattedAddress', 'id'])
     .then((data) => {
-      console.log(data?.places[0], data?.contextualContents[0]);
-      console.log(data?.places.length, data?.contextualContents.length);
+      console.log(data?.places[0], data?.contextualContents?.[0]);
+      console.log(data?.places.length, data?.contextualContents?.length);
     })
-    .catch((err) => console.log);
+    .catch((err) => console.log(err));
 }
