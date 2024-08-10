@@ -10,6 +10,7 @@ import {
   SYSTEM_MESSAGES_V1,
   SYSTEM_MESSAGES_V2,
 } from '../constants/recommendationPrompts';
+import { Intent, PriceLevel, RecommendationsInput, Vibe } from './types';
 
 interface RecommendationsSettings {
   setupSystemMessages?: string[];
@@ -17,69 +18,7 @@ interface RecommendationsSettings {
   model?: ChatModel;
 }
 
-enum Intent {
-  explore = 'Explore',
-  eat = 'Eat',
-  drink = 'Drink',
-  party = 'Party',
-  music = 'Music',
-  socialize = 'Socialize',
-}
-
-enum Destination {
-  restaurant = 'Restaurant',
-  bar = 'Bar',
-  club = 'Club',
-}
-
-enum PriceLevel {
-  cheap = '$',
-  moderate = '$$',
-  expensive = '$$$',
-  veryExpensive = '$$$$',
-}
-
-enum Vibe {
-  lit = 'Lit',
-  adventurous = 'Adventurous',
-  playful = 'Playful',
-  chill = 'Chill',
-  social = 'Social',
-  romantic = 'Romantic',
-  festive = 'Festive',
-}
-
-interface RecommendationsInput {
-  // Location of the user at time of recommendation.
-  currentLocation: {
-    coordinates?: [number, number];
-    address?: string;
-    name?: string;
-  };
-  // What the user intends to do primarily. They may supplement with
-  // other lower priority intents.
-  intent?: Intent;
-  additionalIntents?: Intent[];
-  vibe?: Vibe[];
-  time?: Date;
-  excludedDestinationTypes?: Destination[];
-  distanceContext?: {
-    searchRadiusMiles?: number;
-    maxTravelTimeMinutes?: number;
-  };
-  costContext?: {
-    priceLevels?: PriceLevel[];
-    maxTicketPrice?: number;
-  };
-  userContext?: {
-    id?: string;
-    birthDate?: number;
-    culture?: string;
-    interests?: string[];
-  };
-}
-
-const recommend = async (
+export const recommendGptV1 = async (
   request: RecommendationsInput,
   options?: RecommendationsSettings,
 ) => {
@@ -169,7 +108,7 @@ if (require.main === module) {
   (async () => {
     let start = new Date();
     console.log('Running the recommendation engine...');
-    let recommendations = await recommend(
+    let recommendations = await recommendGptV1(
       {
         currentLocation: {
           address: '22758 Westheimer Pkwy #270, Katy, TX 77450',
