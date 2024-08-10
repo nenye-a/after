@@ -1,0 +1,182 @@
+[
+  {
+    "venue_name": "Monarch",
+    "address": "1502 W Loop N Fwy, Houston, TX 77008",
+    "open_close_times": "5:00 PM - 2:00 AM",
+    "price_level": "$$",
+    "destination_type": "club",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "Monarch is the place to be for a nightlife experience that's all about good vibes and upbeat energy! With a spacious dance floor and awesome cocktails, it's perfect for partying with friends.",
+    "score": 95,
+    "notes": "Live DJ on weekends increases the party atmosphere."
+  },
+  {
+    "venue_name": "8th Wonder Brewery",
+    "address": "2202 Dallas St, Houston, TX 77003",
+    "open_close_times": "4:00 PM - 11:00 PM",
+    "price_level": "$$",
+    "destination_type": "bar",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "Enjoy some killer brews at 8th Wonder Brewery, where you can enjoy a lively atmosphere, meet new friends, and even catch live music on certain nights. It’s a great spot for socializing and having a good time!",
+    "score": 90,
+    "notes": "Popular for local craft beers and outdoor seating."
+  },
+  {
+    "venue_name": "The Rustic",
+    "address": "1836 Polk St, Houston, TX 77003",
+    "open_close_times": "11:00 AM - 12:00 AM",
+    "price_level": "$$",
+    "destination_type": "restaurant",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "The Rustic has a vibrant outdoor patio, live music, and a great menu filled with tasty Texan dishes. This energetic restaurant is perfect for diving into the night with good food and great company!",
+    "score": 88,
+    "notes": "Has frequent live performances to keep the mood up."
+  },
+  {
+    "venue_name": "The Rooftop at The Jones",
+    "address": "11200 Westheimer Rd, Houston, TX 77042",
+    "open_close_times": "5:00 PM - 2:00 AM",
+    "price_level": "$$$",
+    "destination_type": "bar",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "Chill under the stars at The Rooftop at The Jones, where you can sip cocktails and socialize in a lively atmosphere. The views are stunning, and it’s a fantastic place for some late-night fun!",
+    "score": 85,
+    "notes": "Great views of the city skyline, perfect for social media!"
+  },
+  {
+    "venue_name": "Fitzgerald's",
+    "address": "2706 White Oak Dr, Houston, TX 77007",
+    "open_close_times": "7:00 PM - 2:00 AM",
+    "price_level": "$$",
+    "destination_type": "club",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "Fitzgerald's is a local favorite for those who love fun live shows and dancing. It's a buzzing space where you can enjoy music and let loose while socializing with fellow party-goers.",
+    "score": 82,
+    "notes": "Mixed events, including dance nights and live bands."
+  },
+  {
+    "venue_name": "Barbarella",
+    "address": "610 E 11th St, Houston, TX 77008",
+    "open_close_times": "9:00 PM - 2:00 AM",
+    "price_level": "$$",
+    "destination_type": "club",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "Get ready to dance the night away at Barbarella! With its eclectic vibe and funky decor, it’s a fantastic spot for mingling with friends or making new ones on the dance floor.",
+    "score": 80,
+    "notes": "Features themed nights that keep the energy high."
+  },
+  {
+    "venue_name": "Social Beer Garden",
+    "address": "3101 San Jacinto St, Houston, TX 77004",
+    "open_close_times": "12:00 PM - 12:00 AM",
+    "price_level": "$$",
+    "destination_type": "bar",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "As the name suggests, this place is perfect for a social gathering over a wide range of beers and a fun backyard vibe. There are games and great seating, ideal for letting loose after a long week.",
+    "score": 78,
+    "notes": "Perfect for groups and often hosts local events."
+  },
+  {
+    "venue_name": "Hollister's",
+    "address": "2100 W Loop N Fwy, Houston, TX 77027",
+    "open_close_times": "4:00 PM - 12:00 AM",
+    "price_level": "$$",
+    "destination_type": "restaurant",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "Hollister's combines the fun of dining with a vibrant nightlife! Their fun cocktails and friendly atmosphere make it a great spot to kick off your night before or after hitting the clubs.",
+    "score": 75,
+    "notes": "Great place for a meal before heading out!"
+  },
+  {
+    "venue_name": "Pilot House",
+    "address": "6001 Memorial Dr, Houston, TX 77007",
+    "open_close_times": "11:00 AM - 2:00 AM",
+    "price_level": "$$",
+    "destination_type": "bar",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "Pilot House has a fun bar scene with a lively atmosphere and fantastic drinks. There’s often a crowd here looking to socialize, making it a great stop for an energetic evening.",
+    "score": 73,
+    "notes": "Formerly known as The Waldo."
+  },
+  {
+    "venue_name": "Spire Nightclub",
+    "address": "1720 Main St, Houston, TX 77002",
+    "open_close_times": "10:00 PM - 2:00 AM",
+    "price_level": "$$$",
+    "destination_type": "club",
+    "vibe": [
+      "lit",
+      "social"
+    ],
+    "travel_time": {
+      "walk": "N/A",
+      "car": 25
+    },
+    "description": "Spire Nightclub is where the party truly happens! It features cutting-edge sound and visuals, attracting a lively crowd ready to dance and enjoy themselves all night.",
+    "score": 70,
+    "notes": "VIP tables available for those looking for an upscale experience."
+  }
+]
