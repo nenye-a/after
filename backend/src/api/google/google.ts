@@ -36,6 +36,7 @@ export const googleSearch = async (
       `places:searchText`,
       {
         textQuery: searchText,
+        ...otherParams,
       },
       {
         params: {
