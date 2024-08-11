@@ -1,5 +1,7 @@
 const MODEL_NAMES = {
-  user: 'User',
+  user: 'users',
+  recommendationTransaction: 'recommendation_transactions',
+  trip: 'trips',
 };
 
 export { MODEL_NAMES };
