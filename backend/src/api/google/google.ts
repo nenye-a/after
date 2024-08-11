@@ -1,10 +1,12 @@
 import axios from 'axios'; // TODO: Leverage safe request custom library.
 import * as dotenv from 'dotenv';
 import {
+  GoogleLocationCircle,
   GooglePlaceDetailsField,
   GooglePlaceField,
-  GoogleSearchParams,
+  GoogleTextSearchParams,
   GoogleSearchResult,
+  GoogleNearbySearchParams,
 } from './types';
 
 dotenv.config();
@@ -31,7 +33,7 @@ const placesAxiosInstance = axios.create({
 export const googleSearch = async (
   searchText: string,
   fields: GooglePlaceField[] | '*',
-  otherParams?: GoogleSearchParams,
+  otherParams?: GoogleTextSearchParams,
 ): Promise<GoogleSearchResult | null> => {
   let formattedFields;
   if (fields === '*' || fields.includes('*')) {
@@ -44,6 +46,33 @@ export const googleSearch = async (
     .post(
       `places:searchText`,
       { textQuery: searchText, ...otherParams },
+      { params: { fields: formattedFields } },
+    )
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
+};
+
+export const googleNearbySearch = async (
+  locationRestriction: GoogleLocationCircle,
+  fields: GooglePlaceField[] | '*', // NOTE: Cheapest cost is Basic.
+  otherParams?: GoogleNearbySearchParams,
+) => {
+  let formattedFields;
+  if (fields === '*' || fields.includes('*')) {
+    formattedFields = '*';
+  } else {
+    formattedFields = fields.map((field) => `places.${field}`).join(',');
+  }
+
+  return await placesAxiosInstance
+    .post(
+      `places:searchNearby`,
+      { locationRestriction, ...otherParams },
       { params: { fields: formattedFields } },
     )
     .then((response) => {
@@ -97,17 +126,41 @@ if (require.main === module) {
   //     .catch((err) => console.log(err));
   // }
 
+  // {
+  //   // Test Places
+  //   const placeId = 'ChIJWVD7FadZwokRs_pS6XY7VOU';
+  //   googlePlaceDetails(placeId, [
+  //     'name',
+  //     'displayName',
+  //     'formattedAddress',
+  //     'photos',
+  //   ])
+  //     .then((data) => {
+  //       console.log(data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
+
   {
     // Test Places
     const placeId = 'ChIJWVD7FadZwokRs_pS6XY7VOU';
-    googlePlaceDetails(placeId, [
-      'name',
-      'displayName',
-      'formattedAddress',
-      'photos',
-    ])
+    googleNearbySearch(
+      {
+        circle: {
+          center: {
+            latitude: 29.721507745211635,
+            longitude: -95.77843928320651,
+          },
+          radius: 5000,
+        },
+      },
+      ['name', 'displayName', 'formattedAddress', 'photos', 'location'],
+      {
+        includedTypes: ['restaurant'],
+      },
+    )
       .then((data) => {
-        console.log(data);
+        console.log(data.places);
       })
       .catch((err) => console.log(err));
   }
