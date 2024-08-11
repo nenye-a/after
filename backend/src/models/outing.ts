@@ -1,12 +1,16 @@
 import mongoose, { Schema } from 'mongoose';
 import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
 
+export type OutingStatus = 'active' | 'ended' | 'ended_automatically';
+
 export type Outing = {
   user_id: mongoose.Types.ObjectId;
   start_date: Date;
   end_date: Date;
   name: string;
+  status: OutingStatus;
   path: [
+    // NOTE: I may need to put this in it's own collection.
     {
       latitude: number;
       longitude: number;
@@ -14,11 +18,10 @@ export type Outing = {
       duration_ms?: number;
       address?: string;
       name?: string;
-      place_id?: string; // Google Maps place ID TODO: make after place id.
+      place_id?: string; // Google Maps place ID
       starred?: boolean;
     },
   ];
-  automatically_ended?: boolean;
   favorite?: boolean;
 };
 
@@ -31,6 +34,12 @@ export const outingSchema = new Schema<Outing>({
   start_date: { type: Date, required: true },
   end_date: { type: Date, required: true },
   name: { type: String, required: true },
+  status: {
+    type: String,
+    required: true,
+    default: 'active',
+    enum: ['active', 'ended', 'ended_automatically'],
+  },
   path: [
     {
       latitude: Number,
@@ -43,7 +52,6 @@ export const outingSchema = new Schema<Outing>({
       starred: Boolean,
     },
   ],
-  automatically_ended: { type: Boolean },
   favorite: { type: Boolean },
 });
 
