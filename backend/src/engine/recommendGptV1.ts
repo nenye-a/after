@@ -4,13 +4,9 @@ import {
   ChatModel,
 } from 'openai/resources';
 import openai from '../api/openai';
-import fs from 'fs';
 
-import {
-  SYSTEM_MESSAGES_V1,
-  SYSTEM_MESSAGES_V2,
-} from '../constants/recommendationPrompts';
-import { Intent, PriceLevel, RecommendationsInput, Vibe } from './types';
+import { SYSTEM_MESSAGES_V2 } from '../constants/recommendationPrompts';
+import { Intent, RecommendationsInput, Vibe } from './types';
 
 interface RecommendationsSettings {
   setupSystemMessages?: string[];
@@ -22,12 +18,12 @@ export const recommendGptV1 = async (
   request: RecommendationsInput,
   options?: RecommendationsSettings,
 ) => {
+  let time = new Date();
   let {
     currentLocation,
     intent,
     additionalIntents,
     vibe,
-    time = new Date(),
     excludedDestinationTypes,
     distanceContext,
     costContext,
@@ -103,41 +99,3 @@ export const recommendGptV1 = async (
 
   return recommendations;
 };
-
-if (require.main === module) {
-  (async () => {
-    let start = new Date();
-    console.log('Running the recommendation engine...');
-    let recommendations = await recommendGptV1(
-      {
-        currentLocation: {
-          address: '22758 Westheimer Pkwy #270, Katy, TX 77450',
-          name: 'The Public House',
-        },
-        intent: Intent.party,
-        additionalIntents: [Intent.socialize, Intent.eat],
-        vibe: [Vibe.lit, Vibe.social],
-        distanceContext: {
-          maxTravelTimeMinutes: 25,
-        },
-        costContext: {
-          priceLevels: [PriceLevel.moderate, PriceLevel.expensive],
-        },
-      },
-      {
-        model: 'gpt-4o-mini',
-      },
-    );
-    let end = new Date();
-
-    console.log(
-      `Recommendation engine ran in ${(end.getTime() - start.getTime()) / 1000} seconds`,
-    );
-
-    console.log(recommendations);
-    fs.writeFileSync(
-      'examples/recommendations-party-socialize-eat-mini.json',
-      JSON.stringify(recommendations, null, 2),
-    );
-  })();
-}

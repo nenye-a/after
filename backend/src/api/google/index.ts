@@ -3,5 +3,5 @@
  * @see https://developers.google.com/maps/documentation/places/web-service/op-overview
  */
 
-export * as google from './google';
+export * from './google';
 export * from './types';

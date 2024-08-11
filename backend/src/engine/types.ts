@@ -33,16 +33,18 @@ export enum Vibe {
 export type RecommendationsInput = {
   // Location of the user at time of recommendation.
   currentLocation: {
-    coordinates?: [number, number];
+    coordinates?: {
+      latitude: number;
+      longitude: number;
+    };
     address?: string;
     name?: string;
   };
   // What the user intends to do primarily. They may supplement with
   // other lower priority intents.
-  intent?: Intent;
+  intent: Intent;
   additionalIntents?: Intent[];
   vibe?: Vibe[];
-  time?: Date;
   excludedDestinationTypes?: Destination[];
   distanceContext?: {
     searchRadiusMiles?: number;
