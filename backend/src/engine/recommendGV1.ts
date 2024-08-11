@@ -229,12 +229,5 @@ function compositeRatingSort(
       };
     })
     .sort((a, b) => b.trueRating - a.trueRating)
-    .map((item) => {
-      console.log(
-        item.trueRating,
-        item.place.rating,
-        item.place.userRatingCount,
-      );
-      return item.place;
-    });
+    .map((item) => item.place);
 }
