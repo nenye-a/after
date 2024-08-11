@@ -1,6 +1,7 @@
-import mongoose, { modelNames, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { PriceLevel, RecommendationsInput } from '../engine/types';
 import { MODEL_NAMES } from '../constants/models';
+import { coreDb } from '../config/mongoose.db';
 
 export type RecommendationStatus =
   | 'recommendations_requested' // The user has requested recommendations.
@@ -44,9 +45,9 @@ export type Recommendation = {
 };
 
 export type RecommendationTransaction = {
-  user_id: string;
+  user_id: mongoose.Types.ObjectId;
   request_date: Date;
-  trip_id?: Date;
+  outing_id?: mongoose.Types.ObjectId;
   status: RecommendationStatus;
   status_detail: [
     {
@@ -67,9 +68,13 @@ export type RecommendationTransaction = {
 
 export const recommendationTransactionSchema =
   new Schema<RecommendationTransaction>({
-    user_id: { type: String, required: true, ref: MODEL_NAMES.user },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: MODEL_NAMES.user,
+    },
     request_date: { type: Date, required: true, default: Date.now },
-    trip_id: { type: mongoose.Types.ObjectId, ref: MODEL_NAMES.trip },
+    outing_id: { type: mongoose.Types.ObjectId, ref: MODEL_NAMES.outing },
     status: {
       type: String,
       required: true,
@@ -92,7 +97,7 @@ export const recommendationTransactionSchema =
     },
   });
 
-const recommendationTransactions = mongoose.model<RecommendationTransaction>(
+const recommendationTransactions = coreDb.model<RecommendationTransaction>(
   MODEL_NAMES.recommendationTransaction,
   recommendationTransactionSchema,
 );
