@@ -4,12 +4,9 @@ import {
   ChatModel,
 } from 'openai/resources';
 import openai from '../api/openai';
-import fs from 'fs';
 
-import {
-  SYSTEM_MESSAGES_V1,
-  SYSTEM_MESSAGES_V2,
-} from '../constants/recommendationPrompts';
+import { SYSTEM_MESSAGES_V2 } from '../constants/recommendationPrompts';
+import { Intent, RecommendationsInput, Vibe } from './types';
 
 interface RecommendationsSettings {
   setupSystemMessages?: string[];
@@ -17,78 +14,16 @@ interface RecommendationsSettings {
   model?: ChatModel;
 }
 
-enum Intent {
-  explore = 'Explore',
-  eat = 'Eat',
-  drink = 'Drink',
-  party = 'Party',
-  music = 'Music',
-  socialize = 'Socialize',
-}
-
-enum Destination {
-  restaurant = 'Restaurant',
-  bar = 'Bar',
-  club = 'Club',
-}
-
-enum PriceLevel {
-  cheap = '$',
-  moderate = '$$',
-  expensive = '$$$',
-  veryExpensive = '$$$$',
-}
-
-enum Vibe {
-  lit = 'Lit',
-  adventurous = 'Adventurous',
-  playful = 'Playful',
-  chill = 'Chill',
-  social = 'Social',
-  romantic = 'Romantic',
-  festive = 'Festive',
-}
-
-interface RecommendationsInput {
-  // Location of the user at time of recommendation.
-  currentLocation: {
-    coordinates?: [number, number];
-    address?: string;
-    name?: string;
-  };
-  // What the user intends to do primarily. They may supplement with
-  // other lower priority intents.
-  intent?: Intent;
-  additionalIntents?: Intent[];
-  vibe?: Vibe[];
-  time?: Date;
-  excludedDestinationTypes?: Destination[];
-  distanceContext?: {
-    searchRadiusMiles?: number;
-    maxTravelTimeMinutes?: number;
-  };
-  costContext?: {
-    priceLevels?: PriceLevel[];
-    maxTicketPrice?: number;
-  };
-  userContext?: {
-    id?: string;
-    birthDate?: number;
-    culture?: string;
-    interests?: string[];
-  };
-}
-
-const recommend = async (
+export const recommendGptV1 = async (
   request: RecommendationsInput,
   options?: RecommendationsSettings,
 ) => {
+  let time = new Date();
   let {
     currentLocation,
     intent,
     additionalIntents,
     vibe,
-    time = new Date(),
     excludedDestinationTypes,
     distanceContext,
     costContext,
@@ -164,41 +99,3 @@ const recommend = async (
 
   return recommendations;
 };
-
-if (require.main === module) {
-  (async () => {
-    let start = new Date();
-    console.log('Running the recommendation engine...');
-    let recommendations = await recommend(
-      {
-        currentLocation: {
-          address: '22758 Westheimer Pkwy #270, Katy, TX 77450',
-          name: 'The Public House',
-        },
-        intent: Intent.party,
-        additionalIntents: [Intent.socialize, Intent.eat],
-        vibe: [Vibe.lit, Vibe.social],
-        distanceContext: {
-          maxTravelTimeMinutes: 25,
-        },
-        costContext: {
-          priceLevels: [PriceLevel.moderate, PriceLevel.expensive],
-        },
-      },
-      {
-        model: 'gpt-4o-mini',
-      },
-    );
-    let end = new Date();
-
-    console.log(
-      `Recommendation engine ran in ${(end.getTime() - start.getTime()) / 1000} seconds`,
-    );
-
-    console.log(recommendations);
-    fs.writeFileSync(
-      'examples/recommendations-party-socialize-eat-mini.json',
-      JSON.stringify(recommendations, null, 2),
-    );
-  })();
-}

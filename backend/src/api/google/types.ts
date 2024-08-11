@@ -341,7 +341,7 @@ export type GooglePriceLevel =
   | 'PRICE_LEVEL_EXPENSIVE'
   | 'PRICE_LEVEL_VERY_EXPENSIVE';
 
-export interface GoogleSearchParams {
+export interface GoogleTextSearchParams {
   includedType?: GooglePlaceType;
   strictTypeFiltering?: boolean;
   locationBias?: GoogleLocationCircle | GoogleLocationRectangle;
@@ -352,6 +352,15 @@ export interface GoogleSearchParams {
   pageToken?: string;
   priceLevels?: GooglePriceLevel[];
   rankPreference?: 'RELEVANCE' | 'DISTANCE';
+}
+
+export interface GoogleNearbySearchParams {
+  includedTypes?: GooglePlaceType[];
+  includedPrimaryTypes?: GooglePlaceType[];
+  excludedTypes?: GooglePlaceType[];
+  excludedPrimaryTypes?: GooglePlaceType[];
+  maxResultCount?: number;
+  rankPreference?: 'POPULARITY' | 'DISTANCE';
 }
 
 export interface GoogleSearchResult {
