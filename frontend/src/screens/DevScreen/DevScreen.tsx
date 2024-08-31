@@ -8,7 +8,7 @@
 import { Text, View } from 'react-native';
 
 import { useTheme } from '@/theme';
-import { SafeScreen } from '@/components/template';
+import { MapBottomSheet, SafeScreen } from '@/components/template';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -24,6 +24,9 @@ function DevScreen() {
         ]}
       >
         <Text>Dev Screen</Text>
+        <MapBottomSheet>
+          <Text>Map Bottom Sheet</Text>
+        </MapBottomSheet>
       </View>
     </SafeScreen>
   );
