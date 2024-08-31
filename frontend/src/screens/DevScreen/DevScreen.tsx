@@ -9,6 +9,7 @@ import { Text, View } from 'react-native';
 
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
+import { AfterMap } from '@/components/atoms';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -23,8 +24,9 @@ function DevScreen() {
           layout.justifyCenter,
         ]}
       >
-        <Text>Dev Screen</Text>
-        <MapBottomSheet>
+        {/* <Text>Dev Screen</Text> */}
+        <AfterMap />
+        <MapBottomSheet snapPoints={['10%', '50%', '100%']}>
           <Text>Map Bottom Sheet</Text>
         </MapBottomSheet>
       </View>
