@@ -32,7 +32,11 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>We need to know your location in order to track your outings!</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need to know your location in order to track your outings!</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need to know your location in order to track your outings!</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
