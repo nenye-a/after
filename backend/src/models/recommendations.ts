@@ -79,11 +79,40 @@ export const recommendationTransactionSchema =
       type: String,
       required: true,
       default: 'recommendations_requested',
+      enum: [
+        'recommendations_requested',
+        'recommendations_failed',
+        'recommendations_provided',
+        'recommendation_chosen',
+        'recommendation_rejected',
+        'feedback_provided',
+      ],
     },
     status_detail: [
       {
-        status: { type: String, required: true },
-        feedback: String,
+        status: {
+          type: String,
+          required: true,
+          enum: [
+            'recommendations_requested',
+            'recommendations_failed',
+            'recommendations_provided',
+            'recommendation_chosen',
+            'recommendation_rejected',
+            'feedback_provided',
+          ],
+        },
+        feedback: {
+          type: String,
+          enum: [
+            'bad_recommendations',
+            'good_recommendations',
+            'bad_chosen_recommendation',
+            'good_chosen_recommendation',
+            'good_chosen_recommendation',
+            null,
+          ],
+        },
         date: { type: Date, required: true, default: Date.now },
       },
     ],
