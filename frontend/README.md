@@ -2,7 +2,7 @@
 
 ## Environment
 
-Initial setup for this was done with the [Code Machine Boilerplate](https://github.com/thecodingmachine/react-native-boilerplate?tab=readme-ov-file).
+Initial setup for this was done with the [Code Machine Boilerplate](https://github.com/thecodingmachine/react-native-boilerplate?tab=readme-ov-file). [Full Documentation](https://thecodingmachine.github.io/react-native-boilerplate/docs/project-structure).
 
 ### Technologies/Stack
 
