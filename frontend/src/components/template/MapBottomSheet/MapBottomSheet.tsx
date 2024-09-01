@@ -23,6 +23,7 @@ function MapBottomSheet({ children, ...bottomSheetProps }: Props) {
       snapPoints={['10%', '50%', '100%']}
       style={[gutters.paddingRight_15, gutters.paddingLeft_15]}
       backgroundStyle={[backgrounds.blue800]}
+      handleIndicatorStyle={[{ backgroundColor: 'white' }]}
       {...bottomSheetProps}
     >
       <BottomSheetView>{children}</BottomSheetView>

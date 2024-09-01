@@ -10,6 +10,7 @@ const colorsDark = {
   blue500: '#314A7D', // map minor road color
   blue400: '#0963E5', // button color
   green600: '#2B6675', // Major road color
+  gray400: '#32353E', // Secondary button color
   gray300: '#A4A5A9', // Supporting text color
 } as const;
 
@@ -18,7 +19,7 @@ const colorsDark = {
 const exampleColorsLight = {
   red500: '#C13333',
   gray800: '#303030',
-  gray400: '#4D4D4D',
+  // gray400: '#4D4D4D',
   gray200: '#A1A1A1',
   gray100: '#DFDFDF',
   gray50: '#EFEFEF',
@@ -31,7 +32,7 @@ const exampleColorsLight = {
 const exampleColorsDark = {
   red500: '#C13333',
   gray800: '#E0E0E0',
-  gray400: '#969696',
+  // gray400: '#969696',
   gray200: '#BABABA',
   gray100: '#000000',
   gray50: '#EFEFEF',

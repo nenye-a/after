@@ -10,6 +10,7 @@ import { View } from 'react-native';
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
 import { AfterMap, AfterText, Avatar } from '@/components/atoms';
+import { PullButton } from '@/components/molecules';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -25,12 +26,14 @@ function DevScreen() {
         ]}
       >
         <AfterMap />
-        <MapBottomSheet snapPoints={['10%', '50%', '100%']}>
+        <MapBottomSheet snapPoints={['10%', '50%', '100%']} index={1}>
           <Avatar />
           <AfterText fontType="header">Header</AfterText>
           <AfterText fontType="enhanced">Enhanced</AfterText>
           <AfterText fontType="regular">Regular</AfterText>
           <AfterText fontType="minor">Minor</AfterText>
+          <PullButton text="Primary" mode="primary" size="large" />
+          <PullButton text="Secondary" mode="secondary" size="large" />
         </MapBottomSheet>
       </View>
     </SafeScreen>
