@@ -10,7 +10,7 @@ import { View } from 'react-native';
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
 import { AfterMap, AfterText, Avatar } from '@/components/atoms';
-import { PullButton } from '@/components/molecules';
+import { PillButton } from '@/components/molecules';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -32,8 +32,15 @@ function DevScreen() {
           <AfterText fontType="enhanced">Enhanced</AfterText>
           <AfterText fontType="regular">Regular</AfterText>
           <AfterText fontType="minor">Minor</AfterText>
-          <PullButton text="Primary" mode="primary" size="large" />
-          <PullButton text="Secondary" mode="secondary" size="large" />
+          <PillButton text="Primary" mode="primary" size="large" />
+          <PillButton text="Secondary" mode="secondary" size="large" />
+          <PillButton text="Tertiary" mode="tertiary" size="large" />
+          <PillButton
+            text="Secondary"
+            mode="secondary"
+            size="small"
+            style={{ width: 100 }}
+          />
         </MapBottomSheet>
       </View>
     </SafeScreen>

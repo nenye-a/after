@@ -9,11 +9,14 @@ import {
   ViewStyle,
 } from 'react-native';
 
+type ButtonModes = 'primary' | 'secondary' | 'tertiary';
+type ButtonSizes = 'large' | 'small';
+
 type ButtonProps = {
   showIcon?: boolean;
   icon?: 'plus' | '@' | 'refresh' | ReactNode;
-  mode?: 'primary' | 'secondary';
-  size?: 'large' | 'small';
+  mode?: ButtonModes;
+  size?: ButtonSizes;
   text?: string;
   textStyle?: StyleProp<ViewStyle>;
 };
@@ -32,7 +35,7 @@ export default function PillButton(props: Props) {
     : components.buttonText;
 
   return (
-    <Pressable style={buttonStyle} {...props}>
+    <Pressable {...props} style={buttonStyle}>
       <AfterText fontType="regular" style={newTextStyle}>
         {text}
       </AfterText>
@@ -41,8 +44,8 @@ export default function PillButton(props: Props) {
 }
 
 const getButtonStyle = (
-  mode: 'primary' | 'secondary' = 'primary',
-  size: 'large' | 'small' = 'large',
+  mode: ButtonModes = 'primary',
+  size: ButtonSizes = 'large',
   style?:
     | StyleProp<ViewStyle>
     | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>),
@@ -54,9 +57,16 @@ const getButtonStyle = (
       ? size === 'large'
         ? components.primaryButton
         : components.smallPrimaryButton
-      : size === 'large'
-        ? components.secondaryButton
-        : components.smallSecondaryButton;
+      : mode === 'secondary'
+        ? size === 'large'
+          ? components.secondaryButton
+          : components.smallSecondaryButton
+        : size === 'large'
+          ? { ...components.primaryButton, backgroundColor: 'transparent' }
+          : {
+              ...components.smallSecondaryButton,
+              backgroundColor: 'transparent',
+            };
 
   return (state: PressableStateCallbackType): StyleProp<ViewStyle> => {
     const { pressed } = state;
@@ -68,8 +78,8 @@ const getButtonStyle = (
     ];
 
     if (style) {
-      if (typeof style === 'function') return [componentStyle, style(state)];
-      else return [componentStyle, style];
+      if (typeof style === 'function') return [compositeStyle, style(state)];
+      else return [compositeStyle, style];
     }
     return compositeStyle;
   };
