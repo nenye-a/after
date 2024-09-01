@@ -5,11 +5,11 @@
  * features, etc.
  */
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
-import { AfterMap, AfterText, ProfileImage } from '@/components/atoms';
+import { AfterMap, AfterText, Avatar } from '@/components/atoms';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -24,10 +24,9 @@ function DevScreen() {
           layout.justifyCenter,
         ]}
       >
-        {/* <Text>Dev Screen</Text> */}
         <AfterMap />
         <MapBottomSheet snapPoints={['10%', '50%', '100%']}>
-          <ProfileImage />
+          <Avatar />
           <AfterText fontType="header">Header</AfterText>
           <AfterText fontType="enhanced">Enhanced</AfterText>
           <AfterText fontType="regular">Regular</AfterText>

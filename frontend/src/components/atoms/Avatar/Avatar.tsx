@@ -8,7 +8,7 @@ type Props = ImageProps & {
   size?: number;
 };
 
-function ProfileImage(props: Props) {
+function After(props: Props) {
   const { size = 48, uri } = props;
   const { layout } = useTheme();
   return (
@@ -25,4 +25,4 @@ function ProfileImage(props: Props) {
   );
 }
 
-export default ProfileImage;
+export default After;
