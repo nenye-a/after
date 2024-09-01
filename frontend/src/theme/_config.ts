@@ -10,6 +10,7 @@ const colorsDark = {
   blue500: '#314A7D', // map minor road color
   blue400: '#0963E5', // button color
   green600: '#2B6675', // Major road color
+  gray300: '#A4A5A9', // Supporting text color
 } as const;
 
 // Example colors from boiler plate, will be replaced with actual app colors

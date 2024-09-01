@@ -9,7 +9,7 @@ import { Text, View } from 'react-native';
 
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
-import { AfterMap } from '@/components/atoms';
+import { AfterMap, AfterText } from '@/components/atoms';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -28,6 +28,10 @@ function DevScreen() {
         <AfterMap />
         <MapBottomSheet snapPoints={['10%', '50%', '100%']}>
           <Text>Map Bottom Sheet</Text>
+          <AfterText fontType="header">Header</AfterText>
+          <AfterText fontType="enhanced">Enhanced</AfterText>
+          <AfterText fontType="regular">Regular</AfterText>
+          <AfterText fontType="minor">Minor</AfterText>
         </MapBottomSheet>
       </View>
     </SafeScreen>
