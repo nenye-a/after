@@ -7,31 +7,32 @@ type Props = TextProps & {
   fontType: FontType;
 };
 
-function getFont(fontType: FontType) {
+function getFont(fontType: FontType): StyleProp<TextStyle> {
   const {
-    fonts: { size_18, size_20, size_24, size_32 },
+    fonts: { size_12, size_14, size_16, size_24 },
     colors: { gray300 },
   } = useTheme();
   switch (fontType) {
     case 'minor':
-      return { ...size_18, color: gray300 };
+      return { ...size_12, color: gray300 };
     case 'regular':
-      return size_20;
+      return size_14;
     case 'enhanced':
-      return size_24;
+      return size_16;
     case 'header':
-      return size_32;
+      return { ...size_24, fontWeight: 'bold' };
   }
 }
 
 function AfterText({ style, fontType, ...textProps }: Props) {
-  let newStyle: StyleProp<TextStyle> = [
+  let textStyle: StyleProp<TextStyle> = [
     { color: 'white' }, // TODO: Change default based on theme.
     { fontFamily: 'Inter' },
     getFont(fontType),
+    style,
   ];
 
-  return <Text style={[newStyle, style]} {...textProps} />;
+  return <Text style={textStyle} {...textProps} />;
 }
 
 export default AfterText;

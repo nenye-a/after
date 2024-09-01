@@ -27,7 +27,6 @@ function DevScreen() {
         {/* <Text>Dev Screen</Text> */}
         <AfterMap />
         <MapBottomSheet snapPoints={['10%', '50%', '100%']}>
-          <Text>Map Bottom Sheet</Text>
           <AfterText fontType="header">Header</AfterText>
           <AfterText fontType="enhanced">Enhanced</AfterText>
           <AfterText fontType="regular">Regular</AfterText>
