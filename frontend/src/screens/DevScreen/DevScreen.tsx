@@ -33,13 +33,24 @@ function DevScreen() {
           <AfterText fontType="regular">Regular</AfterText>
           <AfterText fontType="minor">Minor</AfterText>
           <PillButton text="Primary" mode="primary" size="large" />
-          <PillButton text="Secondary" mode="secondary" size="large" />
-          <PillButton text="Tertiary" mode="tertiary" size="large" />
+          <PillButton
+            text="Secondary"
+            mode="secondary"
+            size="large"
+            icon={'plus'}
+          />
+          <PillButton
+            text="Tertiary"
+            mode="tertiary"
+            size="large"
+            icon={'refresh'}
+          />
           <PillButton
             text="Secondary"
             mode="secondary"
             size="small"
-            style={{ width: 100 }}
+            icon={'burst'}
+            style={{ width: 150 }}
           />
         </MapBottomSheet>
       </View>

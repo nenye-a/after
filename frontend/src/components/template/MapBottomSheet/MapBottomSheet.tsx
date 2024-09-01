@@ -6,8 +6,6 @@ import BottomSheet, {
 import { useRef, type PropsWithChildren } from 'react';
 import { useTheme } from '@/theme';
 
-// import { useTheme } from '@/theme';
-
 type Props = BottomSheetProps & PropsWithChildren;
 
 function MapBottomSheet({ children, ...bottomSheetProps }: Props) {

@@ -6,6 +6,7 @@ interface AllStyle
 
 export default ({ layout, backgrounds, fonts }: ComponentTheme) => {
   const primaryButton: ViewStyle = {
+    ...layout.row,
     ...layout.justifyCenter,
     ...layout.itemsCenter,
     ...backgrounds.blue400,
