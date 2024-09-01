@@ -4,6 +4,7 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import { useRef, type PropsWithChildren } from 'react';
+import { useTheme } from '@/theme';
 
 // import { useTheme } from '@/theme';
 
@@ -11,7 +12,7 @@ type Props = BottomSheetProps & PropsWithChildren;
 
 function MapBottomSheet({ children, ...bottomSheetProps }: Props) {
   // TODO: Adjust theme of the Map bottom sheet.
-  // const { layout, variant, navigationTheme } = useTheme();
+  const { gutters, backgrounds } = useTheme();
   const bottomSheetRef = useRef<BottomSheet>(null);
   // TODO: Handle the behaviour of having a header or not.
 
@@ -20,6 +21,8 @@ function MapBottomSheet({ children, ...bottomSheetProps }: Props) {
       ref={bottomSheetRef}
       index={0}
       snapPoints={['10%', '50%', '100%']}
+      style={[gutters.paddingRight_15, gutters.paddingLeft_15]}
+      backgroundStyle={[backgrounds.blue800]}
       {...bottomSheetProps}
     >
       <BottomSheetView>{children}</BottomSheetView>
