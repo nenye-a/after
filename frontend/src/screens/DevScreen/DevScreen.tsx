@@ -5,11 +5,12 @@
  * features, etc.
  */
 
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
-import { AfterMap } from '@/components/atoms';
+import { AfterMap, AfterText, Avatar } from '@/components/atoms';
+import { PillButton, TabSelect } from '@/components/molecules';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -24,10 +25,42 @@ function DevScreen() {
           layout.justifyCenter,
         ]}
       >
-        {/* <Text>Dev Screen</Text> */}
         <AfterMap />
-        <MapBottomSheet snapPoints={['10%', '50%', '100%']}>
-          <Text>Map Bottom Sheet</Text>
+        <MapBottomSheet snapPoints={['10%', '50%', '100%']} index={1}>
+          <Avatar />
+          <AfterText fontType="header">Header</AfterText>
+          <AfterText fontType="enhanced">Enhanced</AfterText>
+          <AfterText fontType="regular">Regular</AfterText>
+          <AfterText fontType="minor">Minor</AfterText>
+          <TabSelect
+            tabOptions={[
+              'Recommendations',
+              'Popular',
+              'New',
+              'Random',
+              'Etc.',
+            ].map((text) => ({ text }))}
+          />
+          <PillButton text="Primary" mode="primary" size="large" />
+          <PillButton
+            text="Secondary"
+            mode="secondary"
+            size="large"
+            icon={'plus'}
+          />
+          <PillButton
+            text="Tertiary"
+            mode="tertiary"
+            size="large"
+            icon={'refresh'}
+          />
+          <PillButton
+            text="Secondary"
+            mode="secondary"
+            size="small"
+            icon={'burst'}
+            style={{ width: 150 }}
+          />
         </MapBottomSheet>
       </View>
     </SafeScreen>

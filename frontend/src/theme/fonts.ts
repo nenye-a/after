@@ -30,6 +30,12 @@ export const staticFontStyles = {
   bold: {
     fontWeight: 'bold',
   },
+  semibold: {
+    fontWeight: 'semibold',
+  },
+  medium: {
+    fontWeight: 'medium',
+  },
   uppercase: {
     textTransform: 'uppercase',
   },

@@ -1,4 +1,5 @@
 // import { useMemo } from 'react';
+import { useTheme } from '@/theme';
 import { PropsWithChildren } from 'react';
 import MapView, { MapViewProps, Region } from 'react-native-maps';
 
@@ -20,12 +21,11 @@ function AfterMap({
   initialRegion = defaultRegion,
   ...props
 }: Props) {
+  const { layout } = useTheme();
+
   return (
     <MapView
-      style={{
-        height: 1000,
-        width: 400,
-      }}
+      style={[layout.fullHeight, layout.fullWidth]}
       initialRegion={initialRegion}
       {...props}
     >
