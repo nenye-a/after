@@ -40,7 +40,7 @@ export default function PillButton(props: Props) {
   return (
     <Pressable {...props} style={buttonStyle}>
       {!!iconComponent && (
-        <View style={[gutters.paddingHorizontal_8]}>{iconComponent}</View>
+        <View style={[gutters.paddingRight_8]}>{iconComponent}</View>
       )}
       <AfterText fontType="regular" style={newTextStyle}>
         {text}

@@ -1,4 +1,5 @@
 import { AfterMap, AfterText, Avatar } from '@/components/atoms';
+import { MapSheetUserHeader } from '@/components/molecules';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
 import { View } from 'react-native';
@@ -17,12 +18,11 @@ function HomeScreen() {
             layout.itemsCenter,
             layout.justifyCenter,
           ]}
-        >
-          <AfterText fontType="header">Header</AfterText>
-        </View>
+        ></View>
       </SafeScreen>
       <MapBottomSheet snapPoints={['5%', '25%', '50%', '90%']} index={2}>
-        <AfterText fontType="header">Header</AfterText>
+        {/* <AfterText fontType="header">Header</AfterText> */}
+        <MapSheetUserHeader />
       </MapBottomSheet>
     </>
   );

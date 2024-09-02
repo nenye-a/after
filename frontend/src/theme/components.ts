@@ -16,6 +16,7 @@ export default ({
     ...layout.justifyCenter,
     ...layout.itemsCenter,
     ...backgrounds.blue400,
+    ...gutters.paddingHorizontal_8,
     borderRadius: 24,
     height: 50,
     width: 'auto',
