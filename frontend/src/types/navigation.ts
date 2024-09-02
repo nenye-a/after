@@ -1,9 +1,11 @@
 import type { StackScreenProps } from '@react-navigation/stack';
 
 export type RootStackParamList = {
+  DevScreen: undefined;
+  HomeScreen: undefined;
+  //  Boilerplate screens.
   Startup: undefined;
   Example: undefined;
-  DevScreen: undefined;
 };
 
 export type RootScreenProps<
