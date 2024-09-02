@@ -4,7 +4,13 @@ import type { ComponentTheme } from '@/types/theme/theme';
 interface AllStyle
   extends Record<string, AllStyle | ImageStyle | TextStyle | ViewStyle> {}
 
-export default ({ layout, backgrounds, fonts }: ComponentTheme) => {
+export default ({
+  layout,
+  backgrounds,
+  fonts,
+  gutters,
+  borders,
+}: ComponentTheme) => {
   const primaryButton: ViewStyle = {
     ...layout.row,
     ...layout.justifyCenter,
@@ -38,12 +44,36 @@ export default ({ layout, backgrounds, fonts }: ComponentTheme) => {
     ...fonts.medium,
   };
 
+  const activeTab: ViewStyle = {
+    ...layout.row,
+    ...layout.itemsCenter,
+    ...layout.justifyCenter,
+    ...backgrounds.gray400,
+    ...gutters.paddingHorizontal_11,
+    borderRadius: 12,
+    height: 36,
+  };
+
+  const inactiveTab: ViewStyle = {
+    ...activeTab,
+    opacity: 1,
+    ...backgrounds.transparent,
+  };
+
+  const specialTabBorder: ViewStyle = {
+    ...borders.blue400,
+    ...borders.w_1,
+  };
+
   return {
     primaryButton,
     secondaryButton,
     smallPrimaryButton,
     smallSecondaryButton,
     buttonText,
+    activeTab,
+    inactiveTab,
+    specialTabBorder,
     // Example components below.
     buttonCircle: {
       ...layout.justifyCenter,

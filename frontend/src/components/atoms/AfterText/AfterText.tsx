@@ -32,7 +32,7 @@ function AfterText({ style, fontType, ...textProps }: Props) {
     style,
   ];
 
-  return <Text style={textStyle} {...textProps} />;
+  return <Text {...textProps} style={textStyle} />;
 }
 
 export default AfterText;

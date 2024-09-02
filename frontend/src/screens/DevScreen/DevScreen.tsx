@@ -10,7 +10,7 @@ import { View } from 'react-native';
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
 import { AfterMap, AfterText, Avatar } from '@/components/atoms';
-import { PillButton } from '@/components/molecules';
+import { PillButton, TabSelect } from '@/components/molecules';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -32,6 +32,15 @@ function DevScreen() {
           <AfterText fontType="enhanced">Enhanced</AfterText>
           <AfterText fontType="regular">Regular</AfterText>
           <AfterText fontType="minor">Minor</AfterText>
+          <TabSelect
+            tabOptions={[
+              'Recommendations',
+              'Popular',
+              'New',
+              'Random',
+              'Etc.',
+            ].map((text) => ({ text }))}
+          />
           <PillButton text="Primary" mode="primary" size="large" />
           <PillButton
             text="Secondary"
