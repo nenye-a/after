@@ -1,5 +1,9 @@
 import { AfterMap, AfterText, Avatar, Divider } from '@/components/atoms';
-import { MapSheetUserHeader, TabSelect } from '@/components/molecules';
+import {
+  MapSheetUserHeader,
+  RecommendationsWithHeader,
+  TabSelect,
+} from '@/components/molecules';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
 import { View } from 'react-native';
@@ -14,6 +18,33 @@ const pageHeadings = [
   },
   {
     text: 'Favorites',
+  },
+];
+
+const recommendations = [
+  {
+    name: 'Bareburger',
+    type: 'Restaurant',
+    rating: 4.5,
+    numReviews: 1856,
+    costLevel: 3,
+    tags: ['Chill', 'Trending'],
+  },
+  {
+    name: "Max & Mina's Ice Cream",
+    type: 'Restaurant',
+    rating: 4.8,
+    numReviews: 387,
+    costLevel: 3,
+    tags: ['Trending', 'Gen Z Approved'],
+  },
+  {
+    name: 'Doha Bar & Lounge',
+    type: 'Bar & Lounge',
+    rating: 4.4,
+    numReviews: 856,
+    costLevel: 2,
+    tags: ['Best In Class', 'Hip Hop'],
   },
 ];
 
@@ -41,6 +72,7 @@ function HomeScreen() {
           style={[gutters.marginVertical_15]}
         />
         <Divider />
+        <RecommendationsWithHeader recommendations={recommendations} />
       </MapBottomSheet>
     </>
   );

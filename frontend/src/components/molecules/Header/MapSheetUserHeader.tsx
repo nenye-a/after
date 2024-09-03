@@ -21,14 +21,12 @@ function MapSheetUserHeader(props: MapSheetUserHeaderProps) {
           <AfterText fontType="minor">{outingText}</AfterText>
         </View>
       </View>
-      <View style={[layout.row]}>
-        <PillButton
-          text="Add People"
-          icon={'plus'}
-          mode="secondary"
-          size="small"
-        />
-      </View>
+      <PillButton
+        text="Add People"
+        icon={'plus'}
+        mode="secondary"
+        size="small"
+      />
     </View>
   );
 }

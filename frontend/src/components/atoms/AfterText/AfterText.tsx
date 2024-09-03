@@ -3,7 +3,7 @@ import { StyleProp, Text, TextProps, TextStyle } from 'react-native';
 
 type FontType = 'minor' | 'regular' | 'enhanced' | 'header';
 
-type Props = TextProps & {
+export type AfterTextProps = TextProps & {
   fontType?: FontType;
 };
 
@@ -24,7 +24,7 @@ function getFont(fontType: FontType = 'regular'): StyleProp<TextStyle> {
   }
 }
 
-function AfterText({ style, fontType, ...textProps }: Props) {
+function AfterText({ style, fontType, ...textProps }: AfterTextProps) {
   let textStyle: StyleProp<TextStyle> = [
     { color: 'white' }, // TODO: Change default based on theme.
     { fontFamily: 'Inter' }, // TODO: Get the raw font files in order to better support semibold etc.
