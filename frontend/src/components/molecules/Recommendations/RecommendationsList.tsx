@@ -9,6 +9,7 @@ import {
   StyleProp,
   ViewProps,
   ViewStyle,
+  PressableStateCallbackType,
 } from 'react-native';
 import PillButton from '../PillButton/PillButton';
 import { useTheme } from '@/theme';
@@ -131,9 +132,17 @@ const RecommendationsList = (props: RecommendationsListProps) => {
       ItemSeparatorComponent={() => <Divider />}
       data={data}
       renderItem={({ item, index }) => (
-        <Pressable>
+        <Pressable
+          style={({ pressed }: PressableStateCallbackType) => {
+            if (pressed) {
+              return {
+                backgroundColor: 'rgba(0, 0, 0, 0.05)',
+              };
+            }
+          }}
+        >
           {/* TODO: Implement function to show details. */}
-          <RecommendationListItem {...item} />
+          <RecommendationListItem key={index} {...item} />
         </Pressable>
       )}
     />

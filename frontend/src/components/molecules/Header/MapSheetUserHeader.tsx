@@ -1,6 +1,6 @@
 import { AfterText, Avatar } from '@/components/atoms';
 import { useTheme } from '@/theme';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import PillButton from '../PillButton/PillButton';
 
 type MapSheetUserHeaderProps = {};
@@ -11,7 +11,7 @@ function MapSheetUserHeader(props: MapSheetUserHeaderProps) {
   const outingText = 'No active outing';
 
   return (
-    <View style={[layout.row, layout.itemsCenter, layout.justifyBetween]}>
+    <Pressable style={[layout.row, layout.itemsCenter, layout.justifyBetween]}>
       <View style={[layout.flex_1, layout.row, layout.itemsCenter]}>
         <Avatar />
         <View style={[layout.flex_1, gutters.marginHorizontal_11]}>
@@ -27,7 +27,7 @@ function MapSheetUserHeader(props: MapSheetUserHeaderProps) {
         mode="secondary"
         size="small"
       />
-    </View>
+    </Pressable>
   );
 }
 
