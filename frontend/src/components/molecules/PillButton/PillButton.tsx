@@ -17,7 +17,7 @@ type ButtonIcon = 'plus' | 'refresh' | 'burst';
 
 type ButtonProps = {
   icon?: ButtonIcon;
-  customIcon?: ReactNode;
+  customIcon?: JSX.Element;
   mode?: ButtonMode;
   size?: ButtonSize;
   text?: string;
@@ -27,7 +27,7 @@ type ButtonProps = {
 type Props = PressableProps & ButtonProps;
 
 export default function PillButton(props: Props) {
-  const { components, gutters } = useTheme();
+  const { components, gutters, layout } = useTheme();
   const { text, style, mode, size, textStyle, icon, customIcon } = props;
 
   const buttonStyle = getButtonStyle(mode, size, style); // default style
@@ -40,7 +40,9 @@ export default function PillButton(props: Props) {
   return (
     <Pressable {...props} style={buttonStyle}>
       {!!iconComponent && (
-        <View style={[gutters.paddingHorizontal_8]}>{iconComponent}</View>
+        <View style={[gutters.marginRight_4, layout.itemsCenter, layout.row]}>
+          {iconComponent}
+        </View>
       )}
       <AfterText fontType="regular" style={newTextStyle}>
         {text}

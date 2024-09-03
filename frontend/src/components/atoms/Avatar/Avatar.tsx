@@ -14,12 +14,12 @@ function After(props: Props) {
   return (
     <View>
       <Image
+        {...props}
         height={size}
         width={size}
         style={[{ height: size, width: size }, { borderRadius: size / 2 }]}
         source={uri ?? DefaultProfileAvatar}
         resizeMode="contain"
-        {...props}
       />
     </View>
   );

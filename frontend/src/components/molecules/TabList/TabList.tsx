@@ -11,7 +11,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-type TabProps = PressableProps & {
+type BaseTabProps = {
   icon?: ReactNode;
   active?: boolean;
   text: string;
@@ -19,12 +19,10 @@ type TabProps = PressableProps & {
   border?: boolean;
 };
 
+type TabProps = PressableProps & BaseTabProps;
 type TabSelectProps = {
-  tabOptions: {
-    icon?: ReactNode;
-    text: string;
-    border?: boolean;
-  }[];
+  tabOptions: BaseTabProps[];
+  style?: StyleProp<ViewStyle>;
 };
 
 export function Tab(props: TabProps) {
@@ -55,7 +53,7 @@ export default function TabSelect(props: TabSelectProps) {
   const {} = useTheme();
   const { tabOptions } = props;
 
-  const [options, setOptions] = useState<TabProps[]>([
+  const [options, setOptions] = useState<BaseTabProps[]>([
     { ...tabOptions[0], active: true },
     ...tabOptions.slice(1).map((option) => ({ ...option, active: false })),
   ]);
@@ -74,6 +72,7 @@ export default function TabSelect(props: TabSelectProps) {
       renderItem={({ item, index }) => (
         <Tab {...item} key={index} onPress={() => onPress(index)} />
       )}
+      style={props.style}
     />
   );
 }
