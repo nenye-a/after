@@ -1,13 +1,13 @@
 import * as React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { G, Path, Defs, ClipPath } from 'react-native-svg';
 
 const Burger = (props) => {
-  const { fill = '#fff', size = 24, ...otherProps } = props;
+  const { fill = '#fff', ...otherProps } = props;
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
+      width={14}
+      height={12}
       fill="none"
       {...otherProps}
     >

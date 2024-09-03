@@ -72,7 +72,10 @@ function HomeScreen() {
           style={[gutters.marginVertical_15]}
         />
         <Divider />
-        <RecommendationsWithHeader recommendations={recommendations} />
+        <RecommendationsWithHeader
+          style={[gutters.paddingVertical_15]}
+          recommendations={recommendations}
+        />
       </MapBottomSheet>
     </>
   );

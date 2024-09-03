@@ -66,6 +66,16 @@ export default ({
     ...borders.w_1,
   };
 
+  const basePillStyle = {
+    ...layout.row,
+    ...layout.justifyCenter,
+    ...layout.itemsCenter,
+    ...backgrounds.blue400,
+    ...gutters.paddingHorizontal_8,
+    borderRadius: 99,
+    height: 22,
+  };
+
   return {
     primaryButton,
     secondaryButton,
@@ -75,6 +85,7 @@ export default ({
     activeTab,
     inactiveTab,
     specialTabBorder,
+    basePillStyle,
     // Example components below.
     buttonCircle: {
       ...layout.justifyCenter,

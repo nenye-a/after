@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import { SupportTextWithIcon } from '@/components/atoms';
+import { Pill, SupportTextWithIcon } from '@/components/atoms';
 import { useTheme } from '@/theme';
-import { View } from 'react-native';
+import { FlatList, View } from 'react-native';
 
 import Burger from '@/theme/assets/icons/Burger';
 import Star from '@/theme/assets/icons/Star';
@@ -22,19 +22,39 @@ const RecommendationInfo = (props: RecommendationInfoProps) => {
 
   return (
     <View>
-      <View style={[layout.flex_1, layout.row, layout.itemsCenter]}>
+      <View
+        style={[
+          layout.flex_1,
+          layout.row,
+          layout.itemsCenter,
+          gutters.marginVertical_4,
+        ]}
+      >
         <SupportTextWithIcon
           style={[gutters.marginRight_11]}
-          icon={<Burger />}
+          icon={<Burger fill={colors.gray300} />}
           text={type}
         />
         <SupportTextWithIcon
           style={[gutters.marginRight_11]}
-          icon={<Star />}
+          icon={<Star fill={colors.gray300} />}
           text={`${_.round(rating, 1)} (${numberWithCommas(numReviews)})`}
         />
-        <DollarSigns level={costLevel} color={colors.gray400} />
+        <DollarSigns level={costLevel} color={colors.gray300} />
       </View>
+      <FlatList
+        style={[gutters.marginTop_4]}
+        ItemSeparatorComponent={() => <View style={{ width: 4 }} />}
+        horizontal
+        data={tags}
+        renderItem={({ item, index }) => (
+          <Pill
+            key={index}
+            //   color={colors.gray300}
+            text={item}
+          />
+        )}
+      />
     </View>
   );
 };

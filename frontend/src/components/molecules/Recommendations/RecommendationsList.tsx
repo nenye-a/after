@@ -3,10 +3,12 @@ import {
   View,
   Text,
   FlatList,
-  ViewProps,
   Image,
   FlatListProps,
   Pressable,
+  StyleProp,
+  ViewProps,
+  ViewStyle,
 } from 'react-native';
 import PillButton from '../PillButton/PillButton';
 import { useTheme } from '@/theme';
@@ -30,8 +32,9 @@ type RecommendationsListProps = Omit<
   FlatListProps<RecommendationListItemProps>,
   'renderItem'
 >;
-type RecommendationsModuleProps = {
+type RecommendationsModuleProps = ViewProps & {
   recommendations: RecommendationListItemProps[];
+  headerStyle?: StyleProp<ViewStyle>;
 };
 
 const RecommendationListItem = (props: RecommendationListItemProps) => {
@@ -111,7 +114,12 @@ const RecommendationsHeader = (props: RecommendationsHeaderProps) => {
         </AfterText>
         {/* TODO: Add Info Modal to explain recommendations (if necesssary.) */}
       </View>
-      <PillButton text="Regenerate" mode="primary" size="small" />
+      <PillButton
+        text="Regenerate"
+        mode="primary"
+        size="small"
+        icon="refresh"
+      />
     </View>
   );
 };
@@ -134,13 +142,18 @@ const RecommendationsList = (props: RecommendationsListProps) => {
 
 const RecommendationsWithHeader = ({
   recommendations,
+  headerStyle,
+  ...viewProps
 }: RecommendationsModuleProps) => {
   let numRecommendations = recommendations?.length ?? 0;
   // TODO: Implement a 0 recommendations view.
 
   return (
-    <View>
-      <RecommendationsHeader numRecommendations={numRecommendations} />
+    <View {...viewProps}>
+      <RecommendationsHeader
+        numRecommendations={numRecommendations}
+        style={headerStyle}
+      />
       {numRecommendations ? (
         <RecommendationsList data={recommendations} />
       ) : null}

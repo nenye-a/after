@@ -2,12 +2,12 @@ import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 const DollarSign = (props) => {
-  const { fill = '#fff', size = 24, ...otherProps } = props;
+  const { fill = '#fff', ...otherProps } = props;
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
+      width={16}
+      height={16}
       fill="none"
       {...otherProps}
     >

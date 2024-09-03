@@ -40,7 +40,7 @@ export default function PillButton(props: Props) {
   return (
     <Pressable {...props} style={buttonStyle}>
       {!!iconComponent && (
-        <View style={[gutters.marginRight_8, layout.itemsCenter, layout.row]}>
+        <View style={[gutters.marginRight_4, layout.itemsCenter, layout.row]}>
           {iconComponent}
         </View>
       )}
