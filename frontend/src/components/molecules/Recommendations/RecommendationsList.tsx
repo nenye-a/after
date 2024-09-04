@@ -16,27 +16,12 @@ import { useTheme } from '@/theme';
 
 import ExampleRestaurantImage from '@/theme/assets/images/example_restaurant_image.png';
 import RecommendationInfo from './RecommendationInfo';
-
-type RecommendationListItemProps = {
-  image?: string | JSX.Element;
-  name: string;
-  type: string;
-  rating: number;
-  numReviews: number;
-  costLevel: number;
-  tags: string[];
-};
-type RecommendationsHeaderProps = ViewProps & {
-  numRecommendations?: number;
-};
-type RecommendationsListProps = Omit<
-  FlatListProps<RecommendationListItemProps>,
-  'renderItem'
->;
-type RecommendationsModuleProps = ViewProps & {
-  recommendations: RecommendationListItemProps[];
-  headerStyle?: StyleProp<ViewStyle>;
-};
+import {
+  RecommendationListItemProps,
+  RecommendationsHeaderProps,
+  RecommendationsListProps,
+  RecommendationsWithHeaderProps,
+} from '@/types/components/recommendations';
 
 const RecommendationListItem = (props: RecommendationListItemProps) => {
   const { layout, fonts, gutters, colors } = useTheme();
@@ -64,17 +49,9 @@ const RecommendationListItem = (props: RecommendationListItemProps) => {
           source={image}
           style={{ width: 60, height: 60, borderRadius: 8 }}
         />
-        <View
-          style={[
-            layout.flex_1,
-            gutters.marginHorizontal_11,
-            gutters.paddingTop_4,
-          ]}
-        >
-          <AfterText fontType="regular" style={[fonts.bold]}>
-            {name}
-          </AfterText>
+        <View style={[gutters.marginHorizontal_11, gutters.paddingTop_4]}>
           <RecommendationInfo
+            name={name}
             type={type}
             rating={rating}
             numReviews={numReviews}
@@ -153,7 +130,7 @@ const RecommendationsWithHeader = ({
   recommendations,
   headerStyle,
   ...viewProps
-}: RecommendationsModuleProps) => {
+}: RecommendationsWithHeaderProps) => {
   let numRecommendations = recommendations?.length ?? 0;
   // TODO: Implement a 0 recommendations view.
 

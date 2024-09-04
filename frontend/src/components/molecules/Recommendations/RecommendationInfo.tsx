@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Pill, SupportTextWithIcon } from '@/components/atoms';
+import { AfterText, Pill, SupportTextWithIcon } from '@/components/atoms';
 import { useTheme } from '@/theme';
 import { FlatList, View } from 'react-native';
 
@@ -7,27 +7,30 @@ import Burger from '@/theme/assets/icons/Burger';
 import Star from '@/theme/assets/icons/Star';
 import { numberWithCommas } from '@/helpers/numbers';
 import DollarSigns from '@/components/atoms/DollarSigns/DollarSigns';
+import { RecommendationInfoProps } from '@/types/components/recommendations';
 
-type RecommendationInfoProps = {
-  type: string;
-  rating: number;
-  numReviews: number;
-  costLevel: number;
-  tags: string[];
+type Props = RecommendationInfoProps & {
+  nameStyle?: 'regular' | 'header';
 };
 
-const RecommendationInfo = (props: RecommendationInfoProps) => {
+const RecommendationInfo = (props: Props) => {
   const { layout, fonts, gutters, colors } = useTheme();
-  const { type, rating, numReviews, costLevel, tags } = props;
+  const { name, type, rating, numReviews, costLevel, tags } = props;
 
   return (
-    <View>
+    <View
+    // style={[layout.flex_1]}
+    >
+      <AfterText fontType={props.nameStyle ?? 'regular'} style={[fonts.bold]}>
+        {name}
+      </AfterText>
       <View
         style={[
-          layout.flex_1,
           layout.row,
           layout.itemsCenter,
-          gutters.marginVertical_4,
+          props.nameStyle === 'header'
+            ? [gutters.marginTop_8, gutters.marginBottom_4]
+            : gutters.marginVertical_4,
         ]}
       >
         <SupportTextWithIcon
@@ -50,7 +53,7 @@ const RecommendationInfo = (props: RecommendationInfoProps) => {
         renderItem={({ item, index }) => (
           <Pill
             key={index}
-            //   color={colors.gray300}
+            //   color={colors.gray300} // TODO: Support Color Text
             text={item}
           />
         )}

@@ -7,46 +7,20 @@ import {
 import { MapBottomSheet, SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
 import { View } from 'react-native';
+import RecommendationsScreen from '../SheetScreens/Main/SheetHomeScreen';
+import RecommendationDetailScreen from '../SheetScreens/Main/RecommendationDetailScreen';
 
-// TODO: Move this to a dedicated file containing routes.
-const pageHeadings = [
-  {
-    text: 'Recommendations',
-  },
-  {
-    text: 'Past Outings',
-  },
-  {
-    text: 'Favorites',
-  },
-];
-
-const recommendations = [
-  {
-    name: 'Bareburger',
-    type: 'Restaurant',
-    rating: 4.5,
-    numReviews: 1856,
-    costLevel: 3,
-    tags: ['Chill', 'Trending'],
-  },
-  {
-    name: "Max & Mina's Ice Cream",
-    type: 'Restaurant',
-    rating: 4.8,
-    numReviews: 387,
-    costLevel: 3,
-    tags: ['Trending', 'Gen Z Approved'],
-  },
-  {
-    name: 'Doha Bar & Lounge',
-    type: 'Bar & Lounge',
-    rating: 4.4,
-    numReviews: 856,
-    costLevel: 2,
-    tags: ['Best In Class', 'Hip Hop'],
-  },
-];
+let exampleDeepDetail = {
+  name: 'Bareburger',
+  type: 'Restaurant',
+  rating: 4.5,
+  numReviews: 1856,
+  costLevel: 3,
+  tags: ['Chill', 'Trending'],
+  description:
+    `Since ’09, our journey is more than food – it’s a tale ` +
+    `of crafting the raddest, high-quality, organic, and eco-friendly burgers in town.`,
+};
 
 function HomeScreen() {
   const { layout, gutters } = useTheme();
@@ -64,18 +38,10 @@ function HomeScreen() {
           ]}
         ></View>
       </SafeScreen>
-      <MapBottomSheet snapPoints={['5%', '25%', '50%', '90%']} index={2}>
+      <MapBottomSheet snapPoints={['5%', '25%', '50%', '70%', '90%']} index={2}>
         {/* TODO: Componentize this as this will be in a page that users can navigate from. */}
-        <MapSheetUserHeader />
-        <TabSelect
-          tabOptions={pageHeadings}
-          style={[gutters.marginVertical_15]}
-        />
-        <Divider />
-        <RecommendationsWithHeader
-          style={[gutters.paddingVertical_15]}
-          recommendations={recommendations}
-        />
+        {/* <RecommendationsScreen /> */}
+        <RecommendationDetailScreen {...exampleDeepDetail} />
       </MapBottomSheet>
     </>
   );

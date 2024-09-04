@@ -18,7 +18,7 @@ function MapBottomSheet({ children, ...bottomSheetProps }: Props) {
       index={0}
       snapPoints={['10%', '50%', '100%']}
       backgroundStyle={[backgrounds.blue800]}
-      handleIndicatorStyle={[{ backgroundColor: 'white' }]}
+      handleIndicatorStyle={[backgrounds.blue800]}
       {...bottomSheetProps}
       style={[gutters.paddingHorizontal_15, style]}
     >
