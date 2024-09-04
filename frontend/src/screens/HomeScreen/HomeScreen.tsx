@@ -20,6 +20,7 @@ let exampleDeepDetail = {
   description:
     `Since ’09, our journey is more than food – it’s a tale ` +
     `of crafting the raddest, high-quality, organic, and eco-friendly burgers in town.`,
+  images: [null, null, null],
 };
 
 function HomeScreen() {

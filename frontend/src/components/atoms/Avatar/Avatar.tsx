@@ -8,7 +8,7 @@ type Props = ImageProps & {
   size?: number;
 };
 
-function After(props: Props) {
+function Avatar(props: Props) {
   const { size = 48, uri } = props;
   const { layout } = useTheme();
   return (
@@ -25,4 +25,4 @@ function After(props: Props) {
   );
 }
 
-export default After;
+export default Avatar;
