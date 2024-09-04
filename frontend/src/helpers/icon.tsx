@@ -5,6 +5,7 @@ import {
   BigHandStop,
   BigShare,
   BigTripleStars,
+  Book,
   Burger,
   Burst,
   DollarSign,
@@ -13,10 +14,13 @@ import {
   DollarSign4,
   Heart,
   Info,
+  Menu,
   PlusSign,
   Refresh,
   Star,
   XSign,
+  DirectionsMap,
+  Uber,
 } from '@/theme/assets/icons';
 
 export const getIcon = (icon: AllIcons, fill?: string): IconType | null => {
@@ -55,7 +59,14 @@ export const getIcon = (icon: AllIcons, fill?: string): IconType | null => {
       return <BigHandStop fill={fill} />;
     case 'x':
       return <XSign fill={fill} />;
-
+    case 'menu':
+      return <Menu fill={fill} />;
+    case 'book':
+      return <Book fill={fill} />;
+    case 'directionsmap':
+      return <DirectionsMap fill={fill} />;
+    case 'uber':
+      return <Uber fill={fill} />;
     default:
       return null;
   }

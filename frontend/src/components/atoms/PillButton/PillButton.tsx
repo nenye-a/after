@@ -1,32 +1,20 @@
 import { AfterText } from '@/components/atoms';
 import { getIcon } from '@/helpers/icon';
 import { useTheme } from '@/theme';
-import { Burst, PlusSign, Refresh } from '@/theme/assets/icons';
-import { AllIcons } from '@/types/components/icons';
+import {
+  ButtonMode,
+  ButtonSize,
+  PillButtonProps,
+} from '@/types/components/pillbutton';
 import {
   Pressable,
-  PressableProps,
   PressableStateCallbackType,
   StyleProp,
   View,
   ViewStyle,
 } from 'react-native';
 
-type ButtonMode = 'primary' | 'secondary' | 'tertiary';
-type ButtonSize = 'large' | 'small';
-
-type ButtonProps = {
-  icon?: AllIcons;
-  customIcon?: JSX.Element;
-  mode?: ButtonMode;
-  size?: ButtonSize;
-  text?: string;
-  textStyle?: StyleProp<ViewStyle>;
-};
-
-type Props = PressableProps & ButtonProps;
-
-export default function PillButton(props: Props) {
+export default function PillButton(props: PillButtonProps) {
   const { components, gutters, layout } = useTheme();
   const { text, style, mode, size, textStyle, icon, customIcon } = props;
 

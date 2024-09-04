@@ -15,3 +15,7 @@ export { default as BigShare } from './BigShare';
 export { default as BigTripleStars } from './BigTripleStars';
 export { default as BigHandStop } from './BigHandStop';
 export { default as XSign } from './XSign';
+export { default as Menu } from './Menu';
+export { default as Book } from './Book';
+export { default as Uber } from './Uber';
+export { default as DirectionsMap } from './DirectionsMap';

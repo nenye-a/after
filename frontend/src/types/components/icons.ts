@@ -18,6 +18,10 @@ export type Icons =
   | 'plus'
   | 'refresh'
   | 'star'
+  | 'menu'
+  | 'book'
+  | 'directionsmap'
+  | 'uber'
   | 'x';
 
 export type AllIcons = Icons | LargeIcons;

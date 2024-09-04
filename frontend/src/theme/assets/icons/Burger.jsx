@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Svg, { G, Path, Defs, ClipPath } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 const Burger = (props) => {
   const { fill = '#fff', ...otherProps } = props;
