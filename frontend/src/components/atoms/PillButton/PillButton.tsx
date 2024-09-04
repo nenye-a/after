@@ -1,7 +1,8 @@
 import { AfterText } from '@/components/atoms';
+import { getIcon } from '@/helpers/icon';
 import { useTheme } from '@/theme';
 import { Burst, PlusSign, Refresh } from '@/theme/assets/icons';
-import { ReactNode } from 'react';
+import { AllIcons } from '@/types/components/icons';
 import {
   Pressable,
   PressableProps,
@@ -13,10 +14,9 @@ import {
 
 type ButtonMode = 'primary' | 'secondary' | 'tertiary';
 type ButtonSize = 'large' | 'small';
-type ButtonIcon = 'plus' | 'refresh' | 'burst';
 
 type ButtonProps = {
-  icon?: ButtonIcon;
+  icon?: AllIcons;
   customIcon?: JSX.Element;
   mode?: ButtonMode;
   size?: ButtonSize;
@@ -31,7 +31,7 @@ export default function PillButton(props: Props) {
   const { text, style, mode, size, textStyle, icon, customIcon } = props;
 
   const buttonStyle = getButtonStyle(mode, size, style); // default style
-  const iconComponent = customIcon ?? getIcon(icon);
+  const iconComponent = customIcon ?? (icon ? getIcon(icon) : null);
 
   const newTextStyle = textStyle
     ? [components.buttonText, textStyle]
@@ -91,11 +91,4 @@ const getButtonStyle = (
     }
     return compositeStyle;
   };
-};
-
-const getIcon = (icon?: ButtonIcon) => {
-  if (icon === 'plus') return <PlusSign />;
-  else if (icon === 'refresh') return <Refresh />;
-  else if (icon === 'burst') return <Burst />;
-  else return null;
 };

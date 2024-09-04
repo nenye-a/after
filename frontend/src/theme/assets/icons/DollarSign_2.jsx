@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-const DollarSign = (props) => {
+const DollarSign2 = (props) => {
   const { fill = '#fff', ...otherProps } = props;
   return (
     <Svg
@@ -18,4 +18,4 @@ const DollarSign = (props) => {
     </Svg>
   );
 };
-export default DollarSign;
+export default DollarSign2;

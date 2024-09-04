@@ -1,17 +1,11 @@
-import { AfterText, Divider } from '@/components/atoms';
+import { AfterText, Divider, PillButton } from '@/components/atoms';
 import {
   View,
-  Text,
   FlatList,
   Image,
-  FlatListProps,
   Pressable,
-  StyleProp,
-  ViewProps,
-  ViewStyle,
   PressableStateCallbackType,
 } from 'react-native';
-import PillButton from '../PillButton/PillButton';
 import { useTheme } from '@/theme';
 
 import ExampleRestaurantImage from '@/theme/assets/images/example_restaurant_image.png';

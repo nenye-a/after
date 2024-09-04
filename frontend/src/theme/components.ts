@@ -76,6 +76,22 @@ export default ({
     height: 22,
   };
 
+  const iconButton = {
+    ...layout.row,
+    ...layout.itemsCenter,
+    ...layout.justifyCenter,
+    ...backgrounds.gray400,
+    borderRadius: 99,
+    height: 40,
+    width: 40,
+  };
+
+  const iconButtonLarge = {
+    ...iconButton,
+    height: 108,
+    width: 108,
+  };
+
   return {
     primaryButton,
     secondaryButton,
@@ -86,6 +102,8 @@ export default ({
     inactiveTab,
     specialTabBorder,
     basePillStyle,
+    iconButton,
+    iconButtonLarge,
     // Example components below.
     buttonCircle: {
       ...layout.justifyCenter,
