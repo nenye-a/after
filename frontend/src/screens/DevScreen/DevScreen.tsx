@@ -9,8 +9,8 @@ import { View } from 'react-native';
 
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
-import { AfterMap, AfterText, Avatar } from '@/components/atoms';
-import { PillButton, TabSelect } from '@/components/molecules';
+import { AfterMap, AfterText, Avatar, PillButton } from '@/components/atoms';
+import { TabSelect } from '@/components/molecules';
 
 function DevScreen() {
   const { layout } = useTheme();

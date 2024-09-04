@@ -1,7 +1,6 @@
-import { AfterText, Avatar } from '@/components/atoms';
+import { AfterText, Avatar, PillButton } from '@/components/atoms';
 import { useTheme } from '@/theme';
 import { Pressable, View } from 'react-native';
-import PillButton from '../PillButton/PillButton';
 
 type MapSheetUserHeaderProps = {};
 

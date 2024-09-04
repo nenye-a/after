@@ -53,6 +53,12 @@ export default {
   fullHeight: {
     height: '100%',
   },
+  autoWidth: {
+    width: 'auto',
+  },
+  autoHeight: {
+    height: 'auto',
+  },
   /* Positions */
   relative: {
     position: 'relative',

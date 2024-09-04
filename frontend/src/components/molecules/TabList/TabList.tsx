@@ -68,6 +68,7 @@ export default function TabSelect(props: TabSelectProps) {
     <FlatList
       ItemSeparatorComponent={() => <View style={[{ width: 4 }]} />}
       horizontal
+      showsHorizontalScrollIndicator={false}
       data={options}
       renderItem={({ item, index }) => (
         <Tab {...item} key={index} onPress={() => onPress(index)} />

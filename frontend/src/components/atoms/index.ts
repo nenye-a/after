@@ -5,3 +5,4 @@ export { default as ImageVariant } from './ImageVariant/ImageVariant';
 export { default as AfterMap } from './AfterMap/AfterMap';
 export { default as Avatar } from './Avatar/Avatar';
 export { default as Divider } from './Divider/Divider';
+export { default as PillButton } from './PillButton/PillButton';
