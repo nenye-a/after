@@ -10,6 +10,7 @@ import ExampleRestaurantImage from '@/theme/assets/images/example_restaurant_ima
 import { ComponentTheme } from '@/types/theme/theme';
 import { PillButtonProps } from '@/types/components/pillbutton';
 import { getIcon } from '@/helpers/icon';
+import { useMapSheet } from '@/context/MapSheetContext';
 
 type Props = RecommendationInfoProps & {
   images?: (string | undefined | null)[]; // TODO: Adjust when connecting to BE.
@@ -18,13 +19,17 @@ type Props = RecommendationInfoProps & {
 
 const RecommendationDetailScreen = (props: Props) => {
   const { layout, gutters, fonts } = useTheme();
+  const { setMapSheetPage } = useMapSheet();
   const menuButtonStyle = getMenuButtonStyleProps(useTheme());
 
   return (
     <View>
       <View style={[layout.row, layout.justifyBetween]}>
         <RecommendationInfo {...props} nameStyle="header" />
-        <IconButton icon="x" />
+        <IconButton
+          icon="x"
+          onPress={() => setMapSheetPage('Recommendations')}
+        />
       </View>
       <View
         style={[

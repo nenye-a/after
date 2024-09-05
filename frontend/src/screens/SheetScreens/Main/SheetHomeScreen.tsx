@@ -7,6 +7,10 @@ import {
 } from '@/components/molecules';
 import { Divider } from '@/components/atoms';
 import { useTheme } from '@/theme';
+import { useMapSheet } from '@/context/MapSheetContext';
+import { mapSheetSubComponentRoutes } from '@/router';
+import { MapSheetPage } from '@/types/components/mapsheet';
+import { TabProps } from '@/types/components/tabs';
 
 type Props = {};
 
@@ -50,24 +54,39 @@ const recommendations = [
   },
 ];
 
-const RecommendationsScreen = (props: Props) => {
+const SheetHomeScreen = (props: Props) => {
   const { layout, gutters } = useTheme();
+  const { mapSheetPage, setMapSheetPage, activeOuting } = useMapSheet();
+
+  const tabOptions: TabProps[] = mapSheetSubComponentRoutes
+    .filter((name) => name !== 'Active Outing')
+    .map((name) => ({ text: name, onPress: () => setMapSheetPage(name) }));
+
+  const mapSheetComponent = getMapSheetSubComponent(mapSheetPage);
 
   return (
     <View>
       {/* TODO: Componentize this as this will be in a page that users can navigate from. */}
       <MapSheetUserHeader />
-      <TabSelect
-        tabOptions={pageHeadings}
-        style={[gutters.marginVertical_15]}
-      />
+      <TabSelect tabOptions={tabOptions} style={[gutters.marginVertical_15]} />
       <Divider />
-      <RecommendationsWithHeader
-        style={[gutters.paddingVertical_15]}
-        recommendations={recommendations}
-      />
+      {mapSheetPage === 'Recommendations'
+        ? mapSheetComponent({
+            recommendations,
+            style: gutters.paddingVertical_15,
+          })
+        : null}
     </View>
   );
 };
 
-export default RecommendationsScreen;
+const getMapSheetSubComponent = (mapSheetPage: MapSheetPage) => {
+  switch (mapSheetPage) {
+    case 'Recommendations':
+      return RecommendationsWithHeader;
+    default:
+      return () => <Text>{mapSheetPage}</Text>;
+  }
+};
+
+export default SheetHomeScreen;

@@ -7,8 +7,9 @@ import {
 import { MapBottomSheet, SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
 import { View } from 'react-native';
-import RecommendationsScreen from '../SheetScreens/Main/SheetHomeScreen';
 import RecommendationDetailScreen from '../SheetScreens/Main/RecommendationDetailScreen';
+import SheetHomeScreen from '../SheetScreens/Main/SheetHomeScreen';
+import { useMapSheet } from '@/context/MapSheetContext';
 
 let exampleDeepDetail = {
   name: 'Bareburger',
@@ -25,6 +26,7 @@ let exampleDeepDetail = {
 
 function HomeScreen() {
   const { layout, gutters } = useTheme();
+  const { mapSheetPage } = useMapSheet();
 
   return (
     <>
@@ -40,9 +42,11 @@ function HomeScreen() {
         ></View>
       </SafeScreen>
       <MapBottomSheet snapPoints={['5%', '25%', '50%', '70%', '90%']} index={2}>
-        {/* TODO: Componentize this as this will be in a page that users can navigate from. */}
-        {/* <RecommendationsScreen /> */}
-        <RecommendationDetailScreen {...exampleDeepDetail} />
+        {mapSheetPage === 'Recommendation Detail' ? (
+          <RecommendationDetailScreen {...exampleDeepDetail} />
+        ) : (
+          <SheetHomeScreen />
+        )}
       </MapBottomSheet>
     </>
   );
