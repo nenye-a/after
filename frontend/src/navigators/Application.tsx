@@ -18,8 +18,8 @@ function ApplicationNavigator() {
         <Stack.Navigator key={variant} screenOptions={{ headerShown: false }}>
           {/* <Stack.Screen name="Startup" component={Startup} /> */}
           {/* <Stack.Screen name="Example" component={Example} /> */}
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          {/* <Stack.Screen name="DevScreen" component={DevScreen} /> */}
+          {/* <Stack.Screen name="HomeScreen" component={HomeScreen} /> */}
+          <Stack.Screen name="DevScreen" component={DevScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

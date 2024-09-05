@@ -14,7 +14,7 @@ function MapSheetUserHeader(props: MapSheetUserHeaderProps) {
       <View style={[layout.flex_1, layout.row, layout.itemsCenter]}>
         <Avatar />
         <View style={[layout.flex_1, gutters.marginHorizontal_11]}>
-          <AfterText fontType="regular" style={[fonts.bold]}>
+          <AfterText fontType="enhanced" style={[fonts.bold]}>
             {name}
           </AfterText>
           <AfterText fontType="minor">{outingText}</AfterText>
