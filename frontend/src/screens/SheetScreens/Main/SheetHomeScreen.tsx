@@ -76,10 +76,6 @@ const SheetHomeScreen = (props: Props) => {
             style: gutters.paddingVertical_15,
           })
         : null}
-      {/* <RecommendationsWithHeader
-        style={[gutters.paddingVertical_15]}
-        recommendations={recommendations}
-      /> */}
     </View>
   );
 };

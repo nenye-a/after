@@ -16,6 +16,7 @@ import {
   RecommendationsListProps,
   RecommendationsWithHeaderProps,
 } from '@/types/components/recommendations';
+import { useMapSheet } from '@/context/MapSheetContext';
 
 const RecommendationListItem = (props: RecommendationListItemProps) => {
   const { layout, fonts, gutters, colors } = useTheme();
@@ -98,6 +99,7 @@ const RecommendationsHeader = (props: RecommendationsHeaderProps) => {
 
 const RecommendationsList = (props: RecommendationsListProps) => {
   const { data } = props;
+  const { setMapSheetPage } = useMapSheet();
   return (
     <FlatList
       ItemSeparatorComponent={() => <Divider />}
@@ -111,6 +113,7 @@ const RecommendationsList = (props: RecommendationsListProps) => {
               };
             }
           }}
+          onPress={() => setMapSheetPage('Recommendation Detail')}
         >
           {/* TODO: Implement function to show details. */}
           <RecommendationListItem key={index} {...item} />
