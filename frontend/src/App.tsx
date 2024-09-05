@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/theme';
 
 import ApplicationNavigator from './navigators/Application';
 import './translations';
+import MapSheetProvider from './context/MapSheetContext';
 
 export const queryClient = new QueryClient();
 
@@ -15,7 +16,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider storage={storage}>
-        <ApplicationNavigator />
+        <MapSheetProvider storage={storage}>
+          <ApplicationNavigator />
+        </MapSheetProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

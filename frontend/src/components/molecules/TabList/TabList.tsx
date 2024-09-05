@@ -1,29 +1,8 @@
 import { AfterText } from '@/components/atoms';
 import { useTheme } from '@/theme';
+import { TabProps, TabSelectProps } from '@/types/components/tabs';
 import { ReactNode, useEffect, useState } from 'react';
-import {
-  FlatList,
-  FlatListProps,
-  Pressable,
-  PressableProps,
-  StyleProp,
-  View,
-  ViewStyle,
-} from 'react-native';
-
-type BaseTabProps = {
-  icon?: ReactNode;
-  active?: boolean;
-  text: string;
-  style?: StyleProp<ViewStyle>; // Override default pressable style.
-  border?: boolean;
-};
-
-type TabProps = PressableProps & BaseTabProps;
-type TabSelectProps = {
-  tabOptions: BaseTabProps[];
-  style?: StyleProp<ViewStyle>;
-};
+import { FlatList, Pressable, View } from 'react-native';
 
 export function Tab(props: TabProps) {
   const { components, fonts, gutters } = useTheme();
@@ -53,12 +32,12 @@ export default function TabSelect(props: TabSelectProps) {
   const {} = useTheme();
   const { tabOptions } = props;
 
-  const [options, setOptions] = useState<BaseTabProps[]>([
+  const [options, setOptions] = useState<TabProps[]>([
     { ...tabOptions[0], active: true },
     ...tabOptions.slice(1).map((option) => ({ ...option, active: false })),
   ]);
 
-  const onPress = (index: number) => {
+  const highlightOnPress = (index: number) => {
     setOptions(
       options.map((option, i) => ({ ...option, active: i === index })),
     );
@@ -71,7 +50,14 @@ export default function TabSelect(props: TabSelectProps) {
       showsHorizontalScrollIndicator={false}
       data={options}
       renderItem={({ item, index }) => (
-        <Tab {...item} key={index} onPress={() => onPress(index)} />
+        <Tab
+          {...item}
+          key={index}
+          onPress={(pressProps) => {
+            highlightOnPress(index);
+            item.onPress && item.onPress(pressProps);
+          }}
+        />
       )}
       style={props.style}
     />

@@ -4,5 +4,5 @@ export { default as DevScreen } from './DevScreen/DevScreen';
 export { default as HomeScreen } from './HomeScreen/HomeScreen';
 
 // Sheet Screens
-export { default as RecommendationsScreen } from './SheetScreens/Main/SheetHomeScreen';
+export { default as SheetHomeScreen } from './SheetScreens/Main/SheetHomeScreen';
 export { default as RecommendationDetailScreen } from './SheetScreens/Main/RecommendationDetailScreen';
