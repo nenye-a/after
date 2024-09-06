@@ -27,7 +27,7 @@ export default function MapSheetProvider({ children = null, storage }: Props) {
 
   const [mapSheetPage, setMapSheetPage] =
     useState<MapSheetPage>('Past Outings');
-  const [activeOuting, setActiveOuting] = useState<boolean>(false);
+  const [activeOuting, setActiveOuting] = useState<boolean>(true);
 
   return (
     <MapSheetContext.Provider

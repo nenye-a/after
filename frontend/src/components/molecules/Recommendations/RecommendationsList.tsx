@@ -9,7 +9,7 @@ import {
 import { useTheme } from '@/theme';
 
 import ExampleRestaurantImage from '@/theme/assets/images/example_restaurant_image.png';
-import RecommendationInfo from './RecommendationInfo';
+import LocationInfo from '../Location/LocationInfo';
 import {
   RecommendationListItemProps,
   RecommendationsHeaderProps,
@@ -45,7 +45,7 @@ const RecommendationListItem = (props: RecommendationListItemProps) => {
           style={{ width: 60, height: 60, borderRadius: 8 }}
         />
         <View style={[gutters.marginHorizontal_11, gutters.paddingTop_4]}>
-          <RecommendationInfo
+          <LocationInfo
             name={name}
             type={type}
             rating={rating}

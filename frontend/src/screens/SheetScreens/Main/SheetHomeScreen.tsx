@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native';
 import React from 'react';
 import {
+  ActiveOuting,
   MapSheetUserHeader,
   PastOutings,
   RecommendationsWithHeader,
@@ -36,6 +37,7 @@ const recommendations = [
     numReviews: 1856,
     costLevel: 3,
     tags: ['Chill', 'Trending'],
+    durationString: 'Here since 9:30PM',
   },
   {
     name: "Max & Mina's Ice Cream",
@@ -44,6 +46,7 @@ const recommendations = [
     numReviews: 387,
     costLevel: 3,
     tags: ['Trending', 'Gen Z Approved'],
+    durationString: '7:50PM - 8:55PM (1h 5m)',
   },
   {
     name: 'Doha Bar & Lounge',
@@ -52,6 +55,7 @@ const recommendations = [
     numReviews: 856,
     costLevel: 2,
     tags: ['Best In Class', 'Hip Hop'],
+    durationString: '6:35PM - 7:30PM (55m)',
   },
 ];
 
@@ -60,8 +64,13 @@ const SheetHomeScreen = (props: Props) => {
   const { mapSheetPage, setMapSheetPage, activeOuting } = useMapSheet();
 
   const tabOptions: TabProps[] = mapSheetSubComponentRoutes
-    .filter((name) => name !== 'Active Outing')
-    .map((name) => ({ text: name, onPress: () => setMapSheetPage(name) }));
+    .filter((name) => activeOuting || name !== 'Active Outing')
+    .map((name) => ({
+      text: name,
+      border: name === 'Active Outing',
+      icon: name === 'Active Outing' ? 'burst' : undefined,
+      onPress: () => setMapSheetPage(name),
+    }));
 
   return (
     <View>
@@ -69,9 +78,10 @@ const SheetHomeScreen = (props: Props) => {
       <MapSheetUserHeader />
       <TabSelect tabOptions={tabOptions} style={[gutters.marginVertical_15]} />
       <Divider />
-      {/* {getMapSheetSubComponent(mapSheetPage)(mapSheetProps)} */}
       <View style={[gutters.paddingVertical_15]}>
-        {mapSheetPage === 'Recommendations' ? (
+        {mapSheetPage === 'Active Outing' ? (
+          <ActiveOuting data={recommendations} />
+        ) : mapSheetPage === 'Recommendations' ? (
           <RecommendationsWithHeader recommendations={recommendations} />
         ) : mapSheetPage === 'Past Outings' ? (
           <PastOutings />

@@ -2,8 +2,7 @@ import { FlatList, Image, View } from 'react-native';
 import React from 'react';
 import { AfterText, Divider, PillButton } from '@/components/atoms';
 import { useTheme } from '@/theme';
-import { RecommendationInfoProps } from '@/types/components/recommendations';
-import RecommendationInfo from '@/components/molecules/Recommendations/RecommendationInfo';
+import { LocationInfoProps } from '@/types/components/recommendations';
 import IconButton from '@/components/atoms/IconButton/IconButton';
 
 import ExampleRestaurantImage from '@/theme/assets/images/example_restaurant_image.png';
@@ -11,8 +10,9 @@ import { ComponentTheme } from '@/types/theme/theme';
 import { PillButtonProps } from '@/types/components/pillbutton';
 import { getIcon } from '@/helpers/icon';
 import { useMapSheet } from '@/context/MapSheetContext';
+import LocationInfo from '@/components/molecules/Location/LocationInfo';
 
-type Props = RecommendationInfoProps & {
+type Props = LocationInfoProps & {
   images?: (string | undefined | null)[]; // TODO: Adjust when connecting to BE.
   description: string;
 };
@@ -25,7 +25,7 @@ const RecommendationDetailScreen = (props: Props) => {
   return (
     <View>
       <View style={[layout.row, layout.justifyBetween]}>
-        <RecommendationInfo {...props} nameStyle="header" />
+        <LocationInfo {...props} nameStyle="header" />
         <IconButton
           icon="x"
           onPress={() => setMapSheetPage('Recommendations')}
