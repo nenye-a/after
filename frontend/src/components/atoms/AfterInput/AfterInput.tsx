@@ -28,7 +28,7 @@ const AfterInput = (props: Props) => {
       <TextInput
         placeholderTextColor={colors.gray300}
         cursorColor={colors.blue400}
-        style={[fonts.white]}
+        style={[fonts.white, layout.flex_1]}
         {...textInputProps}
       />
     </View>
