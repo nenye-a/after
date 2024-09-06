@@ -1,32 +1,25 @@
 import _ from 'lodash';
 
 export function convertDateToStringPretty(date: Date) {
-  // const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  // const months = [
-  //   'Jan',
-  //   'Feb',
-  //   'Mar',
-  //   'Apr',
-  //   'May',
-  //   'Jun',
-  //   'Jul',
-  //   'Aug',
-  //   'Sep',
-  //   'Oct',
-  //   'Nov',
-  //   'Dec',
-  // ];
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
-  // const dayName = days[date.getDay()];
-  // const monthName = months[date.getMonth()];
-  // const dayOfMonth = date.getDate();
+  const dayName = days[date.getDay()];
+  const monthName = months[date.getMonth()];
+  const dayOfMonth = date.getDate();
 
-  // return `${dayName}, ${monthName} ${dayOfMonth}`;
-  return _.chain(date)
-    .thru((d) => new Date(d))
-    .invoke('toDateString')
-    .split(' ')
-    .take(3)
-    .join(', ')
-    .value();
+  return `${dayName}, ${monthName} ${dayOfMonth}`;
 }

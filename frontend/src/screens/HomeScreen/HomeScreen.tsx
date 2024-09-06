@@ -1,15 +1,11 @@
-import { AfterMap, AfterText, Avatar, Divider } from '@/components/atoms';
-import {
-  MapSheetUserHeader,
-  RecommendationsWithHeader,
-  TabSelect,
-} from '@/components/molecules';
+import { AfterMap } from '@/components/atoms';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
 import { View } from 'react-native';
 import RecommendationDetailScreen from '../SheetScreens/Main/RecommendationDetailScreen';
 import SheetHomeScreen from '../SheetScreens/Main/SheetHomeScreen';
 import { useMapSheet } from '@/context/MapSheetContext';
+import OutingDetailScreen from '../SheetScreens/Main/OutingDetailScreen';
 
 let exampleDeepDetail = {
   name: 'Bareburger',
@@ -44,6 +40,8 @@ function HomeScreen() {
       <MapBottomSheet snapPoints={['5%', '25%', '50%', '70%', '90%']} index={2}>
         {mapSheetPage === 'Recommendation Detail' ? (
           <RecommendationDetailScreen {...exampleDeepDetail} />
+        ) : mapSheetPage === 'Outing Detail' ? (
+          <OutingDetailScreen />
         ) : (
           <SheetHomeScreen />
         )}

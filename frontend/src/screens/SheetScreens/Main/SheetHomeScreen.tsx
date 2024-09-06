@@ -76,7 +76,11 @@ const SheetHomeScreen = (props: Props) => {
     <View>
       {/* TODO: Componentize this as this will be in a page that users can navigate from. */}
       <MapSheetUserHeader />
-      <TabSelect tabOptions={tabOptions} style={[gutters.marginVertical_15]} />
+      <TabSelect
+        tabOptions={tabOptions}
+        activeTab={mapSheetPage}
+        style={[gutters.marginVertical_15]}
+      />
       <Divider />
       <View style={[gutters.paddingVertical_15]}>
         {mapSheetPage === 'Active Outing' ? (
