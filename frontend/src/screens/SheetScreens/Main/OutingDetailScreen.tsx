@@ -120,7 +120,7 @@ const OutingDetailScreen = (props: Props) => {
       </View>
       <Divider />
       <FlatList
-        // style={[gutters.marginVertical_15]}
+        style={[gutters.marginVertical_15]}
         data={locations ?? []}
         renderItem={({ item: location, index }) => (
           <View
