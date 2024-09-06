@@ -1,5 +1,6 @@
 import type {
   FlatListProps,
+  ImageSourcePropType,
   StyleProp,
   ViewProps,
   ViewStyle,
@@ -15,7 +16,7 @@ export type RecommendationInfoProps = {
 };
 
 export type RecommendationListItemProps = {
-  image?: string | JSX.Element;
+  image?: ImageSourcePropType;
   name: string;
 } & RecommendationInfoProps;
 

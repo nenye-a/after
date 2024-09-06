@@ -115,7 +115,7 @@ export default ({
     ...gutters.marginVertical_8,
     ...gutters.marginBottom_15,
     ...borders.transparent,
-    borderRadius: 12,
+    borderRadius: 4,
   };
 
   return {
