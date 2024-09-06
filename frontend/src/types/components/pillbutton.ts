@@ -1,9 +1,4 @@
-import type {
-  PressableProps,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import type { PressableProps, StyleProp, TextStyle } from 'react-native';
 import type { AllIcons } from './icons';
 
 export type ButtonMode = 'primary' | 'secondary' | 'tertiary';

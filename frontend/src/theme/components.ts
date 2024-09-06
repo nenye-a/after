@@ -66,7 +66,7 @@ export default ({
     ...borders.w_1,
   };
 
-  const basePillStyle = {
+  const basePillStyle: ViewStyle = {
     ...layout.row,
     ...layout.justifyCenter,
     ...layout.itemsCenter,
@@ -76,7 +76,7 @@ export default ({
     height: 22,
   };
 
-  const iconButton = {
+  const iconButton: ViewStyle = {
     ...layout.row,
     ...layout.itemsCenter,
     ...layout.justifyCenter,
@@ -86,10 +86,19 @@ export default ({
     width: 40,
   };
 
-  const iconButtonLarge = {
+  const iconButtonLarge: ViewStyle = {
     ...iconButton,
     height: 108,
     width: 108,
+  };
+
+  const textInputView: ViewStyle = {
+    ...layout.row,
+    ...layout.itemsCenter,
+    ...backgrounds.gray400,
+    ...gutters.paddingHorizontal_11,
+    borderRadius: 12,
+    height: 36,
   };
 
   return {
@@ -104,6 +113,7 @@ export default ({
     basePillStyle,
     iconButton,
     iconButtonLarge,
+    textInputView,
     // Example components below.
     buttonCircle: {
       ...layout.justifyCenter,

@@ -6,3 +6,4 @@ export { default as AfterMap } from './AfterMap/AfterMap';
 export { default as Avatar } from './Avatar/Avatar';
 export { default as Divider } from './Divider/Divider';
 export { default as PillButton } from './PillButton/PillButton';
+export { default as AfterInput } from './AfterInput/AfterInput';

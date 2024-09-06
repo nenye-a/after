@@ -1,4 +1,5 @@
 import type { SvgProps } from 'react-native-svg';
+import { IconProps } from 'react-native-vector-icons/Icon';
 
 export type LargeIcons =
   | 'big_burger'
@@ -30,3 +31,4 @@ export type IconType = JSX.Element &
   SvgProps & {
     fill?: string;
   };
+export type VectorIcon = JSX.Element & React.ComponentType<IconProps>;
