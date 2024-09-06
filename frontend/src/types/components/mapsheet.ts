@@ -3,4 +3,5 @@ export type MapSheetPage =
   | 'Past Outings'
   | 'Favorites'
   | 'Active Outing'
-  | 'Recommendation Detail';
+  | 'Recommendation Detail'
+  | 'Outing Detail';

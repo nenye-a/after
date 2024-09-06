@@ -220,7 +220,7 @@ type PastOutingProps = {};
 
 const PastOutings = (props: PastOutingProps) => {
   const { layout, gutters, components, colors, fonts } = useTheme();
-  const {} = useMapSheet();
+  const { setMapSheetPage } = useMapSheet();
 
   return (
     <View>
@@ -260,6 +260,7 @@ const PastOutings = (props: PastOutingProps) => {
                 };
               }
             }}
+            onPress={() => setMapSheetPage('Outing Detail')}
           >
             <OutingListItem key={index} {...item} />
           </Pressable>
