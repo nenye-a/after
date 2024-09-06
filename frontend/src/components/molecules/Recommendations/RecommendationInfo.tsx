@@ -35,12 +35,14 @@ const RecommendationInfo = (props: Props) => {
       >
         <SupportTextWithIcon
           style={[gutters.marginRight_11]}
-          icon={<Burger fill={colors.gray300} />}
+          icon="burger"
+          iconColor={colors.gray300}
           text={type}
         />
         <SupportTextWithIcon
           style={[gutters.marginRight_11]}
-          icon={<Star fill={colors.gray300} />}
+          icon="star"
+          iconColor={colors.gray300}
           text={`${_.round(rating, 1)} (${numberWithCommas(numReviews)})`}
         />
         <DollarSigns level={costLevel} color={colors.gray300} />

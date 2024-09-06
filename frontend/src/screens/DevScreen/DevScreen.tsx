@@ -9,8 +9,15 @@ import { View } from 'react-native';
 
 import { useTheme } from '@/theme';
 import { MapBottomSheet, SafeScreen } from '@/components/template';
-import { AfterMap, AfterText, Avatar, PillButton } from '@/components/atoms';
+import {
+  AfterInput,
+  AfterMap,
+  AfterText,
+  Avatar,
+  PillButton,
+} from '@/components/atoms';
 import { TabSelect } from '@/components/molecules';
+import Icon from 'react-native-vector-icons/Feather';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -27,6 +34,8 @@ function DevScreen() {
       >
         <AfterMap />
         <MapBottomSheet snapPoints={['10%', '50%', '100%']} index={1}>
+          <Icon name="clock" size={24} color={'white'} />
+          <AfterInput icon="plus" placeholder="Search" />
           <Avatar />
           <AfterText fontType="header">Header</AfterText>
           <AfterText fontType="enhanced">Enhanced</AfterText>
@@ -41,7 +50,12 @@ function DevScreen() {
               'Etc.',
             ].map((text) => ({ text }))}
           />
-          <PillButton text="Primary" mode="primary" size="large" />
+          <PillButton
+            text="Primary"
+            mode="primary"
+            size="large"
+            customIcon={<Icon name="clock" size={12} color={'white'} />}
+          />
           <PillButton
             text="Secondary"
             mode="secondary"

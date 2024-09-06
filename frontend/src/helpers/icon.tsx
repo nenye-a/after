@@ -1,4 +1,4 @@
-import { AllIcons, IconType } from '@/types/components/icons';
+import { AllIcons, IconType, VectorIcon } from '@/types/components/icons';
 import {
   BigBurger,
   BigGlass,
@@ -23,7 +23,12 @@ import {
   Uber,
 } from '@/theme/assets/icons';
 
-export const getIcon = (icon: AllIcons, fill?: string): IconType | null => {
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+export const getIcon = (
+  icon: AllIcons | VectorIcon,
+  fill?: string,
+): IconType | VectorIcon => {
   switch (icon) {
     case 'burger':
       return <Burger fill={fill} />;
@@ -67,7 +72,9 @@ export const getIcon = (icon: AllIcons, fill?: string): IconType | null => {
       return <DirectionsMap fill={fill} />;
     case 'uber':
       return <Uber fill={fill} />;
+    case 'search':
+      return <Icon name="search" size={18} color={fill} />;
     default:
-      return null;
+      return icon;
   }
 };

@@ -30,12 +30,21 @@ export function Tab(props: TabProps) {
 
 export default function TabSelect(props: TabSelectProps) {
   const {} = useTheme();
-  const { tabOptions } = props;
+  const { tabOptions, activeTab } = props;
 
-  const [options, setOptions] = useState<TabProps[]>([
-    { ...tabOptions[0], active: true },
-    ...tabOptions.slice(1).map((option) => ({ ...option, active: false })),
-  ]);
+  const [options, setOptions] = useState<TabProps[]>(
+    activeTab
+      ? tabOptions.map((option) => ({
+          ...option,
+          active: option.text === activeTab,
+        }))
+      : [
+          { ...tabOptions[0], active: true },
+          ...tabOptions
+            .slice(1)
+            .map((option) => ({ ...option, active: false })),
+        ],
+  );
 
   const highlightOnPress = (index: number) => {
     setOptions(
