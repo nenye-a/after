@@ -60,8 +60,13 @@ const SheetHomeScreen = (props: Props) => {
   const { mapSheetPage, setMapSheetPage, activeOuting } = useMapSheet();
 
   const tabOptions: TabProps[] = mapSheetSubComponentRoutes
-    .filter((name) => name !== 'Active Outing')
-    .map((name) => ({ text: name, onPress: () => setMapSheetPage(name) }));
+    .filter((name) => activeOuting || name !== 'Active Outing')
+    .map((name) => ({
+      text: name,
+      border: name === 'Active Outing',
+      icon: name === 'Active Outing' ? 'burst' : undefined,
+      onPress: () => setMapSheetPage(name),
+    }));
 
   return (
     <View>
@@ -69,7 +74,6 @@ const SheetHomeScreen = (props: Props) => {
       <MapSheetUserHeader />
       <TabSelect tabOptions={tabOptions} style={[gutters.marginVertical_15]} />
       <Divider />
-      {/* {getMapSheetSubComponent(mapSheetPage)(mapSheetProps)} */}
       <View style={[gutters.paddingVertical_15]}>
         {mapSheetPage === 'Recommendations' ? (
           <RecommendationsWithHeader recommendations={recommendations} />

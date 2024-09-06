@@ -1,8 +1,9 @@
 import { PressableProps, StyleProp, ViewStyle } from 'react-native';
+import { AllIcons } from './icons';
 
 export type BaseTabProps = {
   text: string;
-  icon?: JSX.Element;
+  icon?: AllIcons;
   active?: boolean;
   style?: StyleProp<ViewStyle>; // Override default pressable style.
   border?: boolean;

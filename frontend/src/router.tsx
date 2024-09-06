@@ -3,8 +3,8 @@ import { RecommendationsWithHeader } from './components/molecules';
 import { RecommendationsWithHeaderProps } from './types/components/recommendations';
 
 export const mapSheetSubComponentRoutes: MapSheetPage[] = [
-  'Recommendations',
   'Active Outing',
+  'Recommendations',
   'Past Outings',
   'Favorites',
 ];

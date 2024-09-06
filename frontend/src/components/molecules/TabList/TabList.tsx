@@ -1,4 +1,5 @@
 import { AfterText } from '@/components/atoms';
+import { getIcon } from '@/helpers/icon';
 import { useTheme } from '@/theme';
 import { TabProps, TabSelectProps } from '@/types/components/tabs';
 import { ReactNode, useEffect, useState } from 'react';
@@ -17,7 +18,7 @@ export function Tab(props: TabProps) {
       ]}
       {...otherProps}
     >
-      {!!icon && <View style={[gutters.paddingHorizontal_8]}>{icon}</View>}
+      {!!icon && <View style={[gutters.paddingRight_8]}>{getIcon(icon)}</View>}
       <AfterText
         fontType="regular"
         style={active ? { ...fonts.white, ...fonts.medium } : fonts.gray300}
