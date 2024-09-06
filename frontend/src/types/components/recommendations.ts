@@ -5,20 +5,11 @@ import type {
   ViewProps,
   ViewStyle,
 } from 'react-native';
-
-export type RecommendationInfoProps = {
-  name: string;
-  type: string;
-  rating: number;
-  numReviews: number;
-  costLevel: number;
-  tags: string[];
-};
+import type { LocationInfoProps } from './location';
 
 export type RecommendationListItemProps = {
   image?: ImageSourcePropType;
-  name: string;
-} & RecommendationInfoProps;
+} & LocationInfoProps;
 
 export type RecommendationsHeaderProps = ViewProps & {
   numRecommendations?: number;

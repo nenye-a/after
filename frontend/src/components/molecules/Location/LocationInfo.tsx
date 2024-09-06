@@ -3,24 +3,20 @@ import { AfterText, Pill, SupportTextWithIcon } from '@/components/atoms';
 import { useTheme } from '@/theme';
 import { FlatList, View } from 'react-native';
 
-import Burger from '@/theme/assets/icons/Burger';
-import Star from '@/theme/assets/icons/Star';
 import { numberWithCommas } from '@/helpers/numbers';
 import DollarSigns from '@/components/atoms/DollarSigns/DollarSigns';
-import { RecommendationInfoProps } from '@/types/components/recommendations';
+import { LocationInfoProps } from '@/types/components/location';
 
-type Props = RecommendationInfoProps & {
+type Props = LocationInfoProps & {
   nameStyle?: 'regular' | 'header';
 };
 
-const RecommendationInfo = (props: Props) => {
+const LocationInfo = (props: Props) => {
   const { layout, fonts, gutters, colors } = useTheme();
   const { name, type, rating, numReviews, costLevel, tags } = props;
 
   return (
-    <View
-    // style={[layout.flex_1]}
-    >
+    <View>
       <AfterText fontType={props.nameStyle ?? 'regular'} style={[fonts.bold]}>
         {name}
       </AfterText>
@@ -64,4 +60,4 @@ const RecommendationInfo = (props: Props) => {
   );
 };
 
-export default RecommendationInfo;
+export default LocationInfo;
