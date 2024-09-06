@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import React from 'react';
 import {
   MapSheetUserHeader,
+  PastOutings,
   RecommendationsWithHeader,
   TabSelect,
 } from '@/components/molecules';
@@ -62,31 +63,22 @@ const SheetHomeScreen = (props: Props) => {
     .filter((name) => name !== 'Active Outing')
     .map((name) => ({ text: name, onPress: () => setMapSheetPage(name) }));
 
-  const mapSheetComponent = getMapSheetSubComponent(mapSheetPage);
-
   return (
     <View>
       {/* TODO: Componentize this as this will be in a page that users can navigate from. */}
       <MapSheetUserHeader />
       <TabSelect tabOptions={tabOptions} style={[gutters.marginVertical_15]} />
       <Divider />
-      {mapSheetPage === 'Recommendations'
-        ? mapSheetComponent({
-            recommendations,
-            style: gutters.paddingVertical_15,
-          })
-        : null}
+      {/* {getMapSheetSubComponent(mapSheetPage)(mapSheetProps)} */}
+      <View style={[gutters.paddingVertical_15]}>
+        {mapSheetPage === 'Recommendations' ? (
+          <RecommendationsWithHeader recommendations={recommendations} />
+        ) : mapSheetPage === 'Past Outings' ? (
+          <PastOutings />
+        ) : null}
+      </View>
     </View>
   );
-};
-
-const getMapSheetSubComponent = (mapSheetPage: MapSheetPage) => {
-  switch (mapSheetPage) {
-    case 'Recommendations':
-      return RecommendationsWithHeader;
-    default:
-      return () => <Text>{mapSheetPage}</Text>;
-  }
 };
 
 export default SheetHomeScreen;

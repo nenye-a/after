@@ -23,6 +23,8 @@ import {
   Uber,
 } from '@/theme/assets/icons';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 export const getIcon = (
   icon: AllIcons | VectorIcon,
   fill?: string,
@@ -70,6 +72,8 @@ export const getIcon = (
       return <DirectionsMap fill={fill} />;
     case 'uber':
       return <Uber fill={fill} />;
+    case 'search':
+      return <Icon name="search" size={18} color={fill} />;
     default:
       return icon;
   }

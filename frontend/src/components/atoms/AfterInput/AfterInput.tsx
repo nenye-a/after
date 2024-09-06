@@ -12,17 +12,18 @@ import { getIcon } from '@/helpers/icon';
 
 type Props = TextInputProps & {
   icon?: AllIcons | VectorIcon;
+  iconColor?: string;
   viewStyle?: StyleProp<ViewStyle>;
 };
 
 const AfterInput = (props: Props) => {
   const { layout, components, gutters, colors, fonts } = useTheme();
-  const { icon, viewStyle, style, ...textInputProps } = props;
+  const { icon, iconColor, viewStyle, style, ...textInputProps } = props;
 
   return (
     <View style={[components.textInputView, viewStyle]}>
       {icon ? (
-        <View style={[gutters.marginRight_8]}>{getIcon(icon)}</View>
+        <View style={[gutters.marginRight_8]}>{getIcon(icon, iconColor)}</View>
       ) : null}
       <TextInput
         placeholderTextColor={colors.gray300}

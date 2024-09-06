@@ -101,6 +101,23 @@ export default ({
     height: 36,
   };
 
+  const dropDownSelectedStyle: ViewStyle = {
+    ...layout.row,
+    ...layout.itemsCenter,
+    ...backgrounds.gray400,
+    ...gutters.paddingHorizontal_11,
+    borderRadius: 12,
+    height: 36,
+  };
+
+  const dropDownListStyle: ViewStyle = {
+    ...backgrounds.gray400,
+    ...gutters.marginVertical_8,
+    ...gutters.marginBottom_15,
+    ...borders.transparent,
+    borderRadius: 12,
+  };
+
   return {
     primaryButton,
     secondaryButton,
@@ -114,6 +131,8 @@ export default ({
     iconButton,
     iconButtonLarge,
     textInputView,
+    dropDownSelectedStyle,
+    dropDownListStyle,
     // Example components below.
     buttonCircle: {
       ...layout.justifyCenter,

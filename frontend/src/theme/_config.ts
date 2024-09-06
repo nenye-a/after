@@ -41,7 +41,7 @@ export const config = {
   borders: {
     widths: [1, 2],
     radius: [4, 16],
-    colors: colorsDark,
+    colors: { ...colorsDark, transparent: 'transparent' },
   },
   navigationColors: {
     ...DefaultTheme.colors,

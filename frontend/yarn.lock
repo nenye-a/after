@@ -4393,6 +4393,7 @@ __metadata:
     react-i18next: ^14.1.0
     react-native: 0.74.1
     react-native-config: ^1.5.3
+    react-native-element-dropdown: ^2.12.1
     react-native-gesture-handler: ^2.16.0
     react-native-maps: ^1.18.0
     react-native-mmkv: ^2.12.2
@@ -11318,6 +11319,18 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: 0eb74e0a10ae6e96422671482da83dea16571f4f5ad848d1f18015dccbecb9cbc066788df72a88c630abf4aed0edb7616ec27704817cff18bd6ed7d61979d671
+  languageName: node
+  linkType: hard
+
+"react-native-element-dropdown@npm:^2.12.1":
+  version: 2.12.1
+  resolution: "react-native-element-dropdown@npm:2.12.1"
+  dependencies:
+    lodash: ^4.17.21
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 5eaa4a78a0ba7a3dc25b913035e959c0876dc7f61498bd31eeaca73027453bb51f77e2ec8ab72ef6aa622db04f40fef4b0c2b4e27f367152a3b6dff0e35b6596
   languageName: node
   linkType: hard
 

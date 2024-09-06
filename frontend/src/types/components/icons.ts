@@ -23,7 +23,8 @@ export type Icons =
   | 'book'
   | 'directionsmap'
   | 'uber'
-  | 'x';
+  | 'x'
+  | 'search';
 
 export type AllIcons = Icons | LargeIcons;
 
