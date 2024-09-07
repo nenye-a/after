@@ -6,8 +6,9 @@ import RecommendationDetailScreen from '../SheetScreens/Main/RecommendationDetai
 import SheetHomeScreen from '../SheetScreens/Main/SheetHomeScreen';
 import { useMapSheet } from '@/context/MapSheetContext';
 import OutingDetailScreen from '../SheetScreens/Main/OutingDetailScreen';
+import LocationStatusBar from '@/components/molecules/LocationStatusBar/LocationStatusBar';
 
-let exampleDeepDetail = {
+const exampleDeepDetail = {
   name: 'Bareburger',
   type: 'Restaurant',
   rating: 4.5,
@@ -20,22 +21,29 @@ let exampleDeepDetail = {
   images: [null, null, null],
 };
 
+const exampleCurrentLocation = 'Doha Bar & Lounge';
+const exampleDurationsTring = 'Started at 6:35PM';
+
 function HomeScreen() {
   const { layout, gutters } = useTheme();
-  const { mapSheetPage } = useMapSheet();
+  const { mapSheetPage, activeOuting } = useMapSheet();
 
   return (
     <>
       <AfterMap />
-      <SafeScreen>
-        <View
-          style={[
-            layout.flex_1,
-            layout.col,
-            layout.itemsCenter,
-            layout.justifyCenter,
-          ]}
-        ></View>
+      <SafeScreen
+        style={[
+          layout.itemsCenter, // Hell
+        ]}
+      >
+        <View style={[{ width: '100%' }]}>
+          <LocationStatusBar
+            currentLocation={exampleCurrentLocation}
+            activeOuting={activeOuting}
+            durationString={exampleDurationsTring}
+            style={[]}
+          />
+        </View>
       </SafeScreen>
       <MapBottomSheet snapPoints={['5%', '25%', '50%', '70%', '90%']} index={2}>
         {mapSheetPage === 'Recommendation Detail' ? (

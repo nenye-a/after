@@ -1,7 +1,9 @@
+import useTheme from '@/theme/hooks/useTheme';
 import * as React from 'react';
 import Svg, { G, Path, Defs, ClipPath } from 'react-native-svg';
 
 const HandStop = (props) => {
+  const { colors } = useTheme();
   const { fill = '#DB4437', innerFill = '#fff', ...otherProps } = props;
   return (
     <Svg
@@ -23,7 +25,7 @@ const HandStop = (props) => {
       </G>
       <Defs>
         <ClipPath id="a">
-          <Path fill={innerFill} d="M0 0h24v24H0z" />
+          <Path fill={colors.blue800} d="M0 0h24v24H0z" />
         </ClipPath>
       </Defs>
     </Svg>

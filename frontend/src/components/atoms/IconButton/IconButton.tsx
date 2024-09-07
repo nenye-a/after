@@ -5,7 +5,8 @@ import { AllIcons } from '@/types/components/icons';
 import { getIcon } from '@/helpers/icon';
 
 type Props = PressableProps & {
-  icon: AllIcons;
+  icon?: AllIcons;
+  customIcon?: JSX.Element;
   style?: StyleProp<ViewStyle>;
   iconColor?: string;
   large?: boolean;
@@ -13,7 +14,7 @@ type Props = PressableProps & {
 
 const IconButton = (props: Props) => {
   const { components } = useTheme();
-  const { style, icon, iconColor, large } = props;
+  const { style, icon, iconColor, customIcon, large } = props;
 
   return (
     <Pressable
@@ -23,7 +24,7 @@ const IconButton = (props: Props) => {
         style,
       ]}
     >
-      {getIcon(icon, iconColor)}
+      {customIcon ? customIcon : icon ? getIcon(icon, iconColor) : null}
     </Pressable>
   );
 };
