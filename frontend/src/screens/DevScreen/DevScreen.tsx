@@ -18,6 +18,7 @@ import {
 } from '@/components/atoms';
 import { TabSelect } from '@/components/molecules';
 import Icon from 'react-native-vector-icons/Feather';
+import LocationStatusBar from '@/components/molecules/LocationStatusBar/LocationStatusBar';
 
 function DevScreen() {
   const { layout } = useTheme();
@@ -33,7 +34,9 @@ function DevScreen() {
         ]}
       >
         <AfterMap />
+
         <MapBottomSheet snapPoints={['10%', '50%', '100%']} index={1}>
+          <LocationStatusBar currentLocation={'HELLO'} activeOuting />
           <Icon name="clock" size={24} color={'white'} />
           <AfterInput icon="plus" placeholder="Search" />
           <Avatar />
