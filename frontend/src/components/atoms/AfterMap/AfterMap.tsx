@@ -1,4 +1,5 @@
 // import { useMemo } from 'react';
+import { MapStyle } from '@/constants/mapstyle';
 import { useTheme } from '@/theme';
 import { PropsWithChildren } from 'react';
 import MapView, { MapViewProps, Region } from 'react-native-maps';
@@ -21,12 +22,19 @@ function AfterMap({
   initialRegion = defaultRegion,
   ...props
 }: Props) {
-  const { layout } = useTheme();
+  const { layout, colors } = useTheme();
 
   return (
     <MapView
       style={[layout.fullHeight, layout.fullWidth]}
       initialRegion={initialRegion}
+      customMapStyle={MapStyle}
+      // tintColor={colors.blue800}
+      // provider="google"
+      mapType="mutedStandard"
+      showsUserLocation={true}
+      userInterfaceStyle="dark"
+      pitchEnabled={false}
       {...props}
     >
       {children}
