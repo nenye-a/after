@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import i18next from 'i18next';
-import { useTranslation } from '../../../node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 
 import { ImageVariant } from '@/components/atoms';

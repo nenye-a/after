@@ -17,6 +17,7 @@ const app = async () => {
     resolvers: [UserResolver],
     scalarsMap: [{ type: GraphQLScalarType, scalar: DateTimeResolver }],
     validate: { forbidUnknownValues: false },
+    emitSchemaFile: true,
   });
 
   const server = new ApolloServer<Context>({ schema });
