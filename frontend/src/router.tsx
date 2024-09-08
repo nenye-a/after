@@ -6,5 +6,5 @@ export const mapSheetSubComponentRoutes: MapSheetPage[] = [
   'Active Outing',
   'Recommendations',
   'Past Outings',
-  'Favorites',
+  // 'Favorites',
 ];

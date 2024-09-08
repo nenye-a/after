@@ -15,7 +15,7 @@ import { ImageVariant } from '@/components/atoms';
 import { Brand } from '@/components/molecules';
 import { SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
-import { fetchOne } from '@/services/users';
+// import { fetchOne } from '@/services/users';
 
 import { isImageSourcePropType } from '@/types/guards/image';
 
