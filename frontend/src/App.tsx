@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Auth0Provider } from 'react-native-auth0';
 import { MMKV } from 'react-native-mmkv';
 
 import { ThemeProvider } from '@/theme';
@@ -16,9 +17,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider storage={storage}>
-        <MapSheetProvider storage={storage}>
-          <ApplicationNavigator />
-        </MapSheetProvider>
+        <Auth0Provider
+          domain={process.env.AUTH0_DOMAIN ?? ''}
+          clientId={process.env.AUTH0_CLIENT_ID ?? ''}
+        >
+          <MapSheetProvider storage={storage}>
+            <ApplicationNavigator />
+          </MapSheetProvider>
+        </Auth0Provider>
       </ThemeProvider>
     </QueryClientProvider>
   );

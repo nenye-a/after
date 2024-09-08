@@ -10,6 +10,7 @@ import LocationStatusBar from '@/components/molecules/LocationStatusBar/Location
 import { useQuery } from '@tanstack/react-query';
 import { afterInstance } from '@/services/afterInstance';
 import { GET_ALL_USERS } from '@/services/graphql/after/queries/user';
+import { useAuth0 } from 'react-native-auth0';
 
 const exampleDeepDetail = {
   name: 'Bareburger',
@@ -61,11 +62,7 @@ function HomeScreen() {
   return (
     <>
       <AfterMap />
-      <SafeScreen
-        style={[
-          layout.itemsCenter, // Hell
-        ]}
-      >
+      <SafeScreen style={[layout.itemsCenter]}>
         <View style={[{ width: '100%' }]}>
           <LocationStatusBar
             currentLocation={exampleCurrentLocation}
