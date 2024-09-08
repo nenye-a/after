@@ -8,14 +8,14 @@ import {
   Alert,
 } from 'react-native';
 import i18next from 'i18next';
-import { useTranslation } from '../../../node_modules/react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 
 import { ImageVariant } from '@/components/atoms';
 import { Brand } from '@/components/molecules';
 import { SafeScreen } from '@/components/template';
 import { useTheme } from '@/theme';
-import { fetchOne } from '@/services/users';
+// import { fetchOne } from '@/services/users';
 
 import { isImageSourcePropType } from '@/types/guards/image';
 
