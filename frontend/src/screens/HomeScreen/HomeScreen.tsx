@@ -7,9 +7,6 @@ import SheetHomeScreen from '../SheetScreens/Main/SheetHomeScreen';
 import { useMapSheet } from '@/context/MapSheetContext';
 import OutingDetailScreen from '../SheetScreens/Main/OutingDetailScreen';
 import LocationStatusBar from '@/components/molecules/LocationStatusBar/LocationStatusBar';
-import { useQuery } from '@tanstack/react-query';
-import { afterInstance } from '@/services/afterInstance';
-import { GET_ALL_USERS } from '@/services/graphql/after/queries/user';
 
 const exampleDeepDetail = {
   name: 'Bareburger',
@@ -31,41 +28,10 @@ function HomeScreen() {
   const { layout, gutters } = useTheme();
   const { mapSheetPage, activeOuting } = useMapSheet();
 
-  const {
-    isFetching,
-    data: allUsers,
-    isSuccess,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ['getAllUsers'],
-    queryFn: async () => {
-      return afterInstance.request(GET_ALL_USERS, {});
-    },
-  });
-
-  if (isFetching) {
-    console.log('Fetching');
-    return (
-      <View style={[layout.flex_1, layout.justifyCenter, layout.itemsCenter]} />
-    );
-  } else if (isSuccess) {
-    console.log('All users', allUsers);
-    console.log(allUsers?.getAllUsers[0].first_name);
-  } else if (isError) {
-    console.log('Error', error);
-  } else {
-    console.log('Random ');
-  }
-
   return (
     <>
       <AfterMap />
-      <SafeScreen
-        style={[
-          layout.itemsCenter, // Hell
-        ]}
-      >
+      <SafeScreen style={[layout.itemsCenter]}>
         <View style={[{ width: '100%' }]}>
           <LocationStatusBar
             currentLocation={exampleCurrentLocation}

@@ -1,22 +1,28 @@
 import { AfterText, Avatar, PillButton } from '@/components/atoms';
+import { useUser } from '@/context/UserContext';
 import { useTheme } from '@/theme';
 import { Pressable, View } from 'react-native';
+import _ from 'lodash';
 
 type MapSheetUserHeaderProps = {};
 
 function MapSheetUserHeader(props: MapSheetUserHeaderProps) {
   const { layout, gutters, fonts } = useTheme();
-  const name = 'Michelle Villanueva'; // TODO: Make dynamic.
+  const { auth0User, isAuthorized } = useUser();
+
+  const name = _.capitalize(auth0User?.nickname ?? auth0User?.name ?? ''); // TODO: Make dynamic.
   const outingText = 'No active outing';
 
   return (
     <Pressable style={[layout.row, layout.itemsCenter, layout.justifyBetween]}>
       <View style={[layout.flex_1, layout.row, layout.itemsCenter]}>
-        <Avatar />
+        <Avatar uri={auth0User?.picture} />
         <View style={[layout.flex_1, gutters.marginHorizontal_11]}>
-          <AfterText fontType="enhanced" style={[fonts.bold]}>
-            {name}
-          </AfterText>
+          <View style={[gutters.marginBottom_4]}>
+            <AfterText fontType="enhanced" style={[fonts.bold]}>
+              {name}
+            </AfterText>
+          </View>
           <AfterText fontType="minor">{outingText}</AfterText>
         </View>
       </View>

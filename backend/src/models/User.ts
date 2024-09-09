@@ -1,9 +1,10 @@
 import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
-import { Schema, Types, model } from 'mongoose';
+import { Model, Schema, Types, model } from 'mongoose';
 import { PriceLevel, Vibe } from '../engine/types';
 
 export type User = {
   // Personal information
+  auth0_id: string;
   email: string;
   first_name: string;
   last_name: string;
@@ -26,26 +27,45 @@ export type User = {
   apple_id: string;
 };
 
-export const userSchema = new Schema<User>({
-  email: { type: String, required: true, unique: true },
-  first_name: String,
-  last_name: String,
-  phone: String,
-  home_address: String,
-  date_of_birth: Date,
-  culture: String,
-  interests: [String],
-  after_preferences: {
-    default_vibes: [String],
-    default_radius_miles: Number,
-    default_radius_in_minutes: Number,
-    preferred_price_levels: [String],
-    max_ticket_price: Number,
-  },
-  stripe_id: String,
-  apple_id: String,
-});
+interface UserModel extends Model<User> {
+  findByAuth0Id: (auth0Id: string) => Promise<User | null>;
+}
 
-const users = coreDb.model<User>(MODEL_NAMES.user, userSchema);
+export const userSchema = new Schema<User, UserModel>(
+  {
+    auth0_id: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    first_name: String,
+    last_name: String,
+    phone: String,
+    home_address: String,
+    date_of_birth: Date,
+    culture: String,
+    interests: [String],
+    after_preferences: {
+      default_vibes: [String],
+      default_radius_miles: Number,
+      default_radius_in_minutes: Number,
+      preferred_price_levels: [String],
+      max_ticket_price: Number,
+    },
+    stripe_id: String,
+    apple_id: String,
+  },
+  {
+    statics: {
+      /**
+       * Returns a user by their Auth0 ID
+       * @param auth0Id
+       * @returns
+       */
+      findByAuth0Id: function (auth0Id: string) {
+        return this.findOne({ auth0_id: auth0Id });
+      },
+    },
+  },
+);
+
+const users = coreDb.model<User, UserModel>(MODEL_NAMES.user, userSchema);
 
 export default users;

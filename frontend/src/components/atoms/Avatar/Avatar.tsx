@@ -18,7 +18,7 @@ function Avatar(props: Props) {
         height={size}
         width={size}
         style={[{ height: size, width: size }, { borderRadius: size / 2 }]}
-        source={uri ?? DefaultProfileAvatar}
+        source={uri ? { uri } : DefaultProfileAvatar}
         resizeMode="contain"
       />
     </View>

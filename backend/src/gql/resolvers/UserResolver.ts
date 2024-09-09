@@ -10,6 +10,7 @@ import {
   Int,
   InputType,
   Field,
+  Authorized,
 } from 'type-graphql';
 import { User } from '../../models/user'; // Temoirary name to avoid conflict with User from type-graphql
 import { UserType } from '../types/User';
@@ -33,15 +34,20 @@ class UserCreateInput {
 
   @Field({ nullable: true })
   home_address: string;
+
+  @Field()
+  auth0_id: string;
 }
 
 @Resolver(UserType)
 export class UserResolver {
+  @Authorized()
   @Query(() => UserType)
-  async getUser(@Arg('id') data: String, @Ctx() ctx: Context) {
-    return ctx.models.users.findById(data);
+  async getUser(@Ctx() ctx: Context) {
+    return ctx.user;
   }
 
+  @Authorized(['ADMIN'])
   @Query(() => [UserType])
   async getAllUsers(@Ctx() ctx: Context) {
     return ctx.models.users.find();

@@ -8,6 +8,7 @@ import * as tq from 'type-graphql';
 import * as dotenv from 'dotenv';
 import { Context, context } from './context';
 import { UserResolver } from './gql/resolvers/UserResolver';
+import { AuthMiddlware } from './gql/middlewares/auth';
 
 // Configures environment variables from .env file. See more: https://www.npmjs.com/package/dotenv
 dotenv.config();
@@ -18,12 +19,18 @@ const app = async () => {
     scalarsMap: [{ type: GraphQLScalarType, scalar: DateTimeResolver }],
     validate: { forbidUnknownValues: false },
     emitSchemaFile: true,
+    authChecker: AuthMiddlware,
   });
 
   const server = new ApolloServer<Context>({ schema });
 
   const { url } = await startStandaloneServer(server, {
-    context: async () => context,
+    context: async ({ req, res }) => {
+      context.req = req;
+      context.res = res;
+
+      return context;
+    },
   });
 
   console.log(`
