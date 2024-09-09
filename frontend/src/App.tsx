@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/theme';
 import ApplicationNavigator from './navigators/Application';
 import './translations';
 import MapSheetProvider from './context/MapSheetContext';
+import UserProvider from './context/UserContext';
 
 export const queryClient = new QueryClient();
 
@@ -21,9 +22,11 @@ function App() {
           domain={process.env.AUTH0_DOMAIN ?? ''}
           clientId={process.env.AUTH0_CLIENT_ID ?? ''}
         >
-          <MapSheetProvider storage={storage}>
-            <ApplicationNavigator />
-          </MapSheetProvider>
+          <UserProvider storage={storage}>
+            <MapSheetProvider storage={storage}>
+              <ApplicationNavigator />
+            </MapSheetProvider>
+          </UserProvider>
         </Auth0Provider>
       </ThemeProvider>
     </QueryClientProvider>

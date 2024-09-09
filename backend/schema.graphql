@@ -9,7 +9,7 @@ type Mutation {
 
 type Query {
   getAllUsers: [UserType!]!
-  getUser(id: String!): UserType!
+  getUser: UserType!
 }
 
 input UserCreateInput {

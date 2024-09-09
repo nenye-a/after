@@ -6,25 +6,24 @@ import { PillButton } from '@/components/atoms';
 import { useAuth0 } from 'react-native-auth0';
 import type { RootScreenProps } from '@/types/navigation';
 import { SafeScreen } from '@/components/template';
+import { useUser } from '@/context/UserContext';
 
 type Props = {};
 
 const LoginScreen = ({ navigation }: RootScreenProps<'LoginScreen'>) => {
   const { layout, fonts, gutters } = useTheme();
-  const { authorize, clearSession, user } = useAuth0();
+  const { isAuthorized, login } = useUser();
 
   const onPress = async () => {
     try {
-      console.log(user);
-
-      let results = await authorize().catch((err) => console.log(err));
+      login();
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    if (user) {
+    if (isAuthorized) {
       navigation.navigate('HomeScreen');
     }
   });
