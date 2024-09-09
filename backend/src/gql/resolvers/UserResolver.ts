@@ -34,16 +34,20 @@ class UserCreateInput {
 
   @Field({ nullable: true })
   home_address: string;
+
+  @Field()
+  auth0_id: string;
 }
 
-@Authorized(['Admin'])
 @Resolver(UserType)
 export class UserResolver {
+  @Authorized()
   @Query(() => UserType)
   async getUser(@Ctx() ctx: Context) {
     return ctx.user;
   }
 
+  @Authorized(['ADMIN'])
   @Query(() => [UserType])
   async getAllUsers(@Ctx() ctx: Context) {
     return ctx.models.users.find();

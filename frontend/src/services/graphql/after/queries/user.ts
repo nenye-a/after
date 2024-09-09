@@ -25,3 +25,16 @@ export const GET_USER = graphql(`
     }
   }
 `);
+
+export const CREATE_USER = graphql(`
+  mutation CreateUser($data: UserCreateInput!) {
+    createUser(data: $data) {
+      id
+      email
+      first_name
+      last_name
+      phone
+      home_address
+    }
+  }
+`);

@@ -7,10 +7,13 @@ import {
 } from 'react';
 import { MMKV } from 'react-native-mmkv';
 import { useAuth0, User, Credentials } from 'react-native-auth0';
-import { UserType } from '@/services/graphql/after/generated/graphql';
-import { useQuery } from '@tanstack/react-query';
+import {
+  UserCreateInput,
+  UserType,
+} from '@/services/graphql/after/generated/graphql';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { afterInstance, createAfterInstance } from '@/services/afterInstance';
-import { GET_USER } from '@/services/graphql/after/queries/user';
+import { CREATE_USER, GET_USER } from '@/services/graphql/after/queries/user';
 import { GraphQLClient } from 'graphql-request';
 
 export type UserContextType = {
@@ -59,17 +62,19 @@ export default function UserProvider({ children, storage }: Props) {
   };
 
   const logout = async () => {
+    await clearSession();
     setAuth0User(null);
     setUserDetails(null);
     setCredentials(null);
     setApiInstance(null);
-    await clearSession();
   };
 
   const {
     data: newUserDetails,
-    isPending: isLoadingUserDetails,
+    isLoading: isLoadingUserDetails,
     refetch: refetchUserDetails,
+    isSuccess,
+    isFetched,
   } = useQuery({
     queryKey: ['getUser', { id: auth0User?.sub }],
     queryFn: () => {
@@ -81,7 +86,21 @@ export default function UserProvider({ children, storage }: Props) {
     enabled: !!auth0User && !!credentials && !!apiInstance,
   });
 
-  const isAuthorized = !!auth0User && !!credentials && !!apiInstance;
+  const { mutate: createUser, isPending: isCreatingUser } = useMutation({
+    mutationFn: (data: UserCreateInput) => {
+      if (apiInstance)
+        return apiInstance.request(CREATE_USER, {
+          data,
+        });
+      else {
+        throw new Error('No valid credentials (API INSTANCE)');
+      }
+    },
+    onSuccess: (data) => {
+      let newUser = data.createUser;
+      setUserDetails(newUser);
+    },
+  });
 
   /** Logout stale users. */
   useEffect(() => {
@@ -121,6 +140,31 @@ export default function UserProvider({ children, storage }: Props) {
     }
   }, [user, credentials]);
 
+  useEffect(() => {
+    if (
+      auth0User?.sub &&
+      !userDetails &&
+      !(isLoadingUserDetails || isCreatingUser) &&
+      !newUserDetails?.getUser
+    ) {
+      createUser({
+        email: auth0User.email ?? '',
+        first_name:
+          auth0User.nickname ?? auth0User.given_name ?? auth0User.name,
+        last_name: auth0User.familyName,
+        phone: auth0User.phoneNumber ?? '',
+        home_address: auth0User.address ?? '',
+        auth0_id: auth0User.sub,
+      });
+    }
+  }, [
+    auth0User,
+    userDetails,
+    isLoadingUserDetails,
+    isCreatingUser,
+    newUserDetails,
+  ]);
+
   /** Update user details */
 
   return (
@@ -136,7 +180,7 @@ export default function UserProvider({ children, storage }: Props) {
         credentials,
         apiInstance,
         isLoadingUserDetails,
-        isAuthorized,
+        isAuthorized: !!auth0User && !!credentials && !!apiInstance,
       }}
     >
       {children}

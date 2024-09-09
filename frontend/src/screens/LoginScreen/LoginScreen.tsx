@@ -12,17 +12,19 @@ type Props = {};
 
 const LoginScreen = ({ navigation }: RootScreenProps<'LoginScreen'>) => {
   const { layout, fonts, gutters } = useTheme();
-  const { isAuthorized, login } = useUser();
+  const { isAuthorized, login, logout, ...otherDetails } = useUser();
 
   const onPress = async () => {
     try {
       login();
+      // logout();
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
+    // console.log(otherDetails);
     if (isAuthorized) {
       navigation.navigate('HomeScreen');
     }
