@@ -35,7 +35,10 @@ export class OutingResolver {
   }
 
   @Mutation(() => OutingType)
-  async startOuting(@Arg('name') name: string, @Ctx() ctx: Context) {
+  async startOuting(
+    @Arg('locationName') locationName: string,
+    @Ctx() ctx: Context,
+  ) {
     const activeOuting = await ctx.models.outings.findOne({
       user_id: ctx.user?._id,
       status: { $in: ['active', 'paused'] },
@@ -51,7 +54,7 @@ export class OutingResolver {
 
     return ctx.models.outings.create({
       user_id: ctx.user?._id,
-      name,
+      name: `Outing from ${locationName}`,
     });
   }
 

@@ -13,6 +13,10 @@ const config: CodegenConfig = {
         namingConvention: {
           enumValues: 'keep',
         },
+        // avoidOptionals: true,
+        avoidOptionals: {
+          field: true,
+        },
       },
     },
   },

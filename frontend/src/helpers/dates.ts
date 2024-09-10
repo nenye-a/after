@@ -23,3 +23,19 @@ export function convertDateToStringPretty(date: Date) {
 
   return `${dayName}, ${monthName} ${dayOfMonth}`;
 }
+
+export const getTimeZone = () => {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return timeZone;
+};
+
+export const getLocalTime = (date: Date, timeZone?: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+    timeZone,
+  };
+
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+};

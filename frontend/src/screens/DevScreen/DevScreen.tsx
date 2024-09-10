@@ -36,7 +36,6 @@ function DevScreen() {
         <AfterMap />
 
         <MapBottomSheet snapPoints={['10%', '50%', '100%']} index={1}>
-          <LocationStatusBar currentLocation={'HELLO'} activeOuting />
           <Icon name="clock" size={24} color={'white'} />
           <AfterInput icon="plus" placeholder="Search" />
           <Avatar />

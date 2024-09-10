@@ -12,7 +12,7 @@ type Mutation {
   createUser(data: UserCreateInput!): UserType!
   endOuting: OutingType!
   pauseOuting: OutingType!
-  startOuting(name: String!): OutingType!
+  startOuting(locationName: String!): OutingType!
 }
 
 type OutingType {

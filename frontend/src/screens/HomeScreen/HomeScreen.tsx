@@ -7,6 +7,7 @@ import SheetHomeScreen from '../SheetScreens/Main/SheetHomeScreen';
 import { useMapSheet } from '@/context/MapSheetContext';
 import OutingDetailScreen from '../SheetScreens/Main/OutingDetailScreen';
 import LocationStatusBar from '@/components/molecules/LocationStatusBar/LocationStatusBar';
+import { useOuting } from '@/context/OutingContext';
 
 const exampleDeepDetail = {
   name: 'Bareburger',
@@ -26,7 +27,7 @@ const exampleDurationsTring = 'Started at 6:35PM';
 
 function HomeScreen() {
   const { layout, gutters } = useTheme();
-  const { mapSheetPage, activeOuting } = useMapSheet();
+  const { mapSheetPage } = useMapSheet();
 
   return (
     <>
@@ -35,7 +36,6 @@ function HomeScreen() {
         <View style={[{ width: '100%' }]}>
           <LocationStatusBar
             currentLocation={exampleCurrentLocation}
-            activeOuting={activeOuting}
             durationString={exampleDurationsTring}
             style={[]}
           />
