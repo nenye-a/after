@@ -12,7 +12,7 @@ import {
   Field,
   Authorized,
 } from 'type-graphql';
-import { User } from '../../models/user'; // Temoirary name to avoid conflict with User from type-graphql
+import { User } from '../../models/user2'; // Temoirary name to avoid conflict with User from type-graphql
 import { UserType } from '../types/User';
 import { Context } from '../../context';
 import { IsEmail, IsPhoneNumber } from 'class-validator';
