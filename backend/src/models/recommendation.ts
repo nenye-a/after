@@ -5,21 +5,17 @@ import { coreDb } from '../config/mongoose.db';
 import { Coordinates } from '../types/location';
 
 export type RecommendationStatus =
-  | 'recommendations_requested' // The user has requested recommendations.
-  | 'recommendations_failed' // The recommendation engine failed to provide recommendations.
-  | 'recommendations_provided' // The recommendation engine has provided recommendations.
-  | 'recommendation_chosen' // The user has chosen a recommendation.
-  | 'recommendation_rejected' // The user has rejected a recommendation.
-  | 'feedback_provided'; // The user has provided feedback on recommendations
+  | 'requested' // The user has requested recommendations.
+  | 'failed' // The recommendation engine failed to provide recommendations.
+  | 'active' // The recommendation engine has provided recommendations.
+  | 'stale'; // The user has chosen a recommendation.
 
 export type RecommendationFeedback =
   | 'bad_recommendations'
-  | 'good_recommendations'
-  | 'bad_chosen_recommendation'
-  | 'good_chosen_recommendation'
-  | 'good_chosen_recommendation';
+  | 'good_recommendations';
 
 export type Recommendation = {
+  _id: mongoose.Types.ObjectId;
   name: string;
   type: string;
   phone: string;
@@ -57,7 +53,7 @@ export type RecommendationRequest = {
   recommendation_model: string; // Which recommendation model was used. TODO: Use enum.
   params: RecommendationsInput;
   recommendations?: Recommendation[]; // The first recommendation is the most important.
-  chosen_recommendation?: Recommendation;
+  chosen_recommendation?: mongoose.Types.ObjectId; // The user's chosen recommendation id.
   performance_context?: {
     recommendation_time_ms: number;
     recommendation_count: number;
@@ -75,40 +71,20 @@ export const recommendationRequestSchema = new Schema<RecommendationRequest>({
   status: {
     type: String,
     required: true,
-    default: 'recommendations_requested',
-    enum: [
-      'recommendations_requested',
-      'recommendations_failed',
-      'recommendations_provided',
-      'recommendation_chosen',
-      'recommendation_rejected',
-      'feedback_provided',
-    ],
+    default: 'requested',
+    enum: ['requested', 'failed', 'active', 'stale'],
   },
   status_detail: [
     {
+      _id: false,
       status: {
         type: String,
         required: true,
-        enum: [
-          'recommendations_requested',
-          'recommendations_failed',
-          'recommendations_provided',
-          'recommendation_chosen',
-          'recommendation_rejected',
-          'feedback_provided',
-        ],
+        enum: ['requested', 'failed', 'active', 'stale'],
       },
       feedback: {
         type: String,
-        enum: [
-          'bad_recommendations',
-          'good_recommendations',
-          'bad_chosen_recommendation',
-          'good_chosen_recommendation',
-          'good_chosen_recommendation',
-          null,
-        ],
+        enum: ['bad_recommendations', 'good_recommendations', null],
       },
       date: { type: Date, required: true, default: Date.now },
     },
