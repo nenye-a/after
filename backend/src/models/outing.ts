@@ -3,6 +3,7 @@ import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
 import { OutingStatus } from '../types/outing';
 
 type Outing = {
+  _id: mongoose.Types.ObjectId;
   user_id: mongoose.Types.ObjectId;
   name: string;
   status: OutingStatus;
@@ -47,7 +48,7 @@ outingSchema.index(
     // Can only have one active outing at a time per user.
     unique: true,
     partialFilterExpression: {
-      status: 'active',
+      status: { $in: ['active', 'paused'] },
     },
   },
 );

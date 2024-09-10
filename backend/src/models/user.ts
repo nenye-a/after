@@ -3,6 +3,8 @@ import { Model, Schema, Types, model } from 'mongoose';
 import { PriceLevel, Vibe } from '../engine/types';
 
 export type User = {
+  _id: Types.ObjectId;
+
   // Personal information
   auth0_id: string;
   email: string;

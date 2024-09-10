@@ -39,6 +39,7 @@ export type Recommendation = {
 };
 
 export type RecommendationRequest = {
+  _id: mongoose.Types.ObjectId;
   user_id: mongoose.Types.ObjectId;
   request_date: Date;
   outing_id?: mongoose.Types.ObjectId;

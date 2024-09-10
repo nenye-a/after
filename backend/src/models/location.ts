@@ -4,6 +4,7 @@ import { Coordinates } from '../types/location';
 import { PriceLevel } from '../engine/types';
 
 type Location = {
+  _id: mongoose.Types.ObjectId;
   user_id: mongoose.Types.ObjectId;
   outing_id: mongoose.Types.ObjectId;
   name: string;

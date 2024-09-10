@@ -3,18 +3,13 @@ import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
 import { Coordinates } from '../types/location';
 
 type PathPoint = {
+  _id: mongoose.Types.ObjectId;
   user_id: mongoose.Types.ObjectId;
   coordinates: Coordinates;
   outing_id: mongoose.Types.ObjectId;
   time: Date;
   linked_outing_id?: mongoose.Types.ObjectId;
-
   location_id?: mongoose.Types.ObjectId;
-  // duration_ms?: number;
-  // address?: string;
-  // name?: string;
-  // place_id?: string; // Google Maps place ID
-  // starred?: boolean;
 };
 
 export const pathPointSchema = new Schema<PathPoint>({
