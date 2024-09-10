@@ -3,15 +3,16 @@ import { useUser } from '@/context/UserContext';
 import { useTheme } from '@/theme';
 import { Pressable, View } from 'react-native';
 import _ from 'lodash';
+import { useOuting } from '@/context/OutingContext';
 
 type MapSheetUserHeaderProps = {};
 
 function MapSheetUserHeader(props: MapSheetUserHeaderProps) {
   const { layout, gutters, fonts } = useTheme();
-  const { auth0User, isAuthorized } = useUser();
+  const { auth0User } = useUser();
+  const { activeOuting } = useOuting();
 
   const name = _.capitalize(auth0User?.nickname ?? auth0User?.name ?? ''); // TODO: Make dynamic.
-  const outingText = 'No active outing';
 
   return (
     <Pressable style={[layout.row, layout.itemsCenter, layout.justifyBetween]}>
@@ -23,7 +24,9 @@ function MapSheetUserHeader(props: MapSheetUserHeaderProps) {
               {name}
             </AfterText>
           </View>
-          <AfterText fontType="minor">{outingText}</AfterText>
+          <AfterText fontType="minor">
+            {activeOuting?.name ?? 'No active outing'}
+          </AfterText>
         </View>
       </View>
       <PillButton text="Add People" icon="plus" mode="secondary" size="small" />
