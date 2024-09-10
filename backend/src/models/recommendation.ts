@@ -101,7 +101,7 @@ export const recommendationRequestSchema = new Schema<RecommendationRequest>({
 });
 
 const recommendationRequests = coreDb.model<RecommendationRequest>(
-  MODEL_NAMES.recommendationTransaction,
+  MODEL_NAMES.recommendationRequests,
   recommendationRequestSchema,
 );
 

@@ -1,6 +1,6 @@
 const MODEL_NAMES = {
   user: 'users',
-  recommendationTransaction: 'recommendation_requests',
+  recommendationRequests: 'recommendation_requests',
   outings: 'outings',
   locations: 'locations',
   pathPoints: 'path_points',
