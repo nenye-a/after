@@ -14,7 +14,7 @@ type LocationStatusBarProps = ViewProps & {
 
 const LocationStatusBar = (props: LocationStatusBarProps) => {
   const { fonts, gutters, layout, borders, backgrounds } = useTheme();
-  const { activeOuting } = useOuting();
+  const { activeOuting, startOuting, endOuting } = useOuting();
 
   const { currentLocation, durationString, style, ...viewProps } = props;
 
@@ -43,12 +43,15 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
                   {currentLocation}
                 </AfterText>
                 <AfterText fontType="minor">
-                  {getLocalTime(activeOuting.start_date)}
+                  Started at {getLocalTime(activeOuting.start_date)}
                 </AfterText>
               </View>
             </View>
           </View>
-          <IconButton customIcon={<Icon name="stop" color="red" size={20} />} />
+          <IconButton
+            customIcon={<Icon name="stop" color="red" size={20} />}
+            onPress={endOuting}
+          />
         </>
       ) : (
         <>
@@ -62,6 +65,7 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
             text="Start Outing"
             size="small"
             textStyle={[fonts.bold]}
+            onPress={() => startOuting(currentLocation)}
           />
         </>
       )}

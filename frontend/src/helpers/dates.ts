@@ -37,5 +37,5 @@ export const getLocalTime = (date: Date, timeZone?: string) => {
     timeZone,
   };
 
-  return new Intl.DateTimeFormat('en-US', options).format(date);
+  return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
 };

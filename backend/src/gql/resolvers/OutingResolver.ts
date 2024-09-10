@@ -19,7 +19,7 @@ export class OutingResolver {
   async getActiveOuting(@Ctx() ctx: Context) {
     return ctx.models.outings.findOne({
       user_id: ctx.user?._id,
-      status: { $or: ['active', 'paused'] },
+      status: { $in: ['active', 'paused'] },
     });
   }
 
