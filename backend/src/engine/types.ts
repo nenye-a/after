@@ -1,3 +1,5 @@
+import { Coordinates } from '../types/location';
+
 export enum Intent {
   explore = 'Explore',
   eat = 'Eat',
@@ -33,10 +35,7 @@ export enum Vibe {
 export type RecommendationsInput = {
   // Location of the user at time of recommendation.
   currentLocation: {
-    coordinates?: {
-      latitude: number;
-      longitude: number;
-    };
+    coordinates?: Coordinates;
     address?: string;
     name?: string;
   };

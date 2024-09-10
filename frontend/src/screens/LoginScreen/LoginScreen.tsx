@@ -1,9 +1,7 @@
-import { View, Text } from 'react-native';
 import React, { useEffect } from 'react';
 import { useTheme } from '@/theme';
 import { PillButton } from '@/components/atoms';
 
-import { useAuth0 } from 'react-native-auth0';
 import type { RootScreenProps } from '@/types/navigation';
 import { SafeScreen } from '@/components/template';
 import { useUser } from '@/context/UserContext';
@@ -12,7 +10,7 @@ type Props = {};
 
 const LoginScreen = ({ navigation }: RootScreenProps<'LoginScreen'>) => {
   const { layout, fonts, gutters } = useTheme();
-  const { isAuthorized, login, logout, ...otherDetails } = useUser();
+  const { isAuthorized, login, logout } = useUser();
 
   const onPress = async () => {
     try {

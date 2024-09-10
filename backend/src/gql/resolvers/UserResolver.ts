@@ -53,7 +53,7 @@ export class UserResolver {
     return ctx.models.users.find();
   }
 
-  @Mutation((returns) => UserType)
+  @Mutation(() => UserType)
   async createUser(
     @Arg('data') data: UserCreateInput,
     @Ctx() ctx: Context,

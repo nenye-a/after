@@ -13,6 +13,7 @@ import { useMapSheet } from '@/context/MapSheetContext';
 import { mapSheetSubComponentRoutes } from '@/router';
 import { MapSheetPage } from '@/types/components/mapsheet';
 import { TabProps } from '@/types/components/tabs';
+import { useOuting } from '@/context/OutingContext';
 
 type Props = {};
 
@@ -61,7 +62,8 @@ const recommendations = [
 
 const SheetHomeScreen = (props: Props) => {
   const { layout, gutters } = useTheme();
-  const { mapSheetPage, setMapSheetPage, activeOuting } = useMapSheet();
+  const { activeOuting } = useOuting();
+  const { mapSheetPage, setMapSheetPage } = useMapSheet();
 
   const tabOptions: TabProps[] = mapSheetSubComponentRoutes
     .filter((name) => activeOuting || name !== 'Active Outing')

@@ -47,6 +47,23 @@ export default function TabSelect(props: TabSelectProps) {
         ],
   );
 
+  useEffect(() => {
+    // If the tabOptions change, update the options
+    setOptions(
+      activeTab
+        ? tabOptions.map((option) => ({
+            ...option,
+            active: option.text === activeTab,
+          }))
+        : [
+            { ...tabOptions[0], active: true },
+            ...tabOptions
+              .slice(1)
+              .map((option) => ({ ...option, active: false })),
+          ],
+    );
+  }, [tabOptions]);
+
   const highlightOnPress = (index: number) => {
     setOptions(
       options.map((option, i) => ({ ...option, active: i === index })),

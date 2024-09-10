@@ -1,7 +1,9 @@
 const MODEL_NAMES = {
   user: 'users',
-  recommendationTransaction: 'recommendation_transactions',
-  outing: 'outings',
+  recommendationRequests: 'recommendation_requests',
+  outings: 'outings',
+  locations: 'locations',
+  pathPoints: 'path_points',
 };
 
 export { MODEL_NAMES };

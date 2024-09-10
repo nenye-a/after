@@ -12,7 +12,7 @@ import {
   UserType,
 } from '@/services/graphql/after/generated/graphql';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { afterInstance, createAfterInstance } from '@/services/afterInstance';
+import { createAfterInstance } from '@/services/afterInstance';
 import { CREATE_USER, GET_USER } from '@/services/graphql/after/queries/user';
 import { GraphQLClient } from 'graphql-request';
 
@@ -73,8 +73,6 @@ export default function UserProvider({ children, storage }: Props) {
     data: newUserDetails,
     isLoading: isLoadingUserDetails,
     refetch: refetchUserDetails,
-    isSuccess,
-    isFetched,
   } = useQuery({
     queryKey: ['getUser', { id: auth0User?.sub }],
     queryFn: () => {

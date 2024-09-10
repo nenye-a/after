@@ -4,17 +4,19 @@ import { useTheme } from '@/theme';
 import { AfterText, PillButton } from '@/components/atoms';
 import IconButton from '@/components/atoms/IconButton/IconButton';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useOuting } from '@/context/OutingContext';
+import { getLocalTime } from '@/helpers/dates';
 
 type LocationStatusBarProps = ViewProps & {
   currentLocation: string;
-  activeOuting?: boolean;
   durationString?: string; // TODO: Replace with an actual string of arrival time
 };
 
 const LocationStatusBar = (props: LocationStatusBarProps) => {
   const { fonts, gutters, layout, borders, backgrounds } = useTheme();
-  const { activeOuting, currentLocation, durationString, style, ...viewProps } =
-    props;
+  const { activeOuting, startOuting, endOuting } = useOuting();
+
+  const { currentLocation, durationString, style, ...viewProps } = props;
 
   return (
     <View
@@ -40,11 +42,16 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
                 <AfterText fontType="enhanced" style={[fonts.bold]}>
                   {currentLocation}
                 </AfterText>
-                <AfterText fontType="minor">{durationString}</AfterText>
+                <AfterText fontType="minor">
+                  Started at {getLocalTime(activeOuting.start_date)}
+                </AfterText>
               </View>
             </View>
           </View>
-          <IconButton customIcon={<Icon name="stop" color="red" size={20} />} />
+          <IconButton
+            customIcon={<Icon name="stop" color="red" size={20} />}
+            onPress={endOuting}
+          />
         </>
       ) : (
         <>
@@ -58,6 +65,7 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
             text="Start Outing"
             size="small"
             textStyle={[fonts.bold]}
+            onPress={() => startOuting(currentLocation)}
           />
         </>
       )}
