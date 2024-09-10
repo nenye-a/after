@@ -20,7 +20,10 @@ const createURI = (dbName: string) => {
 
 const connectDb = (dbName: string, { ...connectionOptions }) => {
   const uri = createURI(dbName);
-  const connection = mongoose.createConnection(uri, connectionOptions);
+  const connection = mongoose.createConnection(uri, {
+    ...connectionOptions,
+    autoIndex: false,
+  });
 
   connection.on('connected', () => {
     console.log(`Connected to ${connection.name} database.`);

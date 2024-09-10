@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { PriceLevel, RecommendationsInput } from '../engine/types';
 import { MODEL_NAMES } from '../constants/models';
 import { coreDb } from '../config/mongoose.db';
+import { Coordinates } from '../types/location';
 
 export type RecommendationStatus =
   | 'recommendations_requested' // The user has requested recommendations.
@@ -24,10 +25,7 @@ export type Recommendation = {
   phone: string;
   maps_url: string;
   address: string;
-  coordinates?: {
-    latitude: number;
-    longitude: number;
-  };
+  coordinates?: Coordinates;
   website_url: string;
   price_level?: PriceLevel;
   rating: number;
@@ -44,7 +42,7 @@ export type Recommendation = {
   raw_place: any;
 };
 
-export type RecommendationTransaction = {
+export type RecommendationRequest = {
   user_id: mongoose.Types.ObjectId;
   request_date: Date;
   outing_id?: mongoose.Types.ObjectId;
@@ -66,69 +64,68 @@ export type RecommendationTransaction = {
   };
 };
 
-export const recommendationTransactionSchema =
-  new Schema<RecommendationTransaction>({
-    user_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: MODEL_NAMES.user,
-    },
-    request_date: { type: Date, required: true, default: Date.now },
-    outing_id: { type: mongoose.Types.ObjectId, ref: MODEL_NAMES.outing },
-    status: {
-      type: String,
-      required: true,
-      default: 'recommendations_requested',
-      enum: [
-        'recommendations_requested',
-        'recommendations_failed',
-        'recommendations_provided',
-        'recommendation_chosen',
-        'recommendation_rejected',
-        'feedback_provided',
-      ],
-    },
-    status_detail: [
-      {
-        status: {
-          type: String,
-          required: true,
-          enum: [
-            'recommendations_requested',
-            'recommendations_failed',
-            'recommendations_provided',
-            'recommendation_chosen',
-            'recommendation_rejected',
-            'feedback_provided',
-          ],
-        },
-        feedback: {
-          type: String,
-          enum: [
-            'bad_recommendations',
-            'good_recommendations',
-            'bad_chosen_recommendation',
-            'good_chosen_recommendation',
-            'good_chosen_recommendation',
-            null,
-          ],
-        },
-        date: { type: Date, required: true, default: Date.now },
-      },
+export const recommendationRequestSchema = new Schema<RecommendationRequest>({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: MODEL_NAMES.user,
+  },
+  request_date: { type: Date, required: true, default: Date.now },
+  outing_id: { type: mongoose.Types.ObjectId, ref: MODEL_NAMES.outings },
+  status: {
+    type: String,
+    required: true,
+    default: 'recommendations_requested',
+    enum: [
+      'recommendations_requested',
+      'recommendations_failed',
+      'recommendations_provided',
+      'recommendation_chosen',
+      'recommendation_rejected',
+      'feedback_provided',
     ],
-    recommendation_model: { type: String, required: true },
-    params: { type: Object, required: true },
-    recommendations: [Object],
-    chosen_recommendation: Object,
-    performance_context: {
-      recommendation_time_ms: Number,
-      recommendation_count: Number,
+  },
+  status_detail: [
+    {
+      status: {
+        type: String,
+        required: true,
+        enum: [
+          'recommendations_requested',
+          'recommendations_failed',
+          'recommendations_provided',
+          'recommendation_chosen',
+          'recommendation_rejected',
+          'feedback_provided',
+        ],
+      },
+      feedback: {
+        type: String,
+        enum: [
+          'bad_recommendations',
+          'good_recommendations',
+          'bad_chosen_recommendation',
+          'good_chosen_recommendation',
+          'good_chosen_recommendation',
+          null,
+        ],
+      },
+      date: { type: Date, required: true, default: Date.now },
     },
-  });
+  ],
+  recommendation_model: { type: String, required: true },
+  params: { type: Object, required: true },
+  recommendations: [Object],
+  chosen_recommendation: Object,
+  performance_context: {
+    recommendation_time_ms: Number,
+    recommendation_count: Number,
+  },
+});
 
-const recommendationTransactions = coreDb.model<RecommendationTransaction>(
+const recommendationRequests = coreDb.model<RecommendationRequest>(
   MODEL_NAMES.recommendationTransaction,
-  recommendationTransactionSchema,
+  recommendationRequestSchema,
 );
 
-export default recommendationTransactions;
+export default recommendationRequests;
