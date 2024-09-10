@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import mongoose from 'mongoose';
 import * as models from './models';
 import { IncomingMessage, ServerResponse } from 'http';
-import { User } from './models/user2';
+import { User } from './models/user';
 
 const prisma = new PrismaClient();
 
