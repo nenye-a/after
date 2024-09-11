@@ -192,6 +192,20 @@ export const googlePlaceDetails = async (
     });
 };
 
+export const getPlacesFromCoordinates = async (
+  coordinates: GoogleLocationPoint,
+  fields: GooglePlaceField[] | '*',
+  searchPrompt: string = 'Place at',
+) => {
+  let address = await getAddress(coordinates);
+  if (address) {
+    console.log(address);
+    return await googleSearch(`${searchPrompt} ${address}`, fields);
+  } else {
+    return [];
+  }
+};
+
 if (require.main === module) {
   // {
   //   // Test Search
@@ -204,7 +218,6 @@ if (require.main === module) {
   //     })
   //     .catch((err) => console.log(err));
   // }
-
   // {
   //   // Test Places
   //   const placeId = 'ChIJWVD7FadZwokRs_pS6XY7VOU';
@@ -219,7 +232,6 @@ if (require.main === module) {
   //     })
   //     .catch((err) => console.log(err));
   // }
-
   // {
   //   // Test Places
   //   const placeId = 'ChIJWVD7FadZwokRs_pS6XY7VOU';
@@ -243,7 +255,6 @@ if (require.main === module) {
   //     })
   //     .catch((err) => console.log(err));
   // }
-
   // {
   //   // // Test Geocode
   //   // const address = '732 S Spring Street, Los Anggeles, CA 90014';
@@ -252,7 +263,6 @@ if (require.main === module) {
   //   //     console.log(data);
   //   //   })
   //   //   .catch((err) => console.log(err));
-
   //   // Test Reverse Geocode
   //   const coordinates = {
   //     latitude: 29.721507745211635,
@@ -264,21 +274,32 @@ if (require.main === module) {
   //     })
   //     .catch((err) => console.log(err));
   // }
-
-  {
-    // // Test address functions
-    const coordinates = {
-      latitude: 29.721507745211635,
-      longitude: -95.77843928320651,
-    };
-    const address = '732 S Spring Street, Los Angeles, CA 90014';
-
-    getAddress(coordinates).then((data) => {
-      console.log(data);
-    });
-
-    getCoordinates(address).then((data) => {
-      console.log(data);
-    });
-  }
+  // {
+  //   // // Test address functions
+  //   const coordinates = {
+  //     latitude: 29.721507745211635,
+  //     longitude: -95.77843928320651,
+  //   };
+  //   const address = '732 S Spring Street, Los Angeles, CA 90014';
+  //   getAddress(coordinates).then((data) => {
+  //     console.log(data);
+  //   });
+  //   getCoordinates(address).then((data) => {
+  //     console.log(data);
+  //   });
+  // }
+  // {
+  //   // Test place finder
+  //   const coordinates = {
+  //     // latitude: 29.74073626004217,
+  //     // longitude: -95.7755183281019,
+  //     // latitude: 29.739959453302856,
+  //     // longitude: -95.78006660958712,
+  //     latitude: 29.760747460072533,
+  //     longitude: -95.38268209252661,
+  //   };
+  //   getPlacesFromCoordinates(coordinates, '*', 'Place at').then((results) => {
+  //     console.log(results);
+  //   });
+  // }
 }
