@@ -195,12 +195,17 @@ export const googlePlaceDetails = async (
 export const getPlacesFromCoordinates = async (
   coordinates: GoogleLocationPoint,
   fields: GooglePlaceField[] | '*',
+  searchParams?: GoogleTextSearchParams,
   searchPrompt: string = 'Place at',
 ) => {
   let address = await getAddress(coordinates);
   if (address) {
     console.log(address);
-    return await googleSearch(`${searchPrompt} ${address}`, fields);
+    return await googleSearch(
+      `${searchPrompt} ${address}`,
+      fields,
+      searchParams,
+    );
   } else {
     return [];
   }
@@ -288,18 +293,18 @@ if (require.main === module) {
   //     console.log(data);
   //   });
   // }
-  // {
-  //   // Test place finder
-  //   const coordinates = {
-  //     // latitude: 29.74073626004217,
-  //     // longitude: -95.7755183281019,
-  //     // latitude: 29.739959453302856,
-  //     // longitude: -95.78006660958712,
-  //     latitude: 29.760747460072533,
-  //     longitude: -95.38268209252661,
-  //   };
-  //   getPlacesFromCoordinates(coordinates, '*', 'Place at').then((results) => {
-  //     console.log(results);
-  //   });
-  // }
+  {
+    // Test place finder
+    const coordinates = {
+      latitude: 29.74073626004217,
+      longitude: -95.7755183281019,
+      // latitude: 29.739959453302856,
+      // longitude: -95.78006660958712,
+      // latitude: 29.760747460072533,
+      // longitude: -95.38268209252661,
+    };
+    getPlacesFromCoordinates(coordinates, '*').then((results) => {
+      console.log(results);
+    });
+  }
 }
