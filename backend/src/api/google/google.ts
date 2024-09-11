@@ -1,3 +1,4 @@
+import fs from 'fs';
 import axios from 'axios'; // TODO: Leverage safe request custom library.
 import * as dotenv from 'dotenv';
 import {
@@ -196,7 +197,7 @@ export const getPlacesFromCoordinates = async (
   coordinates: GoogleLocationPoint,
   fields: GooglePlaceField[] | '*',
   searchParams?: GoogleTextSearchParams,
-  searchPrompt: string = 'Place at',
+  searchPrompt: string = 'Whats at',
 ) => {
   let address = await getAddress(coordinates);
   if (address) {
@@ -207,7 +208,7 @@ export const getPlacesFromCoordinates = async (
       searchParams,
     );
   } else {
-    return [];
+    return null;
   }
 };
 
@@ -296,15 +297,22 @@ if (require.main === module) {
   {
     // Test place finder
     const coordinates = {
-      latitude: 29.74073626004217,
-      longitude: -95.7755183281019,
+      // latitude: 29.74073626004217,
+      // longitude: -95.7755183281019,
       // latitude: 29.739959453302856,
       // longitude: -95.78006660958712,
-      // latitude: 29.760747460072533,
-      // longitude: -95.38268209252661,
+      latitude: 29.760747460072533,
+      longitude: -95.38268209252661,
     };
+
     getPlacesFromCoordinates(coordinates, '*').then((results) => {
       console.log(results);
+
+      if (results)
+        fs.writeFileSync(
+          'places_example.json',
+          JSON.stringify(results.places[0]),
+        );
     });
   }
 }
