@@ -8,9 +8,9 @@ import { OutingStatus } from '../../types/outing';
 @Resolver(OutingType)
 export class OutingResolver {
   @Query(() => OutingType)
-  async getOuting(@Arg('outing_id') outing_id: string, @Ctx() ctx: Context) {
+  async getOuting(@Arg('outingId') outingId: string, @Ctx() ctx: Context) {
     return ctx.models.outings.findOne({
-      _id: outing_id,
+      _id: outingId,
       user_id: ctx.user?._id,
     });
   }

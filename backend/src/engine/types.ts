@@ -16,10 +16,10 @@ export enum Destination {
 }
 
 export enum PriceLevel {
-  cheap = '$',
-  moderate = '$$',
-  expensive = '$$$',
-  veryExpensive = '$$$$',
+  cheap = 'Cheap',
+  moderate = 'Moderate',
+  expensive = 'Expensive',
+  veryExpensive = 'Very Expensive',
 }
 
 export enum Vibe {

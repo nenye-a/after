@@ -3,16 +3,32 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
+}
+
+type CoordinatesType {
+  latitude: Float!
+  longitude: Float!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
 """
 scalar DateTimeISO
 
 type Mutation {
+  createPath(points: [PathInput!]!): Boolean!
   createUser(data: UserCreateInput!): UserType!
   endOuting: OutingType!
   pauseOuting: OutingType!
   startOuting(locationName: String!): OutingType!
+}
+
+type OutingPathType {
+  outing_id: ID!
+  points: [PathType!]!
 }
 
 type OutingType {
@@ -27,10 +43,26 @@ type OutingType {
   user_id: String!
 }
 
+input PathInput {
+  coordinates: CoordinatesInput!
+  time: DateTimeISO!
+}
+
+type PathType {
+  _id: ID!
+  coordinates: CoordinatesType!
+  linked_outing_id: String
+  location_id: ID
+  outing_id: ID!
+  time: DateTimeISO!
+  user_id: ID!
+}
+
 type Query {
   getActiveOuting: OutingType!
   getAllUsers: [UserType!]!
-  getOuting(outing_id: String!): OutingType!
+  getOuting(outingId: String!): OutingType!
+  getOutingPaths(outing_ids: [ID!]): [OutingPathType!]!
   getOutings(status: [String!]): [OutingType!]!
   getUser: UserType!
 }
@@ -45,10 +77,10 @@ input UserCreateInput {
 }
 
 type UserType {
+  _id: ID!
   email: String!
   first_name: String
   home_address: String
-  id: ID!
   last_name: String
   phone: String
 }

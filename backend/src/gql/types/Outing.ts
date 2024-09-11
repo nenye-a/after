@@ -30,3 +30,32 @@ export class OutingType {
   @Field((type) => Boolean, { nullable: true })
   automatically_ended?: boolean;
 }
+
+export class DetailedOuting {
+  @Field((type) => ID)
+  _id: string;
+
+  @Field((type) => String)
+  user_id: string;
+
+  @Field((type) => String)
+  name: string;
+
+  @Field((type) => String)
+  status: string;
+
+  @Field((type) => Date)
+  start_date: Date;
+
+  @Field((type) => Date, { nullable: true })
+  end_date?: Date;
+
+  @Field((type) => String, { nullable: true })
+  linked_outing_id?: string;
+
+  @Field((type) => Boolean, { nullable: true })
+  favorite?: boolean;
+
+  @Field((type) => Boolean, { nullable: true })
+  automatically_ended?: boolean;
+}
