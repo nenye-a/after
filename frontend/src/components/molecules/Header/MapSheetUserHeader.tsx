@@ -5,9 +5,7 @@ import { Pressable, View } from 'react-native';
 import _ from 'lodash';
 import { useOuting } from '@/context/OutingContext';
 
-type MapSheetUserHeaderProps = {};
-
-function MapSheetUserHeader(props: MapSheetUserHeaderProps) {
+function MapSheetUserHeader() {
   const { layout, gutters, fonts } = useTheme();
   const { auth0User } = useUser();
   const { activeOuting } = useOuting();
