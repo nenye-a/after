@@ -72,7 +72,6 @@ export default function OutingProvider({ children = null, storage }: Props) {
   });
 
   const startOuting = async (locationName: string) => {
-    console.log(locationTracking);
     if (!activeOuting) {
       let currentPosition = await getCurrentPosition({});
       startTrackingLocation();
@@ -84,7 +83,6 @@ export default function OutingProvider({ children = null, storage }: Props) {
   };
 
   const endOuting = () => {
-    console.log(locationTracking);
     if (activeOuting) {
       stopTrackingLocation();
       endOutingRequest();
