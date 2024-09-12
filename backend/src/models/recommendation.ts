@@ -25,7 +25,7 @@ export type Recommendation = {
   website_url: string;
   price_level?: PriceLevel;
   rating: number;
-  number_ratings: number;
+  num_ratings: number;
   open_hours: {
     open: string;
     close: string;

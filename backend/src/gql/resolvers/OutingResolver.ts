@@ -3,16 +3,35 @@ import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { OutingType } from '../types/Outing';
 import { Context } from '../../context';
 import { OutingStatus } from '../../types/outing';
+import { getAdditionalOutingInfo } from '../../helpers/outing';
 
 @Authorized()
 @Resolver(OutingType)
 export class OutingResolver {
   @Query(() => OutingType)
-  async getOuting(@Arg('outingId') outingId: string, @Ctx() ctx: Context) {
-    return ctx.models.outings.findOne({
+  async getOuting(
+    @Arg('outingId') outingId: string,
+    @Ctx() ctx: Context,
+    @Arg('includeAdditionalInfo', { defaultValue: false })
+    includeAdditionalInfo: boolean,
+  ) {
+    let outingDetails = await ctx.models.outings.findOne({
       _id: outingId,
       user_id: ctx.user?._id,
     });
+
+    if (outingDetails && includeAdditionalInfo) {
+      let detailsMap = await getAdditionalOutingInfo([outingId]);
+      let outingAdditionalDetails = detailsMap.get(outingId);
+
+      return {
+        ...outingDetails.toObject(),
+        num_locations: outingAdditionalDetails?.numLocations ?? 0,
+        num_participants: outingAdditionalDetails?.numParticipants ?? 1,
+      };
+    } else {
+      return outingDetails;
+    }
   }
 
   /**
@@ -22,11 +41,28 @@ export class OutingResolver {
    * @returns
    */
   @Query(() => OutingType)
-  async getActiveOuting(@Ctx() ctx: Context) {
-    return ctx.models.outings.findOne({
+  async getActiveOuting(
+    @Ctx() ctx: Context,
+    @Arg('includeAdditionalInfo', { defaultValue: false })
+    includeAdditionalInfo: boolean,
+  ) {
+    let activeOuting = await ctx.models.outings.findOne({
       user_id: ctx.user?._id,
       status: { $in: ['active', 'paused'] },
     });
+
+    if (activeOuting && includeAdditionalInfo) {
+      let detailsMap = await getAdditionalOutingInfo([activeOuting._id]);
+      let outingAdditionalDetails = detailsMap.get(activeOuting._id.toString());
+
+      return {
+        ...activeOuting.toObject(),
+        num_locations: outingAdditionalDetails?.numLocations ?? 0,
+        num_participants: outingAdditionalDetails?.numParticipants ?? 1,
+      };
+    } else {
+      return activeOuting;
+    }
   }
 
   /**
@@ -38,12 +74,28 @@ export class OutingResolver {
   @Query(() => [OutingType])
   async getOutings(
     @Ctx() ctx: Context,
+    @Arg('includeAdditionalInfo', { defaultValue: false })
+    includeAdditionalInfo: boolean,
     @Arg('status', () => [String], { nullable: true }) status?: OutingStatus[],
   ) {
-    return ctx.models.outings.find({
+    let allOutings = await ctx.models.outings.find({
       user_id: ctx.user?._id,
       ...(status ? { status: { $in: status } } : {}),
     });
+
+    if (allOutings.length && includeAdditionalInfo) {
+      let detailsMap = await getAdditionalOutingInfo(
+        allOutings.map((o) => o._id),
+      );
+      return allOutings.map((outing) => {
+        let outingDetails = detailsMap.get(outing._id.toString());
+        return {
+          ...outing.toObject(),
+          num_locations: outingDetails?.numLocations ?? 0,
+          num_participants: outingDetails?.numParticipants ?? 1,
+        };
+      });
+    }
   }
 
   /**
@@ -71,10 +123,18 @@ export class OutingResolver {
       return activeOuting.save();
     }
 
-    return ctx.models.outings.create({
+    let newOuting = await ctx.models.outings.create({
       user_id: ctx.user?._id,
       name: `Outing from ${locationName}`,
     });
+
+    if (newOuting) {
+      return {
+        ...newOuting.toObject(),
+        num_locations: 1, // TODO: Determine this based on the location submitted.
+        num_participants: 1,
+      };
+    }
   }
 
   /**

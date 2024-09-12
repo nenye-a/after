@@ -74,6 +74,8 @@ type OutingType {
   favorite: Boolean
   linked_outing_id: String
   name: String!
+  num_locations: Float
+  num_participants: Float
   start_date: DateTimeISO!
   status: String!
   user_id: String!
@@ -103,13 +105,13 @@ enum PriceLevel {
 }
 
 type Query {
-  getActiveOuting: OutingType!
+  getActiveOuting(includeAdditionalInfo: Boolean! = false): OutingType!
   getAllUsers: [UserType!]!
   getLocationDetails(locationId: ID!): LocationType!
-  getOuting(outingId: String!): OutingType!
+  getOuting(includeAdditionalInfo: Boolean! = false, outingId: String!): OutingType!
   getOutingLocations(outingId: ID!): [LocationType!]!
   getOutingPaths(outing_ids: [ID!]): [OutingPathType!]!
-  getOutings(status: [String!]): [OutingType!]!
+  getOutings(includeAdditionalInfo: Boolean! = false, status: [String!]): [OutingType!]!
   getUser: UserType!
 }
 
