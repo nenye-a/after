@@ -68,10 +68,10 @@ export class LocationType {
   city?: string;
 
   @Field()
-  start_time: Date;
+  arrival_time: Date;
 
   @Field({ nullable: true })
-  end_time?: Date;
+  departure_time?: Date;
 
   @Field((type) => LocationInfo, { defaultValue: {} })
   info: LocationInfo;

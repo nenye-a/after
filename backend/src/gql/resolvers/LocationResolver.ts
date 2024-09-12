@@ -32,7 +32,7 @@ export class LocationResolver {
       .find({ outing_id: outingId, user_id: ctx.user?._id })
       .then((locations) =>
         locations.sort(
-          (a, b) => a.start_time.getTime() - b.start_time.getTime(),
+          (a, b) => a.arrival_time.getTime() - b.arrival_time.getTime(),
         ),
       );
   }
@@ -125,7 +125,7 @@ export class LocationResolver {
     });
 
     if (location) {
-      if (!location.end_time) location.end_time = new Date();
+      if (!location.departure_time) location.departure_time = new Date();
       return location.save();
     }
 

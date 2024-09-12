@@ -156,8 +156,8 @@ export class OutingResolver {
 
     // End any current stay at the current location.
     await ctx.models.locations.updateMany(
-      { outing_id: activeOuting._id, end_time: null },
-      { end_time: new Date() },
+      { outing_id: activeOuting._id, departure_time: null },
+      { departure_time: new Date() },
     );
 
     activeOuting.status = 'paused';
@@ -180,8 +180,8 @@ export class OutingResolver {
 
     // End any current stay at the current location.
     await ctx.models.locations.updateMany(
-      { outing_id: activeOuting._id, end_time: null },
-      { end_time: new Date() },
+      { outing_id: activeOuting._id, departure_time: null },
+      { departure_time: new Date() },
     );
 
     return activeOuting.save();

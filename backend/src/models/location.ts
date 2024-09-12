@@ -11,8 +11,8 @@ export type Location = {
   address: string;
   coordinates: Coordinates;
   city?: string;
-  start_time: Date; // TODO: Change to arrival & departure time.
-  end_time?: Date;
+  arrival_time: Date; // TODO: Change to arrival & departure time.
+  departure_time?: Date;
   info: {
     type?: string; // Convert to enum.
     rating?: number;
@@ -56,8 +56,8 @@ const locationSchema = new Schema<Location, LocationModel>(
       longitude: { type: Number, required: true },
     },
     city: String,
-    start_time: { type: Date, required: true, default: Date.now },
-    end_time: Date,
+    arrival_time: { type: Date, required: true, default: Date.now },
+    departure_time: Date,
     info: {
       type: { type: String },
       rating: Number,

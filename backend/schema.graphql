@@ -37,9 +37,10 @@ type LocationInfo {
 type LocationType {
   _id: ID!
   address: String!
+  arrival_time: DateTimeISO!
   city: String
   coordinates: CoordinatesType!
-  end_time: DateTimeISO
+  departure_time: DateTimeISO
   external_ids: LocationExternalIds!
   favorite: Boolean
   info: LocationInfo!
@@ -48,7 +49,6 @@ type LocationType {
   notes: String
   outing_id: ID!
   recommendation_id: ID
-  start_time: DateTimeISO!
   user_id: ID!
 }
 
