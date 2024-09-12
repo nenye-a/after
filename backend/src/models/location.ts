@@ -92,14 +92,6 @@ const locationSchema = new Schema<Location, LocationModel>(
         userId: mongoose.Types.ObjectId,
         outingId: mongoose.Types.ObjectId,
       ) {
-        console.log({
-          type: place.types[0],
-          rating: place.rating,
-          num_ratings: place.userRatingCount,
-          price_level: convertGooglePriceLevel(place.priceLevel),
-          // image_urls: place.photos?.map((photo) => photo.photo_reference),
-          tags: place.types,
-        });
         let formattedLocation: Location = new locations({
           user_id: userId,
           outing_id: outingId,
