@@ -10,13 +10,15 @@ import { Context, context } from './context';
 import { UserResolver } from './gql/resolvers/UserResolver';
 import { AuthMiddlware } from './gql/middlewares/auth';
 import { OutingResolver } from './gql/resolvers/OutingResolver';
+import { PathResolver } from './gql/resolvers/PathResolver';
+import { LocationResolver } from './gql/resolvers/LocationResolver';
 
 // Configures environment variables from .env file. See more: https://www.npmjs.com/package/dotenv
 dotenv.config();
 
 const app = async () => {
   const schema = await tq.buildSchema({
-    resolvers: [UserResolver, OutingResolver],
+    resolvers: [UserResolver, OutingResolver, PathResolver, LocationResolver],
     scalarsMap: [{ type: GraphQLScalarType, scalar: DateTimeResolver }],
     validate: { forbidUnknownValues: false },
     emitSchemaFile: true,

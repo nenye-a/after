@@ -3,16 +3,68 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
+}
+
+type CoordinatesType {
+  latitude: Float!
+  longitude: Float!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
 """
 scalar DateTimeISO
 
+type LocationExternalIds {
+  google_place_id: String
+  here_id: String
+  yelp_id: String
+}
+
+type LocationInfo {
+  google_photo_names: [String!]
+  image_urls: [String!]
+  num_ratings: Float
+  price_level: PriceLevel
+  rating: Float
+  tags: [String!]
+  type: String
+}
+
+type LocationType {
+  _id: ID!
+  address: String!
+  arrival_time: DateTimeISO!
+  city: String
+  coordinates: CoordinatesType!
+  departure_time: DateTimeISO
+  external_ids: LocationExternalIds!
+  favorite: Boolean
+  info: LocationInfo!
+  name: String!
+  nickname: String
+  notes: String
+  outing_id: ID!
+  recommendation_id: ID
+  user_id: ID!
+}
+
 type Mutation {
+  createLocationFromPoint(coordinates: CoordinatesInput!): LocationType
+  createPath(points: [PathInput!]!): Boolean!
   createUser(data: UserCreateInput!): UserType!
+  endLocationStay(locationId: ID!): LocationType!
   endOuting: OutingType!
   pauseOuting: OutingType!
   startOuting(locationName: String!): OutingType!
+}
+
+type OutingPathType {
+  outing_id: ID!
+  points: [PathType!]!
 }
 
 type OutingType {
@@ -22,16 +74,44 @@ type OutingType {
   favorite: Boolean
   linked_outing_id: String
   name: String!
+  num_locations: Float
+  num_participants: Float
   start_date: DateTimeISO!
   status: String!
   user_id: String!
 }
 
+input PathInput {
+  coordinates: CoordinatesInput!
+  time: DateTimeISO!
+}
+
+type PathType {
+  _id: ID!
+  coordinates: CoordinatesType!
+  linked_outing_id: String
+  location_id: ID
+  outing_id: ID!
+  time: DateTimeISO!
+  user_id: ID!
+}
+
+"""Price level of a location"""
+enum PriceLevel {
+  cheap
+  expensive
+  moderate
+  veryExpensive
+}
+
 type Query {
-  getActiveOuting: OutingType!
+  getActiveOuting(includeAdditionalInfo: Boolean! = false): OutingType!
   getAllUsers: [UserType!]!
-  getOuting(outing_id: String!): OutingType!
-  getOutings(status: [String!]): [OutingType!]!
+  getLocationDetails(locationId: ID!): LocationType!
+  getOuting(includeAdditionalInfo: Boolean! = false, outingId: String!): OutingType!
+  getOutingLocations(outingId: ID!): [LocationType!]!
+  getOutingPaths(outing_ids: [ID!]): [OutingPathType!]!
+  getOutings(includeAdditionalInfo: Boolean! = false, status: [String!]): [OutingType!]!
   getUser: UserType!
 }
 
@@ -45,10 +125,10 @@ input UserCreateInput {
 }
 
 type UserType {
+  _id: ID!
   email: String!
   first_name: String
   home_address: String
-  id: ID!
   last_name: String
   phone: String
 }

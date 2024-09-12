@@ -1,3 +1,4 @@
+import fs from 'fs';
 import axios from 'axios'; // TODO: Leverage safe request custom library.
 import * as dotenv from 'dotenv';
 import {
@@ -8,6 +9,7 @@ import {
   GoogleSearchResult,
   GoogleNearbySearchParams,
   GoogleLocationPoint,
+  GooglePhotosParams,
 } from './types';
 
 dotenv.config();
@@ -192,6 +194,63 @@ export const googlePlaceDetails = async (
     });
 };
 
+/**
+ * Get a photo from google places. Since this is a get request, we will always return the photo
+ * in a json.
+ * @param googlePhotoNames
+ * @param params
+ * @returns
+ */
+export const getGooglePhotos = async (
+  googlePhotoNames: string[],
+  params: GooglePhotosParams,
+): Promise<
+  | {
+      name: string;
+      photoUri: string;
+    }[]
+  | null
+> => {
+  return await Promise.all(
+    googlePhotoNames.map(async (photoName) => {
+      return await placesV2AxiosInstance
+        .get(`${photoName}/media`, {
+          params: {
+            ...params,
+            skipHttpRedirect: true,
+            key: GOOGLE_API_KEY,
+          },
+        })
+        .then((response) => {
+          return response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+          return null;
+        });
+    }),
+  );
+};
+
+export const getPlacesFromCoordinates = async (
+  coordinates: GoogleLocationPoint,
+  fields: GooglePlaceField[] | '*',
+  searchParams?: GoogleTextSearchParams,
+  searchPrompt: string = 'Whats at',
+) => {
+  let address = await getAddress(coordinates);
+  if (address) {
+    console.log(address);
+    return await googleSearch(
+      `${searchPrompt} ${address}`,
+      fields,
+      searchParams,
+    );
+  } else {
+    return null;
+  }
+};
+
 if (require.main === module) {
   // {
   //   // Test Search
@@ -204,7 +263,6 @@ if (require.main === module) {
   //     })
   //     .catch((err) => console.log(err));
   // }
-
   // {
   //   // Test Places
   //   const placeId = 'ChIJWVD7FadZwokRs_pS6XY7VOU';
@@ -219,7 +277,6 @@ if (require.main === module) {
   //     })
   //     .catch((err) => console.log(err));
   // }
-
   // {
   //   // Test Places
   //   const placeId = 'ChIJWVD7FadZwokRs_pS6XY7VOU';
@@ -243,7 +300,6 @@ if (require.main === module) {
   //     })
   //     .catch((err) => console.log(err));
   // }
-
   // {
   //   // // Test Geocode
   //   // const address = '732 S Spring Street, Los Anggeles, CA 90014';
@@ -252,7 +308,6 @@ if (require.main === module) {
   //   //     console.log(data);
   //   //   })
   //   //   .catch((err) => console.log(err));
-
   //   // Test Reverse Geocode
   //   const coordinates = {
   //     latitude: 29.721507745211635,
@@ -264,21 +319,50 @@ if (require.main === module) {
   //     })
   //     .catch((err) => console.log(err));
   // }
+  // {
+  //   // // Test address functions
+  //   const coordinates = {
+  //     latitude: 29.721507745211635,
+  //     longitude: -95.77843928320651,
+  //   };
+  //   const address = '732 S Spring Street, Los Angeles, CA 90014';
+  //   getAddress(coordinates).then((data) => {
+  //     console.log(data);
+  //   });
+  //   getCoordinates(address).then((data) => {
+  //     console.log(data);
+  //   });
+  // }
+  // {
+  //   // Test place finder
+  //   const coordinates = {
+  //     // latitude: 29.74073626004217,
+  //     // longitude: -95.7755183281019,
+  //     // latitude: 29.739959453302856,
+  //     // longitude: -95.78006660958712,
+  //     latitude: 29.760747460072533,
+  //     longitude: -95.38268209252661,
+  //   };
 
+  //   getPlacesFromCoordinates(coordinates, '*').then((results) => {
+  //     console.log(results);
+
+  //     if (results)
+  //       fs.writeFileSync(
+  //         'places_example.json',
+  //         JSON.stringify(results.places[0]),
+  //       );
+  //   });
+  // }
   {
-    // // Test address functions
-    const coordinates = {
-      latitude: 29.721507745211635,
-      longitude: -95.77843928320651,
-    };
-    const address = '732 S Spring Street, Los Angeles, CA 90014';
+    // Test photo retrieval.
+    const photoNames = [
+      'places/ChIJbzpGZFm_QIYRwF6S5OkowRA/photos/AXCi2Q6t_J6hayARCU39gF3BGl8jax9tAh8Hcg1Fp_txkG9zPCPKlD57961WkjxLmWgR5ZJ1x68qqu6lPF2o-zKKheHcS7a1R-Q8tr1alN5OMeGeVusYluIsEDD4cgXS7fAsjntNz_bSrxV0njwvwxApPdENJo2wpGDqotRc',
+      'places/ChIJbzpGZFm_QIYRwF6S5OkowRA/photos/AXCi2Q5ZzdT4hCM4ys49_MQk6wD6KzS9QpK66O9E5LjeHrzpkrYMSDSUlBN3ukVXGds3tpwyMhF3DHuJookBPKd08F4D0AxTEJYXasKJFyGGTxUf9bKIoUcDujAKLtOi97pc29KSUGR2mKJR6It5NFymlDTJIsmo87Ofemlm',
+    ];
 
-    getAddress(coordinates).then((data) => {
-      console.log(data);
-    });
-
-    getCoordinates(address).then((data) => {
-      console.log(data);
-    });
+    getGooglePhotos(photoNames, { maxWidthPx: 1000, maxHeightPx: 1000 }).then(
+      (results) => console.log(results),
+    );
   }
 }

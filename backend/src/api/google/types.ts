@@ -446,3 +446,9 @@ export type GooglePlaceDetailsField =
   | GooglePlaceDetailsBasicField
   | GooglePlaceDetailsAdvancedField
   | GooglePlaceDetailsPreferredField;
+
+export interface GooglePhotosParams {
+  maxHeightPx?: number;
+  maxWidthPx?: number;
+  skipHttpRedirect?: boolean;
+}

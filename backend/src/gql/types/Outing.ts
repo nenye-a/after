@@ -29,4 +29,10 @@ export class OutingType {
 
   @Field((type) => Boolean, { nullable: true })
   automatically_ended?: boolean;
+
+  @Field((type) => Number, { nullable: true })
+  num_locations?: number;
+
+  @Field((type) => Number, { nullable: true })
+  num_participants?: number;
 }

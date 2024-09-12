@@ -1,7 +1,7 @@
 // import { useMemo } from 'react';
 import { MapStyle } from '@/constants/mapstyle';
 import { useTheme } from '@/theme';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useRef } from 'react';
 import MapView, { MapViewProps, Region } from 'react-native-maps';
 
 // San francisco coordinates is the default region.
@@ -24,6 +24,8 @@ function AfterMap({
 }: Props) {
   const { layout, colors } = useTheme();
 
+  const mapRef = useRef<MapView>(null);
+
   return (
     <MapView
       style={[layout.fullHeight, layout.fullWidth]}
@@ -33,9 +35,12 @@ function AfterMap({
       // provider="google"
       mapType="mutedStandard"
       showsUserLocation={true}
+      followsUserLocation={true} // NOTE: Can remove if necessary.
+      // shows
       userInterfaceStyle="dark"
       pitchEnabled={false}
       {...props}
+      ref={mapRef}
     >
       {children}
     </MapView>
