@@ -23,6 +23,7 @@ export type Location = {
     num_ratings?: number;
     price_level?: PriceLevel; // TODO: Centralize price level.
     image_urls?: string[];
+    google_photo_names?: string[];
     tags?: string[];
   };
   external_ids: {
@@ -36,13 +37,7 @@ export type Location = {
   favorite?: boolean;
 };
 
-interface LocationModel extends Model<Location> {
-  fromGoogleTextSearchPlace: (
-    place: any,
-    userId: mongoose.Types.ObjectId,
-    outingId: mongoose.Types.ObjectId,
-  ) => Location;
-}
+interface LocationModel extends Model<Location> {}
 
 const locationSchema = new Schema<Location, LocationModel>(
   {
@@ -73,6 +68,7 @@ const locationSchema = new Schema<Location, LocationModel>(
       num_ratings: Number,
       price_level: String,
       image_urls: [String],
+      google_photo_names: [String],
       tags: [String],
     },
     external_ids: {
@@ -86,36 +82,7 @@ const locationSchema = new Schema<Location, LocationModel>(
     favorite: Boolean,
   },
   {
-    statics: {
-      fromGoogleTextSearchPlace: function (
-        place: any,
-        userId: mongoose.Types.ObjectId,
-        outingId: mongoose.Types.ObjectId,
-      ) {
-        let formattedLocation: Location = new locations({
-          user_id: userId,
-          outing_id: outingId,
-          name: place.displayName.text,
-          address: place.formattedAddress,
-          coordinates: place.location,
-          city: findCityFromGoogleAddressComponents(place.addressComponents),
-          info: {
-            type: place.types[0],
-            rating: place.rating,
-            num_ratings: place.userRatingCount,
-            price_level: convertGooglePriceLevel(place.priceLevel),
-            image_urls: place.photos?.map(
-              (photo: { name: string }) => photo.name,
-            ),
-            tags: place.types,
-          },
-          external_ids: {
-            google_place_id: place.name,
-          },
-        });
-        return formattedLocation;
-      },
-    },
+    statics: {},
   },
 );
 

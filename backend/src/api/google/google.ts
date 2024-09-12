@@ -201,7 +201,7 @@ export const googlePlaceDetails = async (
  * @param params
  * @returns
  */
-export const googleGetPhotos = async (
+export const getGooglePhotos = async (
   googlePhotoNames: string[],
   params: GooglePhotosParams,
 ): Promise<
@@ -361,7 +361,7 @@ if (require.main === module) {
       'places/ChIJbzpGZFm_QIYRwF6S5OkowRA/photos/AXCi2Q5ZzdT4hCM4ys49_MQk6wD6KzS9QpK66O9E5LjeHrzpkrYMSDSUlBN3ukVXGds3tpwyMhF3DHuJookBPKd08F4D0AxTEJYXasKJFyGGTxUf9bKIoUcDujAKLtOi97pc29KSUGR2mKJR6It5NFymlDTJIsmo87Ofemlm',
     ];
 
-    googleGetPhotos(photoNames, { maxWidthPx: 1000, maxHeightPx: 1000 }).then(
+    getGooglePhotos(photoNames, { maxWidthPx: 1000, maxHeightPx: 1000 }).then(
       (results) => console.log(results),
     );
   }

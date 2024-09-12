@@ -4,6 +4,7 @@ import { LocationType } from '../types/Location';
 import { CoordinatesInput } from '../types/Path';
 import { Context } from '../../context';
 import { getPlacesFromCoordinates } from '../../api/google';
+import { convertGooglePlaceToLocationBase } from '../../helpers/locations';
 
 @Authorized()
 @Resolver(LocationType)
@@ -43,10 +44,14 @@ export class LocationResolver {
 
       if (googlePlaceOptions) {
         let googlePlace = googlePlaceOptions.places[0];
-        let formattedLocation = ctx.models.locations.fromGoogleTextSearchPlace(
+
+        let formattedLocation = await convertGooglePlaceToLocationBase(
           googlePlace,
-          ctx.user._id,
-          activeOuting._id,
+          {
+            userId: ctx.user._id,
+            outingId: activeOuting._id,
+            hydratePhotos: true,
+          },
         );
 
         return await ctx.models.locations.create(formattedLocation);

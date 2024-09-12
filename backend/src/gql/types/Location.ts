@@ -26,6 +26,9 @@ export class LocationInfo {
   image_urls?: string[];
 
   @Field((type) => [String], { nullable: true })
+  google_photo_names?: string[];
+
+  @Field((type) => [String], { nullable: true })
   tags?: string[];
 }
 

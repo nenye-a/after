@@ -25,6 +25,7 @@ type LocationExternalIds {
 }
 
 type LocationInfo {
+  google_photo_names: [String!]
   image_urls: [String!]
   num_ratings: Float
   price_level: PriceLevel
