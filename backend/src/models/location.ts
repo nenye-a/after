@@ -2,10 +2,6 @@ import mongoose, { Model, Schema } from 'mongoose';
 import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
 import { Coordinates } from '../types/location';
 import { PriceLevel } from '../engine/types';
-import {
-  convertGooglePriceLevel,
-  findCityFromGoogleAddressComponents,
-} from '../helpers/locations';
 
 export type Location = {
   _id: mongoose.Types.ObjectId;
@@ -15,7 +11,7 @@ export type Location = {
   address: string;
   coordinates: Coordinates;
   city?: string;
-  start_time: Date;
+  start_time: Date; // TODO: Change to arrival & departure time.
   end_time?: Date;
   info: {
     type?: string; // Convert to enum.

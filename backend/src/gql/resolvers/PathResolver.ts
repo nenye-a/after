@@ -14,6 +14,12 @@ import { Context } from '../../context';
 @Authorized()
 @Resolver(PathType)
 export class PathResolver {
+  /**
+   * Get all paths for given outings.
+   * @param ctx
+   * @param outing_ids
+   * @returns
+   */
   @Query(() => [OutingPathType])
   async getOutingPaths(
     @Ctx() ctx: Context,
@@ -37,6 +43,12 @@ export class PathResolver {
     ]);
   }
 
+  /**
+   * Create path for an outing by storing a set of points.
+   * @param points
+   * @param ctx
+   * @returns
+   */
   @Mutation(() => Boolean)
   async createPath(
     @Arg('points', () => [PathInput]) points: PathInput[],
