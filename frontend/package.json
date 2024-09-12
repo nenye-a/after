@@ -32,6 +32,8 @@
     "react-i18next": "^14.1.0",
     "react-native": "0.74.1",
     "react-native-auth0": "^3.2.1",
+    "react-native-background-fetch": "^4.2.1",
+    "react-native-background-geolocation": "^4.17.1",
     "react-native-config": "^1.5.3",
     "react-native-element-dropdown": "^2.12.1",
     "react-native-gesture-handler": "^2.16.0",

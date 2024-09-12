@@ -18,6 +18,7 @@ import {
   GET_ACTIVE_OUTING,
   START_OUTING,
 } from '@/services/graphql/after/queries/outing';
+import { useLocation } from './LocationContext';
 
 export type OutingContextType = {
   activeOuting: OutingType | null;
@@ -39,6 +40,13 @@ type Props = PropsWithChildren & { storage: MMKV };
 
 export default function OutingProvider({ children = null, storage }: Props) {
   const { apiInstance, isAuthorized } = useUser();
+  const {
+    locationTracking,
+    getCurrentPosition,
+    startTrackingLocation,
+    stopTrackingLocation,
+  } = useLocation();
+
   const [activeOuting, setActiveOuting] = useState<OutingType | null>(null);
 
   const { data: activeOutingData } = useQuery({
@@ -63,17 +71,22 @@ export default function OutingProvider({ children = null, storage }: Props) {
     },
   });
 
-  const startOuting = (locationName: string) => {
-    if (!activeOuting) createOutingRequest({ locationName });
-    else
+  const startOuting = async (locationName: string) => {
+    if (!activeOuting) {
+      let currentPosition = await getCurrentPosition({});
+      startTrackingLocation();
+      createOutingRequest({ locationName });
+    } else
       console.log(
         'User already has an active outing, end first before starting a new one',
       );
   };
 
   const endOuting = () => {
-    if (activeOuting) endOutingRequest();
-    else console.log('No active outing to end');
+    if (activeOuting) {
+      stopTrackingLocation();
+      endOutingRequest();
+    } else console.log('No active outing to end');
   };
 
   useEffect(() => {

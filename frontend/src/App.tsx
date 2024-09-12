@@ -10,6 +10,7 @@ import './translations';
 import MapSheetProvider from './context/MapSheetContext';
 import UserProvider from './context/UserContext';
 import OutingProvider from './context/OutingContext';
+import LocationProvider from './context/LocationContext';
 
 export const queryClient = new QueryClient();
 
@@ -24,11 +25,13 @@ function App() {
           clientId={process.env.AUTH0_CLIENT_ID ?? ''}
         >
           <UserProvider storage={storage}>
-            <OutingProvider storage={storage}>
-              <MapSheetProvider storage={storage}>
-                <ApplicationNavigator />
-              </MapSheetProvider>
-            </OutingProvider>
+            <LocationProvider storage={storage}>
+              <OutingProvider storage={storage}>
+                <MapSheetProvider storage={storage}>
+                  <ApplicationNavigator />
+                </MapSheetProvider>
+              </OutingProvider>
+            </LocationProvider>
           </UserProvider>
         </Auth0Provider>
       </ThemeProvider>

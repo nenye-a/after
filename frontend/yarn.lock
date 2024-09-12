@@ -5508,6 +5508,8 @@ __metadata:
     react-i18next: ^14.1.0
     react-native: 0.74.1
     react-native-auth0: ^3.2.1
+    react-native-background-fetch: ^4.2.1
+    react-native-background-geolocation: ^4.17.1
     react-native-config: ^1.5.3
     react-native-element-dropdown: ^2.12.1
     react-native-gesture-handler: ^2.16.0
@@ -13198,6 +13200,22 @@ __metadata:
     expo:
       optional: true
   checksum: 133bf17706fbfe53606fba4b5b3de0fea6c2e0607aaa17b94d8e733a24f967100c0d21231907064dfb97a98edfecd18781b3176e457d7e1a59d89e92eb0a9bc8
+  languageName: node
+  linkType: hard
+
+"react-native-background-fetch@npm:^4.2.1, react-native-background-fetch@npm:~4.2.5":
+  version: 4.2.5
+  resolution: "react-native-background-fetch@npm:4.2.5"
+  checksum: d124418a69377f0399b72cb86bfea5e801a4dc2d5b8215e6736fd21836a82ad514a3b89fd2915b866c205e6e7f2feddd0486d4893a0261e7d978502773397d45
+  languageName: node
+  linkType: hard
+
+"react-native-background-geolocation@npm:^4.17.1":
+  version: 4.17.1
+  resolution: "react-native-background-geolocation@npm:4.17.1"
+  dependencies:
+    react-native-background-fetch: ~4.2.5
+  checksum: 1398e179580bb97c1f609e5322edfb7993557b754422e2a2422ad57e44e0e36c0a374cc7aa986d2465a00200de9223490a931a5b71911676f67f52c1abaa445f
   languageName: node
   linkType: hard
 

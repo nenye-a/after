@@ -4,6 +4,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import <React/RCTLinkingManager.h>
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
 
 @implementation AppDelegate
 
@@ -17,6 +18,9 @@
   // Setup google API key for maps.
   NSString *googleMapsApiKey = [RNCConfig envFor:@"GOOGLE_MAPS_API_KEY"];
   [GMSServices provideAPIKey:googleMapsApiKey]; 
+
+  //  [REQUIRED] Register BackgroundFetch
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
