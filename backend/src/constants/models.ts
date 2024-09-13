@@ -1,5 +1,6 @@
 const MODEL_NAMES = {
-  user: 'users',
+  users: 'users',
+  sessions: 'sessions',
   recommendationRequests: 'recommendation_requests',
   outings: 'outings',
   locations: 'locations',

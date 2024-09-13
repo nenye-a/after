@@ -15,6 +15,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { createAfterInstance } from '@/services/afterInstance';
 import { CREATE_USER, GET_USER } from '@/services/graphql/after/queries/user';
 import { GraphQLClient } from 'graphql-request';
+import { seconds } from '@/helpers/dates';
 
 export type UserContextType = {
   auth0User: User | null;
@@ -81,7 +82,8 @@ export default function UserProvider({ children, storage }: Props) {
         throw new Error('No valid credentials (API INSTANCE)');
       }
     },
-    enabled: !!auth0User && !!credentials && !!apiInstance,
+    enabled: !!auth0User && !!credentials && !!apiInstance && !userDetails,
+    staleTime: 10 * seconds,
   });
 
   const { mutate: createUser, isPending: isCreatingUser } = useMutation({
@@ -110,7 +112,7 @@ export default function UserProvider({ children, storage }: Props) {
           });
       });
     }
-  });
+  }, [auth0User]);
 
   /** Set new users upon detected logins. */
   useEffect(() => {

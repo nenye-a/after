@@ -1,5 +1,13 @@
 import _ from 'lodash';
 
+export const years = 1000 * 3600 * 24 * 365;
+export const days = 1000 * 3600 * 24;
+export const hours = 1000 * 3600;
+export const minutes = 1000 * 60;
+export const seconds = 1000;
+export const milliseconds = 1;
+export const microseconds = 0.001;
+
 export function convertDateToStringPretty(date: Date) {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const months = [

@@ -16,7 +16,7 @@ export const pathPointSchema = new Schema<PathPoint>({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: MODEL_NAMES.user,
+    ref: MODEL_NAMES.users,
     index: true,
   },
   coordinates: {

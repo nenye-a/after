@@ -14,16 +14,47 @@ export const AuthMiddlware: AuthChecker<Context> = async (
   roles,
 ) => {
   let authHeader = context.req?.headers.authorization;
-  if (!authHeader) {
-    return false;
-  } else {
-    let user = await getUser(authHeader.replace('Bearer ', ''));
 
-    if (!user) {
+  if (!authHeader) {
+    // No token provided -- UNAUTHORIZED
+    return false;
+  }
+
+  let token = authHeader.replace('Bearer ', '');
+  let session = await context.models.sessions.findSession(token);
+  if (session) {
+    if (session.user_id) {
+      // Existing session for user -- AUTHORIZED
+      context.user = await context.models.users.findById(session.user_id);
+      return true;
+    } else {
+      // Session exists but user is not found -- UNAUTHORIZED
+      console.log('Key is known to be invalid');
       return false;
     }
-    context.auth0User = user;
-    context.user = await context.models.users.findByAuth0Id(user.sub);
+  } else {
+    // Check autho0 for user.
+    let user = await getUser(token);
+    if (user) {
+      // AUTH0 User found -- AUTHORIZED
+      context.user =
+        (await context.models.users.findByAuth0Id(user.sub)) ??
+        // Create user if not found in our system.
+        (await context.models.users.create({
+          auth0_id: user.sub,
+          email: user.email,
+          first_name: user.nickname ?? user.given_name ?? user.name,
+          last_name: user.family_name,
+          phone: user.phone_number,
+        }));
+      await context.models.sessions.createSession(token, context.user?._id);
+      return true;
+    } else {
+      // No user found -- UNAUTHORIZED. Marking token as invalid.
+
+      await context.models.sessions.createSession(token, null);
+    }
   }
-  return true;
+
+  return false;
 };

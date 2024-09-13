@@ -22,11 +22,10 @@ const LoginScreen = ({ navigation }: RootScreenProps<'LoginScreen'>) => {
   };
 
   useEffect(() => {
-    // console.log(otherDetails);
     if (isAuthorized) {
       navigation.navigate('HomeScreen');
     }
-  });
+  }, [isAuthorized]);
 
   return (
     <SafeScreen

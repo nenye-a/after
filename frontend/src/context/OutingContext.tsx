@@ -1,7 +1,6 @@
 import {
   GetActiveOutingQueryVariables,
   MutationStartOutingArgs,
-  OutingType,
 } from '@/services/graphql/after/generated/graphql';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -19,19 +18,41 @@ import {
   START_OUTING,
 } from '@/services/graphql/after/queries/outing';
 import { useLocation } from './LocationContext';
+import { seconds } from '@/helpers/dates';
+import { GET_LOCATION_PREVIEW } from '@/services/graphql/after/queries/location';
+import { ActiveOutingSummary } from '@/types/service/outing';
+import { Coordinates } from '@/types/components/location';
+import { CREATE_PATH } from '@/services/graphql/after/queries/paths';
+
+export type Place = {
+  name: string;
+  address: string;
+};
 
 export type OutingContextType = {
-  activeOuting: OutingType | null;
-  setActiveOuting: (outing: OutingType) => void;
+  activeOuting: ActiveOutingSummary | null;
+  currentCoordinates: Coordinates | null;
+  setCurrentCoordinates: (coordinates: Coordinates) => void;
+  currentPlace: Place | null;
+  setCurrentPlace: (place: Place) => void;
+  setActiveOuting: (outing: ActiveOutingSummary) => void;
   startOuting: (locationName: string) => void;
   endOuting: () => void;
+  locationDetailsStatus: string | null;
+  refetchLocationDetails: () => void;
 };
 
 const OutingContext = createContext<OutingContextType>({
   activeOuting: null,
+  currentCoordinates: null,
+  setCurrentCoordinates: () => {},
+  currentPlace: null,
+  setCurrentPlace: () => {},
   setActiveOuting: () => {},
   startOuting: () => {},
   endOuting: () => {},
+  locationDetailsStatus: null,
+  refetchLocationDetails: () => {},
 });
 
 export const useOuting = () => useContext(OutingContext);
@@ -40,19 +61,49 @@ type Props = PropsWithChildren & { storage: MMKV };
 
 export default function OutingProvider({ children = null, storage }: Props) {
   const { apiInstance, isAuthorized } = useUser();
+
   const {
-    locationTracking,
-    getCurrentPosition,
     startTrackingLocation,
     stopTrackingLocation,
+    onMotionChange,
+    onLocationChange,
+    removeLocationListeners,
   } = useLocation();
 
-  const [activeOuting, setActiveOuting] = useState<OutingType | null>(null);
+  const [activeOuting, setActiveOuting] = useState<ActiveOutingSummary | null>(
+    null,
+  );
+  const [currentCoordinates, setCurrentCoordinates] =
+    useState<Coordinates | null>(null);
+  const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
 
   const { data: activeOutingData } = useQuery({
     queryKey: ['getActiveOuting'],
-    queryFn: async () => apiInstance?.request(GET_ACTIVE_OUTING),
-    enabled: isAuthorized && !!apiInstance,
+    queryFn: async () => {
+      return apiInstance?.request(GET_ACTIVE_OUTING);
+    },
+    staleTime: 10 * seconds,
+    enabled: isAuthorized && !!apiInstance && !activeOuting,
+  });
+
+  const {
+    status: locationDetailsStatus,
+    data: locationDetails,
+    refetch: refetchLocationDetails,
+  } = useQuery({
+    queryKey: ['getGooglePreviewLocation'],
+    queryFn: async () => {
+      if (currentCoordinates) {
+        let locationRequest = await apiInstance?.request(GET_LOCATION_PREVIEW, {
+          coordinates: currentCoordinates,
+        });
+        let locationData = locationRequest?.getGooglePreviewLocation;
+        return locationData;
+      } else {
+        return null;
+      }
+    },
+    enabled: !!currentCoordinates,
   });
 
   const { mutate: createOutingRequest } = useMutation({
@@ -71,9 +122,20 @@ export default function OutingProvider({ children = null, storage }: Props) {
     },
   });
 
+  const { mutate: createPathPoints, isPending: pathCreationPending } =
+    useMutation({
+      mutationFn: async (coordinatesList: Coordinates[]) => {
+        return apiInstance?.request(CREATE_PATH, {
+          points: coordinatesList.map((coordinates) => ({
+            coordinates,
+            time: new Date(),
+          })),
+        });
+      },
+    });
+
   const startOuting = async (locationName: string) => {
     if (!activeOuting) {
-      let currentPosition = await getCurrentPosition({});
       startTrackingLocation();
       createOutingRequest({ locationName });
     } else
@@ -101,13 +163,57 @@ export default function OutingProvider({ children = null, storage }: Props) {
     }
   }, [isAuthorized]);
 
+  useEffect(() => {
+    if (locationDetails) {
+      setCurrentPlace({
+        name: locationDetails.displayName,
+        address: locationDetails.address,
+      });
+    }
+  }, [locationDetails]);
+
+  useEffect(() => {
+    onMotionChange((changeEvent) => {
+      // Update current coordinates.
+
+      if (activeOuting) {
+        // Add current point to the path.
+
+        if (!pathCreationPending) {
+          console.log('Attempting to create a path point.');
+          createPathPoints([changeEvent.location.coords]);
+        }
+        setCurrentCoordinates(changeEvent.location.coords);
+        // If on an active outing, trigger the creation of a new location if significant
+        // if insigificant add a path point.
+      }
+    });
+
+    onLocationChange((locaton) => {
+      if (activeOuting) {
+        if (!pathCreationPending) createPathPoints([locaton.coords]);
+        setCurrentCoordinates(locaton.coords);
+      }
+    });
+
+    return () => {
+      removeLocationListeners();
+    };
+  }, []);
+
   return (
     <OutingContext.Provider
       value={{
+        currentCoordinates,
+        setCurrentCoordinates,
+        currentPlace,
+        setCurrentPlace,
         activeOuting,
         setActiveOuting,
         startOuting,
         endOuting,
+        locationDetailsStatus,
+        refetchLocationDetails,
       }}
     >
       {children}

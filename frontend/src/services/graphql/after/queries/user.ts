@@ -3,7 +3,7 @@ import { graphql } from '../generated';
 export const GET_ALL_USERS = graphql(`
   query GetAllUsers {
     getAllUsers {
-      id
+      _id
       email
       first_name
       last_name
@@ -16,7 +16,7 @@ export const GET_ALL_USERS = graphql(`
 export const GET_USER = graphql(`
   query GetUser {
     getUser {
-      id
+      _id
       email
       first_name
       last_name
@@ -29,7 +29,7 @@ export const GET_USER = graphql(`
 export const CREATE_USER = graphql(`
   mutation CreateUser($data: UserCreateInput!) {
     createUser(data: $data) {
-      id
+      _id
       email
       first_name
       last_name

@@ -72,7 +72,6 @@ export class LocationResolver {
     ]);
 
     if (googlePlaceOptions) {
-      console.log(googlePlaceOptions);
       let googlePlace = googlePlaceOptions.places[0];
 
       return {
