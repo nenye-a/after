@@ -91,3 +91,27 @@ export class LocationType {
   @Field({ nullable: true })
   favorite?: boolean;
 }
+
+@ObjectType()
+export class GooglePreviewLocationType {
+  @Field()
+  google_place_id: string;
+
+  @Field()
+  displayName: string;
+
+  @Field()
+  address: string;
+
+  @Field((type) => CoordinatesType)
+  coordinates: CoordinatesType;
+
+  @Field(() => [String])
+  types: string[];
+
+  @Field({ nullable: true })
+  rating: number;
+
+  @Field({ nullable: true })
+  num_ratings: number;
+}

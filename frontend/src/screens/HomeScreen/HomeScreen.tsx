@@ -41,7 +41,7 @@ function HomeScreen() {
           />
         </View>
       </SafeScreen>
-      <MapBottomSheet snapPoints={['5%', '25%', '50%', '70%', '90%']} index={2}>
+      <MapBottomSheet snapPoints={['5%', '25%', '50%', '70%', '90%']} index={1}>
         {mapSheetPage === 'Recommendation Detail' ? (
           <RecommendationDetailScreen {...exampleDeepDetail} />
         ) : mapSheetPage === 'Outing Detail' ? (

@@ -35,8 +35,7 @@ function AfterMap({
       // provider="google"
       mapType="mutedStandard"
       showsUserLocation={true}
-      followsUserLocation={true} // NOTE: Can remove if necessary.
-      // shows
+      followsUserLocation={true} // TODO: Make this togglable!
       userInterfaceStyle="dark"
       pitchEnabled={false}
       {...props}

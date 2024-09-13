@@ -8,7 +8,7 @@ import {
   Query,
   Resolver,
 } from 'type-graphql';
-import { LocationType } from '../types/Location';
+import { GooglePreviewLocationType, LocationType } from '../types/Location';
 import { CoordinatesInput } from '../types/Path';
 import { Context } from '../../context';
 import { getPlacesFromCoordinates } from '../../api/google';
@@ -52,6 +52,39 @@ export class LocationResolver {
       _id: locationId,
       user_id: ctx.user?._id,
     });
+  }
+
+  @Query(() => GooglePreviewLocationType)
+  async getGooglePreviewLocation(
+    @Arg('coordinates', () => CoordinatesInput) coordinates: CoordinatesInput,
+  ) {
+    let googlePlaceOptions = await getPlacesFromCoordinates(coordinates, [
+      'name',
+      'displayName',
+      'formattedAddress',
+      'location',
+      'addressComponents',
+      'types',
+      'rating',
+      'userRatingCount',
+      'priceLevel',
+      'photos',
+    ]);
+
+    if (googlePlaceOptions) {
+      console.log(googlePlaceOptions);
+      let googlePlace = googlePlaceOptions.places[0];
+
+      return {
+        google_place_id: googlePlace.name,
+        displayName: googlePlace.displayName.text,
+        address: googlePlace.formattedAddress,
+        coordinates: googlePlace.location,
+        types: googlePlace.types,
+        rating: googlePlace.rating,
+        num_ratings: googlePlace.userRatingCount,
+      };
+    }
   }
 
   /**

@@ -3,7 +3,7 @@ import { getGooglePhotos, GooglePriceLevel } from '../api/google';
 import { PriceLevel } from '../engine/types';
 import { Coordinates } from '../types/location';
 
-interface AddressComponent {
+export interface AddressComponent {
   longText: string;
   shortText: string;
   types: string[];

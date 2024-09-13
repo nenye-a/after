@@ -18,6 +18,16 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTimeISO
 
+type GooglePreviewLocationType {
+  address: String!
+  coordinates: CoordinatesType!
+  displayName: String!
+  google_place_id: String!
+  num_ratings: Float
+  rating: Float
+  types: [String!]!
+}
+
 type LocationExternalIds {
   google_place_id: String
   here_id: String
@@ -107,6 +117,7 @@ enum PriceLevel {
 type Query {
   getActiveOuting(includeAdditionalInfo: Boolean! = false): OutingType!
   getAllUsers: [UserType!]!
+  getGooglePreviewLocation(coordinates: CoordinatesInput!): GooglePreviewLocationType!
   getLocationDetails(locationId: ID!): LocationType!
   getOuting(includeAdditionalInfo: Boolean! = false, outingId: String!): OutingType!
   getOutingLocations(outingId: ID!): [LocationType!]!
