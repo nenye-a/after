@@ -253,16 +253,25 @@ export const getPlacesFromCoordinates = async (
   coordinates: GoogleLocationPoint,
   fields: GooglePlaceField[] | '*',
   options?: {
-    searchParams?: GoogleTextSearchParams;
+    searchParams?: GoogleNearbySearchParams;
     searchPrompt?: string;
   },
 ) => {
   let address = await getAddress(coordinates, { ignoreSubPresmises: true });
   if (address) {
-    return await googleSearch(
-      `${options?.searchPrompt ?? 'Whats at'} ${address}`,
+    return await googleNearbySearch(
+      {
+        circle: {
+          center: coordinates,
+          // Only within 10 meters of the location.
+          radius: 10,
+        },
+      },
       fields,
-      options?.searchParams,
+      {
+        rankPreference: 'DISTANCE',
+        ...options?.searchParams,
+      },
     );
   } else {
     return null;

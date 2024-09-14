@@ -87,7 +87,7 @@ export const convertGooglePlaceToLocationBase = async (
     rating: number;
     userRatingCount: number;
     priceLevel: GooglePriceLevel;
-    photos: { name: string }[];
+    photos?: { name: string }[];
   },
   metaDetails?: {
     userId?: Types.ObjectId;
@@ -97,7 +97,7 @@ export const convertGooglePlaceToLocationBase = async (
 ) => {
   let googlePhotoNames = place.photos?.map((photo) => photo.name);
   let googlePhotoUris: string[] = [];
-  if (metaDetails?.hydratePhotos) {
+  if (metaDetails?.hydratePhotos && googlePhotoNames) {
     googlePhotoUris = await getGooglePhotos(googlePhotoNames, {
       maxHeightPx: 400,
       maxWidthPx: 400,

@@ -51,10 +51,10 @@ export type LocationContextType = {
     options: CurrentPositionRequest,
   ) => Promise<Location | null>;
   getCurrentPositionRNCG: (
-    success: (position: GeolocationResponse) => void,
+    success?: (position: GeolocationResponse) => void,
     error?: ((error: GeolocationError) => void) | undefined,
     options?: GeolocationOptions,
-  ) => void;
+  ) => Promise<GeolocationResponse>;
   startTrackingLocation: () => Promise<boolean>;
   stopTrackingLocation: () => Promise<boolean>;
 };
@@ -67,7 +67,8 @@ const LocationContext = createContext<LocationContextType>({
   onActivityChange: (stub) => ({ remove: () => {} }),
   removeLocationListeners: stub,
   getCurrentPositionBG: async () => ({}) as Location,
-  getCurrentPositionRNCG: async () => ({}) as Location,
+  getCurrentPositionRNCG: async () =>
+    Promise.resolve({} as GeolocationResponse),
   startTrackingLocation: () => Promise.resolve(false),
   stopTrackingLocation: () => Promise.resolve(false),
 });
@@ -116,6 +117,26 @@ export default function LocationProvider({ children = null, storage }: Props) {
     };
   }, []);
 
+  // Convert getCurrentPosition from BackgroundGeolocation to a promise.
+  const getCurrentPositionRNCG = async (
+    success?: (position: GeolocationResponse) => void,
+    errorHandler?: ((error: GeolocationError) => void) | undefined,
+    options?: GeolocationOptions,
+  ) =>
+    new Promise<GeolocationResponse>((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          success && success(position);
+          resolve(position);
+        },
+        (error) => {
+          errorHandler && errorHandler(error);
+          reject(error);
+        },
+        options,
+      );
+    });
+
   return (
     <LocationContext.Provider
       value={{
@@ -130,7 +151,7 @@ export default function LocationProvider({ children = null, storage }: Props) {
         removeLocationListeners: (...args) =>
           BackgroundGeolocation.removeAllListeners(...args),
         getCurrentPositionBG: BackgroundGeolocation.getCurrentPosition,
-        getCurrentPositionRNCG: Geolocation.getCurrentPosition,
+        getCurrentPositionRNCG,
         startTrackingLocation: startTracking,
         stopTrackingLocation: stopTracking,
       }}
