@@ -254,7 +254,6 @@ export const getPlacesFromCoordinates = async (
   fields: GooglePlaceField[] | '*',
   options?: {
     searchParams?: GoogleNearbySearchParams;
-    searchPrompt?: string;
   },
 ) => {
   let address = await getAddress(coordinates, { ignoreSubPresmises: true });

@@ -24,7 +24,7 @@ function AfterMap({
   ...props
 }: Props) {
   const { layout, colors } = useTheme();
-  const { setCurrentCoordinates } = useOuting();
+  const { setCurrentCoordinates, addToOutingPath } = useOuting();
 
   const mapRef = useRef<MapView>(null);
 

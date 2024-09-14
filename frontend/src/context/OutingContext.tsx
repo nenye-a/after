@@ -38,6 +38,7 @@ export type OutingContextType = {
   endOuting: () => void;
   locationDetailsStatus: string | null;
   refetchLocationDetails: () => void;
+  addToOutingPath: (coordinatesList: Coordinates[]) => void;
 };
 
 const OutingContext = createContext<OutingContextType>({
@@ -51,6 +52,7 @@ const OutingContext = createContext<OutingContextType>({
   endOuting: () => {},
   locationDetailsStatus: null,
   refetchLocationDetails: () => {},
+  addToOutingPath: () => {},
 });
 
 export const useOuting = () => useContext(OutingContext);
@@ -104,12 +106,10 @@ export default function OutingProvider({ children = null, storage }: Props) {
   });
 
   useEffect(() => {
-    // React native community geolocation obtains positioning much faster
-    // than the background geolocation service.
     getCurrentPositionRNCG((position) => {
       position.coords && setCurrentCoordinates(position.coords);
     });
-  }, [activeOuting, isAuthorized]);
+  }, []);
 
   const {
     status: locationDetailsStatus,
@@ -192,10 +192,23 @@ export default function OutingProvider({ children = null, storage }: Props) {
       },
     });
 
+  const addToOutingPath = async (coordinatesList: Coordinates[]) => {
+    if (activeOuting) {
+      createPathPoints(coordinatesList);
+    } else console.log('No active outing to add path points to.');
+  };
+
   const startOuting = async () => {
     if (!activeOuting) {
-      createOutingRequest({ coordinates: currentCoordinates });
+      let coordinates = await getCurrentPositionRNCG().then(
+        (position): Coordinates => ({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }),
+      );
+      createOutingRequest({ coordinates });
       startTrackingLocation();
+      addToOutingPath([coordinates]);
     } else
       console.log(
         'User already has an active outing, end first before starting a new one',
@@ -216,12 +229,6 @@ export default function OutingProvider({ children = null, storage }: Props) {
   }, [activeOutingData]);
 
   useEffect(() => {
-    if (!isAuthorized && activeOuting) {
-      setActiveOuting(null);
-    }
-  }, [isAuthorized]);
-
-  useEffect(() => {
     if (locationDetails) {
       setCurrentPlace({
         name: locationDetails.displayName,
@@ -232,26 +239,11 @@ export default function OutingProvider({ children = null, storage }: Props) {
 
   useEffect(() => {
     onMotionChange((changeEvent) => {
-      // Update current coordinates.
-
-      if (activeOuting) {
-        // Add current point to the path.
-
-        if (!pathCreationPending) {
-          console.log('Attempting to create a path point.');
-          createPathPoints([changeEvent.location.coords]);
-        }
-        setCurrentCoordinates(changeEvent.location.coords);
-        // If on an active outing, trigger the creation of a new location if significant
-        // if insigificant add a path point.
-      }
+      setCurrentCoordinates(changeEvent.location.coords);
     });
 
     onLocationChange((locaton) => {
-      if (activeOuting) {
-        if (!pathCreationPending) createPathPoints([locaton.coords]);
-        setCurrentCoordinates(locaton.coords);
-      }
+      setCurrentCoordinates(locaton.coords);
     });
 
     return () => {
@@ -274,6 +266,14 @@ export default function OutingProvider({ children = null, storage }: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    // Every time the user moves, add the new coordinates to the outing path.
+    // TODO: Add filters to somewhat limit this to a certain distance from the last point.
+    if (activeOuting) {
+      currentCoordinates && addToOutingPath([currentCoordinates]);
+    }
+  }, [currentCoordinates]);
+
   return (
     <OutingContext.Provider
       value={{
@@ -287,6 +287,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
         endOuting,
         locationDetailsStatus,
         refetchLocationDetails,
+        addToOutingPath,
       }}
     >
       {children}

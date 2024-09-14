@@ -47,6 +47,8 @@ export type LocationContextType = {
     callback: (event: MotionActivityEvent) => void,
   ) => Subscription;
   removeLocationListeners: () => void;
+  // NOTE: React native community geolocation obtains positioning much faster
+  // than the background geolocation service.
   getCurrentPositionBG: (
     options: CurrentPositionRequest,
   ) => Promise<Location | null>;
