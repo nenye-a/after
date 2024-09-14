@@ -68,6 +68,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
     onMotionChange,
     onLocationChange,
     removeLocationListeners,
+    getCurrentPositionRNCG,
   } = useLocation();
 
   const [activeOuting, setActiveOuting] = useState<ActiveOutingSummary | null>(
@@ -86,6 +87,12 @@ export default function OutingProvider({ children = null, storage }: Props) {
     enabled: isAuthorized && !!apiInstance && !activeOuting,
   });
 
+  useEffect(() => {
+    getCurrentPositionRNCG((position) => {
+      position.coords && setCurrentCoordinates(position.coords);
+    });
+  }, [activeOuting, isAuthorized]);
+
   const {
     status: locationDetailsStatus,
     data: locationDetails,
@@ -94,16 +101,25 @@ export default function OutingProvider({ children = null, storage }: Props) {
     queryKey: ['getGooglePreviewLocation'],
     queryFn: async () => {
       if (currentCoordinates) {
-        let locationRequest = await apiInstance?.request(GET_LOCATION_PREVIEW, {
-          coordinates: currentCoordinates,
-        });
+        let locationRequest = await apiInstance
+          ?.request(GET_LOCATION_PREVIEW, {
+            coordinates: {
+              latitude: currentCoordinates.latitude,
+              longitude: currentCoordinates.longitude,
+            },
+          })
+          .catch((error) => {
+            console.log(error);
+            console.log(`Failed to get current location`);
+          });
+
         let locationData = locationRequest?.getGooglePreviewLocation;
         return locationData;
       } else {
         return null;
       }
     },
-    enabled: !!currentCoordinates,
+    enabled: isAuthorized && !!currentCoordinates,
   });
 
   const { mutate: createOutingRequest } = useMutation({

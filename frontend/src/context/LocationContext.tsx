@@ -15,6 +15,11 @@ import BackgroundGeolocation, {
   MotionChangeEvent,
   Subscription,
 } from 'react-native-background-geolocation';
+import Geolocation, {
+  GeolocationError,
+  GeolocationOptions,
+  GeolocationResponse,
+} from '@react-native-community/geolocation';
 
 const GeolocationConfig: Config = {
   stopOnTerminate: false,
@@ -42,9 +47,14 @@ export type LocationContextType = {
     callback: (event: MotionActivityEvent) => void,
   ) => Subscription;
   removeLocationListeners: () => void;
-  getCurrentPosition: (
+  getCurrentPositionBG: (
     options: CurrentPositionRequest,
   ) => Promise<Location | null>;
+  getCurrentPositionRNCG: (
+    success: (position: GeolocationResponse) => void,
+    error?: ((error: GeolocationError) => void) | undefined,
+    options?: GeolocationOptions,
+  ) => void;
   startTrackingLocation: () => Promise<boolean>;
   stopTrackingLocation: () => Promise<boolean>;
 };
@@ -56,7 +66,8 @@ const LocationContext = createContext<LocationContextType>({
   onMotionChange: (stub) => ({ remove: () => {} }),
   onActivityChange: (stub) => ({ remove: () => {} }),
   removeLocationListeners: stub,
-  getCurrentPosition: async () => ({}) as Location,
+  getCurrentPositionBG: async () => ({}) as Location,
+  getCurrentPositionRNCG: async () => ({}) as Location,
   startTrackingLocation: () => Promise.resolve(false),
   stopTrackingLocation: () => Promise.resolve(false),
 });
@@ -94,7 +105,6 @@ export default function LocationProvider({ children = null, storage }: Props) {
           state.enabled,
         );
         setFeatureReady(true);
-        startTracking();
       },
       async (error) => {
         console.log('BackgroundGeolocation ready error', error);
@@ -103,7 +113,6 @@ export default function LocationProvider({ children = null, storage }: Props) {
 
     return () => {
       BackgroundGeolocation.removeAllListeners();
-      stopTracking();
     };
   }, []);
 
@@ -120,7 +129,8 @@ export default function LocationProvider({ children = null, storage }: Props) {
           BackgroundGeolocation.onActivityChange(...args),
         removeLocationListeners: (...args) =>
           BackgroundGeolocation.removeAllListeners(...args),
-        getCurrentPosition: BackgroundGeolocation.getCurrentPosition,
+        getCurrentPositionBG: BackgroundGeolocation.getCurrentPosition,
+        getCurrentPositionRNCG: Geolocation.getCurrentPosition,
         startTrackingLocation: startTracking,
         stopTrackingLocation: stopTracking,
       }}
