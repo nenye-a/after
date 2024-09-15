@@ -115,6 +115,8 @@ export class LocationResolver {
         ctx,
       );
 
+      // TODO: If there is a prior location for this outing, mark that as departed.
+
       return await newLocation?.save();
     } else return null;
   }
