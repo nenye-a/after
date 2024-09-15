@@ -54,17 +54,19 @@ export type OutingContextType = {
   activeOutingPath: PathType[];
   mostRecentLocation: LocationType | null;
   inTransit: boolean;
+  isAtMostRecentLocation: boolean;
   currentCoordinates: Coordinates | null;
   setCurrentCoordinates: (coordinates: Coordinates) => void;
   currentPlace: Place | null;
   setCurrentPlace: (place: Place) => void;
   setActiveOuting: (outing: ActiveOutingSummary) => void;
-  startOuting: (locationName: string) => void;
+  startOuting: () => void;
   endOuting: () => void;
   locationDetailsStatus: string | null;
   refetchLocationDetails: () => void;
   addToOutingPath: (coordinatesList: Coordinates[]) => void;
   outingDataLoading: boolean;
+  isMoving: boolean;
 };
 
 const OutingContext = createContext<OutingContextType>({
@@ -73,6 +75,7 @@ const OutingContext = createContext<OutingContextType>({
   activeOutingPath: [],
   mostRecentLocation: null,
   inTransit: false,
+  isAtMostRecentLocation: false,
   currentCoordinates: null,
   setCurrentCoordinates: () => {},
   currentPlace: null,
@@ -84,6 +87,7 @@ const OutingContext = createContext<OutingContextType>({
   refetchLocationDetails: () => {},
   addToOutingPath: () => {},
   outingDataLoading: false,
+  isMoving: false,
 });
 
 export const useOuting = () => useContext(OutingContext);
@@ -114,6 +118,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
     null,
   );
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
+  const [isMoving, setIsMoving] = useState<boolean>(false);
 
   const mostRecentLocation = activeOutingLocations[0] ?? null;
   const inTransit = !mostRecentLocation || !!mostRecentLocation.departure_time;
@@ -527,6 +532,22 @@ export default function OutingProvider({ children = null, storage }: Props) {
       handleCreateEndLocation(locaton.coords);
     });
 
+    onActivityChange(({ activity, confidence }) => {
+      if (confidence > 70)
+        switch (activity) {
+          case 'running':
+          case 'on_bicycle':
+          case 'unknown':
+          case 'in_vehicle':
+            if (!isMoving) setIsMoving(true);
+          case 'still':
+          case 'walking':
+          case 'on_foot':
+          default:
+            if (isMoving) setIsMoving(false);
+        }
+    });
+
     return () => {
       removeLocationListeners();
     };
@@ -567,6 +588,10 @@ export default function OutingProvider({ children = null, storage }: Props) {
         setCurrentCoordinates,
         mostRecentLocation,
         inTransit,
+        isMoving,
+        isAtMostRecentLocation:
+          currentPlace?.google_place_id ===
+          mostRecentLocation?.external_ids.google_place_id,
         currentPlace,
         setCurrentPlace,
         activeOuting,
