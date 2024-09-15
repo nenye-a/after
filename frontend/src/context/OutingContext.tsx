@@ -610,6 +610,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
         let path = pastOutingPathsData.get(outing._id) ?? [];
         return {
           ...outing,
+
           path,
         };
       });

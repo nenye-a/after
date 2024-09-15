@@ -18,7 +18,11 @@ import Icon from 'react-native-vector-icons/Feather';
 import { ViewProps } from 'react-native-svg/lib/typescript/fabric/utils';
 import { useOuting } from '@/context/OutingContext';
 import { LocationType } from '@/services/graphql/after/generated/graphql';
-import { formattedDateDifference, getLocalTime } from '@/helpers/dates';
+import {
+  formattedDateDifference,
+  generateDurationString,
+  getLocalTime,
+} from '@/helpers/dates';
 import { convertLocationPriceLevel } from '@/helpers/location';
 
 type ListItemProps = { active?: boolean } & LocationType;
@@ -86,7 +90,7 @@ const LocationItem = (props: ListItemProps) => {
 
   const durationString = props.active
     ? `Here since ${getLocalTime(props.arrival_time)} (${formattedDateDifference(new Date(), props.arrival_time, ['day', 'hour', 'minute'])})`
-    : `${getLocalTime(props.arrival_time)} - ${getLocalTime(props.departure_time)} (${formattedDateDifference(props.departure_time, props.arrival_time, ['day', 'hour', 'minute'])})`;
+    : generateDurationString(props.departure_time, props.arrival_time);
 
   return (
     <View>

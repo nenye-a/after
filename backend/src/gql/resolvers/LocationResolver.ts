@@ -12,7 +12,6 @@ import { GooglePreviewLocationType, LocationType } from '../types/Location';
 import { CoordinatesInput } from '../types/Path';
 import { Context } from '../../context';
 import { getPlacesFromCoordinates } from '../../api/google';
-import { convertGooglePlaceToLocationBase } from '../../helpers/locations';
 import getPreviewLocation from './resolverHelpers/getPreviewLocation';
 
 @Authorized()

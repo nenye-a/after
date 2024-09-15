@@ -27,6 +27,8 @@ export const GET_OUTINGS = graphql(`
       automatically_ended
       num_locations
       num_participants
+      images
+      city
     }
   }
 `);

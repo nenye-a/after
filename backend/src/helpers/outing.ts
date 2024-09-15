@@ -8,8 +8,10 @@ export const getAdditionalOutingInfo = async (
   Map<
     string,
     {
-      numLocations: number;
-      numParticipants: number;
+      num_locations: number;
+      num_participants: number;
+      images: string[];
+      city: string;
     }
   >
 > => {
@@ -22,23 +24,46 @@ export const getAdditionalOutingInfo = async (
     {
       $group: {
         _id: '$outing_id',
-        numLocations: { $sum: 1 },
+        num_locations: { $sum: 1 },
+        images: { $push: '$info.image_urls' },
+        city: { $first: '$city' },
+        state: { $first: '$state' },
       },
     },
     {
       $set: {
         // TODO: Programatically obtain a different set of num participants once
         // the shared outings feature is implemented.
-        numParticipants: 1,
+        num_participants: 1,
+        city: { $concat: ['$city', ', ', '$state'] },
       },
     },
   ]);
 
-  return locationDetails.reduce(
-    (acc, { _id, numLocations, numParticipants }) => {
-      acc.set(_id.toString(), { numLocations, numParticipants });
+  let resultMap = locationDetails.reduce(
+    (acc, { _id, num_locations, num_participants, images, city }) => {
+      acc.set(_id.toString(), {
+        num_locations,
+        num_participants,
+        city,
+        images: images.flat(),
+      });
+
       return acc;
     },
     new Map(),
   );
+
+  outingIds.forEach((id) => {
+    if (!resultMap.has(id.toString())) {
+      resultMap.set(id.toString(), {
+        num_locations: 0,
+        num_participants: 1,
+        images: [],
+        city: '',
+      });
+    }
+  });
+
+  return resultMap;
 };

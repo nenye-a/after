@@ -35,6 +35,7 @@ export const ORDERED_TIME_UNITS: { name: UnitName; value: number }[] = [
 ];
 
 export function convertDateToStringPretty(date: Date) {
+  date = new Date(date);
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const months = [
     'Jan',
@@ -222,4 +223,13 @@ export const hourOfDate = function (date = new Date()) {
   );
 
   return newDate;
+};
+
+export const generateDurationString = (laterDate: Date, earlierDate: Date) => {
+  let duration = formattedDateDifference(laterDate, earlierDate, [
+    'day',
+    'hour',
+    'minute',
+  ]);
+  return `${getLocalTime(earlierDate)} - ${getLocalTime(laterDate)}${duration ? ` (${duration})` : ''}`;
 };

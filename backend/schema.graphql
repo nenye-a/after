@@ -85,8 +85,10 @@ type OutingPathType {
 type OutingType {
   _id: ID!
   automatically_ended: Boolean
+  city: String
   end_date: DateTimeISO
   favorite: Boolean
+  images: [String!]
   linked_outing_id: String
   name: String!
   num_locations: Float

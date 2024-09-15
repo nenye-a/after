@@ -30,9 +30,15 @@ export class OutingType {
   @Field((type) => Boolean, { nullable: true })
   automatically_ended?: boolean;
 
+  @Field((type) => String, { nullable: true })
+  city?: string;
+
   @Field((type) => Number, { nullable: true })
   num_locations?: number;
 
   @Field((type) => Number, { nullable: true })
   num_participants?: number;
+
+  @Field((type) => [String], { nullable: true })
+  images?: string[];
 }

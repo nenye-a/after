@@ -3,6 +3,21 @@ import { getGooglePhotos, GooglePriceLevel } from '../api/google';
 import { PriceLevel } from '../engine/types';
 import { Coordinates } from '../types/location';
 
+export const citySearchComponentList = [
+  'locality',
+  'postal_town',
+  'administrative_area_level_3',
+  'administrative_area_level_2',
+  'sublocality_level_1',
+  'sublocality',
+];
+
+export const stateSearchComponentList = [
+  'administrative_area_level_1',
+  'administrative_area_level_2',
+  'administrative_area_level_3',
+];
+
 export interface AddressComponent {
   longText: string;
   shortText: string;
@@ -14,46 +29,25 @@ export interface AddressComponent {
  * @param addressComponents
  * @returns
  */
-export function findCityFromGoogleAddressComponents(
+export function findFirstMatchingComponent(
   addressComponents: AddressComponent[],
+  target: 'city' | 'state' | string[] = 'city',
 ): string | null {
   // Define the priority order for city-related types
-  const cityTypes = [
-    'locality',
-    'postal_town',
-    'administrative_area_level_3',
-    'administrative_area_level_2',
-    'sublocality_level_1',
-    'sublocality',
-  ];
+  if (target === 'city') target = citySearchComponentList;
+  if (target === 'state') target = stateSearchComponentList;
 
   // First, try to find an exact match
-  for (const type of cityTypes) {
-    const match = addressComponents.find(
-      (component) =>
-        component.types.includes(type) &&
-        !component.types.includes('political'),
-    );
-    if (match) return match.longText;
+  for (const type of target) {
+    const match =
+      addressComponents.find(
+        (component) =>
+          component.types.includes(type) &&
+          component.types.includes('political'),
+      ) ??
+      addressComponents.find((component) => component.types.includes(type));
+    if (match) return match.shortText ?? match.longText;
   }
-
-  // If no exact match, look for partial matches
-  for (const type of cityTypes) {
-    const match = addressComponents.find(
-      (component) =>
-        component.types.some((t) => t.startsWith(type)) &&
-        !component.types.includes('political'),
-    );
-    if (match) return match.longText;
-  }
-
-  // If still no match, try to find any sublocality
-  const sublocality = addressComponents.find(
-    (component) =>
-      component.types.some((t) => t.startsWith('sublocality')) &&
-      !component.types.includes('political'),
-  );
-  if (sublocality) return sublocality.longText;
 
   // If all else fails, return null
   return null;
@@ -110,7 +104,8 @@ export const convertGooglePlaceToLocationBase = async (
     name: place.displayName.text,
     address: place.formattedAddress,
     coordinates: place.location,
-    city: findCityFromGoogleAddressComponents(place.addressComponents),
+    city: findFirstMatchingComponent(place.addressComponents, 'city'),
+    state: findFirstMatchingComponent(place.addressComponents, 'state'),
     info: {
       type: place.types[0],
       rating: place.rating,
