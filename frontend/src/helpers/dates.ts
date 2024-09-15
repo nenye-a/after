@@ -96,6 +96,9 @@ export const dateDifference = function (
     digits = 2,
   } = {},
 ) {
+  laterDate = new Date(laterDate);
+  earlierDate = new Date(earlierDate);
+
   let difference =
     additionalMilliseconds + (laterDate.getTime() - earlierDate.getTime());
   if (abs) difference = Math.abs(difference);
@@ -169,25 +172,31 @@ export const formattedDateDifference = function (
   earlierDate: Date,
   includedUnits: UnitName[],
   asString: boolean = true,
-  stringOptions: {
+  options: {
     delimiter: string;
     capitalize: boolean;
+    ignoreExcess?: boolean;
   } = {
     delimiter: ' ',
     capitalize: true,
+    ignoreExcess: true,
   },
 ) {
-  let difference = Math.abs(laterDate.getTime() - earlierDate.getTime());
+  let difference = dateDifference(laterDate, earlierDate);
   let unitDetails = ORDERED_TIME_UNITS.filter(({ name }) =>
     includedUnits.includes(name),
   );
 
   let resultMap = new Map<UnitName, number>();
 
-  unitDetails.forEach(({ name, value: timeUnitValue }) => {
-    let numUnits = Math.floor(difference / timeUnitValue);
+  unitDetails.forEach(({ name, value: timeUnitValue }, index) => {
+    let numUnits =
+      index !== unitDetails.length - 1
+        ? Math.floor(difference / timeUnitValue)
+        : _.round(difference / timeUnitValue, 0);
+
     difference -= numUnits * timeUnitValue;
-    resultMap.set(name, numUnits);
+    if (!options?.ignoreExcess || numUnits > 0) resultMap.set(name, numUnits);
   });
 
   if (asString) {
@@ -196,10 +205,10 @@ export const formattedDateDifference = function (
       let unitPrePend = ['microsecond', 'millisecond'].includes(unitName)
         ? unitName.slice(0, 3)
         : unitName.slice(0, 1);
-      if (stringOptions?.capitalize) unitPrePend = _.capitalize(unitPrePend);
+      if (options?.capitalize) unitPrePend = _.capitalize(unitPrePend);
       results.push(`${differenceValue}${unitName[0]}`);
     }
-    return results.join(stringOptions?.delimiter ?? ' ');
+    return results.join(options?.delimiter ?? ' ');
   }
 
   return resultMap;

@@ -5,7 +5,7 @@ import { AfterText, PillButton } from '@/components/atoms';
 import IconButton from '@/components/atoms/IconButton/IconButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useOuting } from '@/context/OutingContext';
-import { getLocalTime } from '@/helpers/dates';
+import { formattedDateDifference, getLocalTime } from '@/helpers/dates';
 
 type LocationStatusBarProps = ViewProps & {};
 
@@ -29,7 +29,7 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
     isMoving && mostRecentLocation?.departure_time
       ? `Since ${getLocalTime(mostRecentLocation.departure_time)}`
       : currentPlace?.arrival_time
-        ? `Arrived at ${getLocalTime(currentPlace?.arrival_time)}`
+        ? `Arrived at ${getLocalTime(currentPlace?.arrival_time)} (${formattedDateDifference(new Date(), currentPlace?.arrival_time, ['day', 'hour', 'minute'])})`
         : null;
 
   return (
