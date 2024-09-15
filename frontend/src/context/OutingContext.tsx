@@ -412,13 +412,13 @@ export default function OutingProvider({ children = null, storage }: Props) {
           // consider this a new location.
 
           if (
-            distanceFromCurrentPlace <
+            distanceFromCurrentPlace <=
             SameLocationDistanceCutoffMeters.HIGH_CONFIDENCE
           ) {
             // We're at the same location, consider this a new location.
             shouldCreateNewLocation = true;
           } else if (
-            distanceFromCurrentPlace >=
+            distanceFromCurrentPlace <=
             SameLocationDistanceCutoffMeters.LOW_CONFIDENCE
           ) {
             shouldCheckLocation = true;
