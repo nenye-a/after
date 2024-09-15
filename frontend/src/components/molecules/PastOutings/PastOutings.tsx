@@ -29,6 +29,8 @@ import {
 import Icon from 'react-native-vector-icons/Feather';
 import { useOuting } from '@/context/OutingContext';
 import { OutingType } from '@/services/graphql/after/generated/graphql';
+import { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
 
 const exampleCityList = [
   {
@@ -177,8 +179,11 @@ const PastOutings = (props: PastOutingProps) => {
   const { pastOutings } = useOuting();
 
   return (
-    <View>
-      <View style={[layout.row, layout.justifyBetween, gutters.marginBottom_8]}>
+    <>
+      <BottomSheetView
+        focusHook={useFocusEffect}
+        style={[layout.row, layout.justifyBetween, gutters.marginBottom_8]}
+      >
         <AfterInput
           viewStyle={[{ flex: 2 }, gutters.marginRight_8]}
           icon="search"
@@ -202,8 +207,9 @@ const PastOutings = (props: PastOutingProps) => {
           activeColor={colors.gray300}
           fontFamily="Inter"
         />
-      </View>
-      <FlatList
+      </BottomSheetView>
+      <BottomSheetFlatList
+        focusHook={useFocusEffect}
         data={pastOutings.sort(
           (a, b) =>
             new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
@@ -225,7 +231,7 @@ const PastOutings = (props: PastOutingProps) => {
         ListEmptyComponent={() => <View />}
         ItemSeparatorComponent={() => <Divider />}
       />
-    </View>
+    </>
   );
 };
 

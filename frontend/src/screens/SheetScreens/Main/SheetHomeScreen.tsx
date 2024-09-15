@@ -14,6 +14,8 @@ import { mapSheetSubComponentRoutes } from '@/router';
 import { MapSheetPage } from '@/types/components/mapsheet';
 import { TabProps } from '@/types/components/tabs';
 import { useOuting } from '@/context/OutingContext';
+import { BottomSheetView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = {};
 
@@ -75,16 +77,18 @@ const SheetHomeScreen = (props: Props) => {
     }));
 
   return (
-    <View>
-      {/* TODO: Componentize this as this will be in a page that users can navigate from. */}
+    <>
       <MapSheetUserHeader />
-      <TabSelect
-        tabOptions={tabOptions}
-        activeTab={mapSheetPage}
-        style={[gutters.marginVertical_15]}
-      />
-      <Divider />
-      <View style={[gutters.paddingVertical_15]}>
+      <BottomSheetView focusHook={useFocusEffect}>
+        <TabSelect
+          tabOptions={tabOptions}
+          activeTab={mapSheetPage}
+          style={[gutters.marginVertical_15]}
+        />
+      </BottomSheetView>
+      <Divider style={[gutters.marginBottom_15]} />
+      {/* <View style={[gutters.paddingVertical_15]}> */}
+      <>
         {mapSheetPage === 'Active Outing' ? (
           <ActiveOuting />
         ) : mapSheetPage === 'Recommendations' ? (
@@ -92,8 +96,9 @@ const SheetHomeScreen = (props: Props) => {
         ) : mapSheetPage === 'Past Outings' ? (
           <PastOutings />
         ) : null}
-      </View>
-    </View>
+      </>
+      {/* </View> */}
+    </>
   );
 };
 
