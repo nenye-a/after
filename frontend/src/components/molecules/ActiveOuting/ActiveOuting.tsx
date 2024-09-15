@@ -16,20 +16,21 @@ import { Divider, SupportTextWithIcon } from '@/components/atoms';
 
 import Icon from 'react-native-vector-icons/Feather';
 import { ViewProps } from 'react-native-svg/lib/typescript/fabric/utils';
+import { useOuting } from '@/context/OutingContext';
+import { LocationType } from '@/services/graphql/after/generated/graphql';
+import { formattedDateDifference, getLocalTime } from '@/helpers/dates';
+import { convertLocationPriceLevel } from '@/helpers/location';
 
-type ListItemProps = {
-  image?: ImageSourcePropType;
-  active?: boolean;
-  durationString: string; // TODO: Adjust this with real dates and time and calculate
-} & LocationInfoProps;
+type ListItemProps = { active?: boolean } & LocationType;
 
 export type ActiveOutingProps = Omit<
-  FlatListProps<ListItemProps>,
-  'renderItem'
+  FlatListProps<LocationType>,
+  'renderItem' | 'data'
 >;
 
 const ActiveOutingIcon = (props: ViewProps & { active?: boolean }) => {
-  const { layout, fonts, gutters, colors, backgrounds } = useTheme();
+  const { layout, colors, backgrounds } = useTheme();
+
   return (
     <View {...props}>
       <View
@@ -82,24 +83,20 @@ const ActiveOutingIcon = (props: ViewProps & { active?: boolean }) => {
 
 const LocationItem = (props: ListItemProps) => {
   const { layout, fonts, gutters, colors } = useTheme();
-  const {
-    image = ExampleRestaurantImage,
-    name,
-    type,
-    rating,
-    numReviews,
-    costLevel,
-    tags,
-    durationString,
-    active,
-  } = props;
+
+  const durationString = props.active
+    ? `Here since ${getLocalTime(props.arrival_time)}`
+    : `${getLocalTime(props.arrival_time)} - ${getLocalTime(props.departure_time)} (${formattedDateDifference(props.departure_time, props.arrival_time, ['day', 'hour', 'minute'])})`;
 
   return (
     <View>
       <View style={[layout.flex_1, layout.row, gutters.marginVertical_15]}>
-        <ActiveOutingIcon active={active} style={[gutters.marginRight_11]} />
+        <ActiveOutingIcon
+          active={props.active}
+          style={[gutters.marginRight_11]}
+        />
         <Image
-          source={image}
+          source={{ uri: props.info.image_urls?.[0] }}
           style={{ width: 60, height: 60, borderRadius: 8 }}
         />
         <View style={[gutters.marginHorizontal_11]}>
@@ -109,12 +106,16 @@ const LocationItem = (props: ListItemProps) => {
             text={durationString}
           />
           <LocationInfo
-            name={name}
-            type={type}
-            rating={rating}
-            numReviews={numReviews}
-            costLevel={costLevel}
-            tags={tags}
+            name={props.name}
+            type={props.info.type ?? 'place'}
+            rating={props.info.rating}
+            numReviews={props.info.num_ratings}
+            costLevel={
+              props.info.price_level
+                ? convertLocationPriceLevel(props.info.price_level)
+                : null
+            }
+            tags={props.info.tags ?? []}
           />
         </View>
       </View>
@@ -123,12 +124,18 @@ const LocationItem = (props: ListItemProps) => {
 };
 
 const ActiveOutingList = (props: ActiveOutingProps) => {
+  const { activeOutingLocations, inTransit } = useOuting();
   return (
     <FlatList
       style={[{ marginTop: -15 }]}
       {...props}
+      data={activeOutingLocations}
       renderItem={({ item, index }) => (
-        <LocationItem {...item} active={index === 0} key={index} />
+        <LocationItem
+          {...item}
+          active={!inTransit && index === 0}
+          key={index}
+        />
       )}
       // ItemSeparatorComponent={() => <Divider />}
     />

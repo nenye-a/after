@@ -62,7 +62,7 @@ const recommendations = [
 
 const SheetHomeScreen = (props: Props) => {
   const { layout, gutters } = useTheme();
-  const { activeOuting } = useOuting();
+  const { activeOuting, activeOutingLocations } = useOuting();
   const { mapSheetPage, setMapSheetPage } = useMapSheet();
 
   const tabOptions: TabProps[] = mapSheetSubComponentRoutes
@@ -86,7 +86,7 @@ const SheetHomeScreen = (props: Props) => {
       <Divider />
       <View style={[gutters.paddingVertical_15]}>
         {mapSheetPage === 'Active Outing' ? (
-          <ActiveOuting data={recommendations} />
+          <ActiveOuting />
         ) : mapSheetPage === 'Recommendations' ? (
           <RecommendationsWithHeader recommendations={recommendations} />
         ) : mapSheetPage === 'Past Outings' ? (

@@ -6,6 +6,7 @@ import { FlatList, View } from 'react-native';
 import { numberWithCommas } from '@/helpers/numbers';
 import DollarSigns from '@/components/atoms/DollarSigns/DollarSigns';
 import { LocationInfoProps } from '@/types/components/location';
+import { cleanWord } from '@/helpers/text';
 
 type Props = LocationInfoProps & {
   nameStyle?: 'regular' | 'header';
@@ -33,21 +34,25 @@ const LocationInfo = (props: Props) => {
           style={[gutters.marginRight_11]}
           icon="burger"
           iconColor={colors.gray300}
-          text={type}
+          text={cleanWord(type)}
         />
-        <SupportTextWithIcon
-          style={[gutters.marginRight_11]}
-          icon="star"
-          iconColor={colors.gray300}
-          text={`${_.round(rating, 1)} (${numberWithCommas(numReviews)})`}
-        />
-        <DollarSigns level={costLevel} color={colors.gray300} />
+        {rating || numReviews ? (
+          <SupportTextWithIcon
+            style={[gutters.marginRight_11]}
+            icon="star"
+            iconColor={colors.gray300}
+            text={`${rating ? _.round(rating, 1) : ''} ${numReviews ? `(${numberWithCommas(numReviews)})` : ''}`.trim()}
+          />
+        ) : null}
+        {costLevel ? (
+          <DollarSigns level={costLevel} color={colors.gray300} />
+        ) : null}
       </View>
       <FlatList
         style={[gutters.marginTop_4]}
         ItemSeparatorComponent={() => <View style={{ width: 4 }} />}
         horizontal
-        data={tags}
+        data={tags?.map((word) => cleanWord(word))}
         renderItem={({ item, index }) => (
           <Pill
             key={index}

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { capitalize } from 'lodash';
 
 export const years = 1000 * 3600 * 24 * 365;
 export const days = 1000 * 3600 * 24;
@@ -15,7 +15,16 @@ export type DateDifferenceOptions = {
   digits?: number;
 };
 
-export const ORDERED_TIME_UNITS = [
+export type UnitName =
+  | 'year'
+  | 'day'
+  | 'hour'
+  | 'minute'
+  | 'second'
+  | 'millisecond'
+  | 'microsecond';
+
+export const ORDERED_TIME_UNITS: { name: UnitName; value: number }[] = [
   { name: 'year', value: years },
   { name: 'day', value: days },
   { name: 'hour', value: hours },
@@ -153,6 +162,47 @@ export const secondsDifference = function (
     ...options,
     as: 'second',
   });
+};
+
+export const formattedDateDifference = function (
+  laterDate: Date,
+  earlierDate: Date,
+  includedUnits: UnitName[],
+  asString: boolean = true,
+  stringOptions: {
+    delimiter: string;
+    capitalize: boolean;
+  } = {
+    delimiter: ' ',
+    capitalize: true,
+  },
+) {
+  let difference = Math.abs(laterDate.getTime() - earlierDate.getTime());
+  let unitDetails = ORDERED_TIME_UNITS.filter(({ name }) =>
+    includedUnits.includes(name),
+  );
+
+  let resultMap = new Map<UnitName, number>();
+
+  unitDetails.forEach(({ name, value: timeUnitValue }) => {
+    let numUnits = Math.floor(difference / timeUnitValue);
+    difference -= numUnits * timeUnitValue;
+    resultMap.set(name, numUnits);
+  });
+
+  if (asString) {
+    let results = [];
+    for (let [unitName, differenceValue] of resultMap.entries()) {
+      let unitPrePend = ['microsecond', 'millisecond'].includes(unitName)
+        ? unitName.slice(0, 3)
+        : unitName.slice(0, 1);
+      if (stringOptions?.capitalize) unitPrePend = _.capitalize(unitPrePend);
+      results.push(`${differenceValue}${unitName[0]}`);
+    }
+    return results.join(stringOptions?.delimiter ?? ' ');
+  }
+
+  return resultMap;
 };
 
 export const hourOfDate = function (date = new Date()) {

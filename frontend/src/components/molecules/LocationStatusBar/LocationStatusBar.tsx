@@ -16,10 +16,8 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
     startOuting,
     endOuting,
     currentPlace,
-    inTransit,
     isMoving,
     mostRecentLocation,
-    isAtMostRecentLocation,
   } = useOuting();
 
   const { style, ...viewProps } = props;

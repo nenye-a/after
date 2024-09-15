@@ -512,10 +512,13 @@ export default function OutingProvider({ children = null, storage }: Props) {
         name: locationDetails.displayName,
         address: locationDetails.address,
         arrival_time:
-          locationDetails.google_place_id !== currentPlace?.google_place_id ||
-          !currentPlace?.arrival_time
-            ? new Date()
-            : currentPlace?.arrival_time,
+          locationDetails.google_place_id ===
+          mostRecentLocation?.external_ids.google_place_id
+            ? mostRecentLocation?.arrival_time
+            : locationDetails.google_place_id !==
+                  currentPlace?.google_place_id || !currentPlace?.arrival_time
+              ? new Date()
+              : currentPlace?.arrival_time,
         coordinates: locationDetails.coordinates,
       });
     }
