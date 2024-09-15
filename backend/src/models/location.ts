@@ -40,7 +40,7 @@ const locationSchema = new Schema<Location, LocationModel>(
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: MODEL_NAMES.user,
+      ref: MODEL_NAMES.users,
       index: true,
     },
     outing_id: {

@@ -10,6 +10,7 @@ import {
 } from 'type-graphql';
 import { OutingPathType, PathInput, PathType } from '../types/Path';
 import { Context } from '../../context';
+import { Types } from 'mongoose';
 
 @Authorized()
 @Resolver(PathType)
@@ -29,7 +30,15 @@ export class PathResolver {
       {
         $match: {
           user_id: ctx.user?._id,
-          ...(outing_ids?.length ? { outing_id: { $in: outing_ids } } : {}),
+          ...(outing_ids?.length
+            ? {
+                outing_id: {
+                  $in: outing_ids.map(
+                    (outing_id) => new Types.ObjectId(outing_id),
+                  ),
+                },
+              }
+            : {}),
         },
       },
       {

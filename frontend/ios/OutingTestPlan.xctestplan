@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "F6A9A70B-9A63-4A1D-BADF-D770655359D6",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:After.xcodeproj",
+        "identifier" : "00E356ED1AD99517003FC87E",
+        "name" : "AfterTests"
+      }
+    }
+  ],
+  "version" : 1
+}

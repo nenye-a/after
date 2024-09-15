@@ -97,9 +97,26 @@ export const getCoordinates = async (address: string) => {
  * @param coordinates
  * @returns
  */
-export const getAddress = async (coordinates: GoogleLocationPoint) => {
+export const getAddress = async (
+  coordinates: GoogleLocationPoint,
+  options?: {
+    ignoreSubPresmises?: boolean;
+  },
+) => {
   return await reverseGeocode(coordinates).then((data) => {
-    return data?.results[0]?.formatted_address;
+    let results = data?.results;
+    if (!results) return null;
+
+    if (options?.ignoreSubPresmises) {
+      results = results.filter(
+        (result: any) =>
+          !result.address_components.some((component: { types: string[] }) =>
+            component.types.includes('subpremise'),
+          ),
+      );
+    }
+
+    return results[0]?.formatted_address;
   });
 };
 
@@ -235,16 +252,25 @@ export const getGooglePhotos = async (
 export const getPlacesFromCoordinates = async (
   coordinates: GoogleLocationPoint,
   fields: GooglePlaceField[] | '*',
-  searchParams?: GoogleTextSearchParams,
-  searchPrompt: string = 'Whats at',
+  options?: {
+    searchParams?: GoogleNearbySearchParams;
+  },
 ) => {
-  let address = await getAddress(coordinates);
+  let address = await getAddress(coordinates, { ignoreSubPresmises: true });
   if (address) {
-    console.log(address);
-    return await googleSearch(
-      `${searchPrompt} ${address}`,
+    return await googleNearbySearch(
+      {
+        circle: {
+          center: coordinates,
+          // Only within 10 meters of the location.
+          radius: 10,
+        },
+      },
       fields,
-      searchParams,
+      {
+        rankPreference: 'DISTANCE',
+        ...options?.searchParams,
+      },
     );
   } else {
     return null;
@@ -333,36 +359,33 @@ if (require.main === module) {
   //     console.log(data);
   //   });
   // }
-  // {
-  //   // Test place finder
-  //   const coordinates = {
-  //     // latitude: 29.74073626004217,
-  //     // longitude: -95.7755183281019,
-  //     // latitude: 29.739959453302856,
-  //     // longitude: -95.78006660958712,
-  //     latitude: 29.760747460072533,
-  //     longitude: -95.38268209252661,
-  //   };
-
-  //   getPlacesFromCoordinates(coordinates, '*').then((results) => {
-  //     console.log(results);
-
-  //     if (results)
-  //       fs.writeFileSync(
-  //         'places_example.json',
-  //         JSON.stringify(results.places[0]),
-  //       );
-  //   });
-  // }
   {
-    // Test photo retrieval.
-    const photoNames = [
-      'places/ChIJbzpGZFm_QIYRwF6S5OkowRA/photos/AXCi2Q6t_J6hayARCU39gF3BGl8jax9tAh8Hcg1Fp_txkG9zPCPKlD57961WkjxLmWgR5ZJ1x68qqu6lPF2o-zKKheHcS7a1R-Q8tr1alN5OMeGeVusYluIsEDD4cgXS7fAsjntNz_bSrxV0njwvwxApPdENJo2wpGDqotRc',
-      'places/ChIJbzpGZFm_QIYRwF6S5OkowRA/photos/AXCi2Q5ZzdT4hCM4ys49_MQk6wD6KzS9QpK66O9E5LjeHrzpkrYMSDSUlBN3ukVXGds3tpwyMhF3DHuJookBPKd08F4D0AxTEJYXasKJFyGGTxUf9bKIoUcDujAKLtOi97pc29KSUGR2mKJR6It5NFymlDTJIsmo87Ofemlm',
-    ];
-
-    getGooglePhotos(photoNames, { maxWidthPx: 1000, maxHeightPx: 1000 }).then(
-      (results) => console.log(results),
-    );
+    // Test place finder
+    const coordinates = {
+      // latitude: 29.74073626004217,
+      // longitude: -95.7755183281019,
+      // latitude: 29.739959453302856,
+      // longitude: -95.78006660958712,
+      latitude: 29.760747460072533,
+      longitude: -95.38268209252661,
+    };
+    getPlacesFromCoordinates(coordinates, '*').then((results) => {
+      console.log(results);
+      if (results)
+        fs.writeFileSync(
+          'places_example.json',
+          JSON.stringify(results.places[0]),
+        );
+    });
   }
+  // {
+  //   // Test photo retrieval.
+  //   const photoNames = [
+  //     'places/ChIJbzpGZFm_QIYRwF6S5OkowRA/photos/AXCi2Q6t_J6hayARCU39gF3BGl8jax9tAh8Hcg1Fp_txkG9zPCPKlD57961WkjxLmWgR5ZJ1x68qqu6lPF2o-zKKheHcS7a1R-Q8tr1alN5OMeGeVusYluIsEDD4cgXS7fAsjntNz_bSrxV0njwvwxApPdENJo2wpGDqotRc',
+  //     'places/ChIJbzpGZFm_QIYRwF6S5OkowRA/photos/AXCi2Q5ZzdT4hCM4ys49_MQk6wD6KzS9QpK66O9E5LjeHrzpkrYMSDSUlBN3ukVXGds3tpwyMhF3DHuJookBPKd08F4D0AxTEJYXasKJFyGGTxUf9bKIoUcDujAKLtOi97pc29KSUGR2mKJR6It5NFymlDTJIsmo87Ofemlm',
+  //   ];
+  //   getGooglePhotos(photoNames, { maxWidthPx: 1000, maxHeightPx: 1000 }).then(
+  //     (results) => console.log(results),
+  //   );
+  // }
 }

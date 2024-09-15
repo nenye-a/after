@@ -4,6 +4,9 @@ import { OutingType } from '../types/Outing';
 import { Context } from '../../context';
 import { OutingStatus } from '../../types/outing';
 import { getAdditionalOutingInfo } from '../../helpers/outing';
+import { CoordinatesInput } from '../types/Path';
+import getPreviewLocation from './resolverHelpers/getPreviewLocation';
+import { OutingAndLocationType } from '../types/SharedTypes';
 
 @Authorized()
 @Resolver(OutingType)
@@ -40,7 +43,7 @@ export class OutingResolver {
    * @param ctx
    * @returns
    */
-  @Query(() => OutingType)
+  @Query(() => OutingType, { nullable: true })
   async getActiveOuting(
     @Ctx() ctx: Context,
     @Arg('includeAdditionalInfo', { defaultValue: false })
@@ -105,10 +108,10 @@ export class OutingResolver {
    * @param ctx
    * @returns
    */
-  @Mutation(() => OutingType)
+  @Mutation(() => OutingAndLocationType)
   async startOuting(
-    @Arg('locationName') locationName: string,
     @Ctx() ctx: Context,
+    @Arg('coordinates', { nullable: true }) coordinates?: CoordinatesInput,
   ) {
     const activeOuting = await ctx.models.outings.findOne({
       user_id: ctx.user?._id,
@@ -123,18 +126,32 @@ export class OutingResolver {
       return activeOuting.save();
     }
 
-    let newOuting = await ctx.models.outings.create({
+    let formattedDate = new Date().toLocaleString('en-US');
+    let newOuting = new ctx.models.outings({
       user_id: ctx.user?._id,
-      name: `Outing from ${locationName}`,
+      // Provide a temp name in case we don't find the location.
+      name: `New Outing - ${formattedDate}`,
     });
 
-    if (newOuting) {
-      return {
-        ...newOuting.toObject(),
-        num_locations: 1, // TODO: Determine this based on the location submitted.
-        num_participants: 1,
-      };
+    let startingLocation = coordinates
+      ? await getPreviewLocation(coordinates, newOuting._id, ctx)
+      : null;
+
+    if (startingLocation) {
+      newOuting.name = `Outing from ${startingLocation.name}`;
     }
+
+    await startingLocation?.save();
+    newOuting = await newOuting.save();
+
+    return {
+      outing: {
+        ...newOuting.toObject(),
+        num_locations: startingLocation ? 1 : 0,
+        num_participants: 1, // TODO: Update this when shared trips are enabled..
+      },
+      location: startingLocation?.toJSON(),
+    };
   }
 
   /**

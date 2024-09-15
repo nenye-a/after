@@ -65,7 +65,7 @@ export const recommendationRequestSchema = new Schema<RecommendationRequest>({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: MODEL_NAMES.user,
+    ref: MODEL_NAMES.users,
   },
   request_date: { type: Date, required: true, default: Date.now },
   outing_id: { type: mongoose.Types.ObjectId, ref: MODEL_NAMES.outings },

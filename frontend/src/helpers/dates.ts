@@ -1,5 +1,30 @@
 import _ from 'lodash';
 
+export const years = 1000 * 3600 * 24 * 365;
+export const days = 1000 * 3600 * 24;
+export const hours = 1000 * 3600;
+export const minutes = 1000 * 60;
+export const seconds = 1000;
+export const milliseconds = 1;
+export const microseconds = 0.001;
+
+export type DateDifferenceOptions = {
+  as?: string;
+  abs?: boolean;
+  additionalMilliseconds?: number;
+  digits?: number;
+};
+
+export const ORDERED_TIME_UNITS = [
+  { name: 'year', value: years },
+  { name: 'day', value: days },
+  { name: 'hour', value: hours },
+  { name: 'minute', value: minutes },
+  { name: 'second', value: seconds },
+  { name: 'millisecond', value: milliseconds },
+  { name: 'microsecond', value: microseconds },
+];
+
 export function convertDateToStringPretty(date: Date) {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const months = [
@@ -38,4 +63,105 @@ export const getLocalTime = (date: Date, timeZone?: string) => {
   };
 
   return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
+};
+
+/**
+ * Returns the time difference between two dates. By
+ * default will return absolute value. If abs is set
+ * to false, will return date 1 - date 2.
+ * @param laterDate
+ * @param earlierDate
+ * @param {{
+ *   abs: Boolean,
+ *   as: String
+ * }} options
+ * @returns
+ */
+export const dateDifference = function (
+  laterDate: Date,
+  earlierDate: Date,
+  {
+    as = 'millisecond',
+    abs = true,
+    additionalMilliseconds = 0,
+    digits = 2,
+  } = {},
+) {
+  let difference =
+    additionalMilliseconds + (laterDate.getTime() - earlierDate.getTime());
+  if (abs) difference = Math.abs(difference);
+  let unit = ORDERED_TIME_UNITS.find(({ name }) => name === as);
+  if (unit) {
+    return _.round(difference / unit.value, digits);
+  } else {
+    let unitNames = ORDERED_TIME_UNITS.map(({ name }) => name);
+    throw new Error(
+      `Provide a correct 'as'. Options are ${unitNames
+        .slice(0, -1)
+        .join(', ')}, and ${unitNames[unitNames.length - 1]}`,
+    );
+  }
+};
+
+export const dayDifference = function (
+  laterDate: Date,
+  earlierDate: Date,
+  options?: DateDifferenceOptions,
+) {
+  return dateDifference(laterDate, earlierDate, {
+    abs: true,
+    digits: 2,
+    ...options,
+    as: 'day',
+  });
+};
+
+export const hourDifference = function (
+  laterDate: Date,
+  earlierDate: Date,
+  options?: DateDifferenceOptions,
+) {
+  return dateDifference(laterDate, earlierDate, {
+    abs: true,
+    digits: 2,
+    ...options,
+    as: 'hour',
+  });
+};
+
+export const minuteDifference = function (
+  laterDate: Date,
+  earlierDate: Date,
+  options?: DateDifferenceOptions,
+) {
+  return dateDifference(laterDate, earlierDate, {
+    abs: true,
+    digits: 2,
+    ...options,
+    as: 'minute',
+  });
+};
+
+export const secondsDifference = function (
+  laterDate: Date,
+  earlierDate: Date,
+  options?: DateDifferenceOptions,
+) {
+  return dateDifference(laterDate, earlierDate, {
+    abs: true,
+    digits: 2,
+    ...options,
+    as: 'second',
+  });
+};
+
+export const hourOfDate = function (date = new Date()) {
+  let newDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    date.getHours(),
+  );
+
+  return newDate;
 };

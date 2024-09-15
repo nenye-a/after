@@ -11,8 +11,15 @@ import MapSheetProvider from './context/MapSheetContext';
 import UserProvider from './context/UserContext';
 import OutingProvider from './context/OutingContext';
 import LocationProvider from './context/LocationContext';
+import { minutes } from './helpers/dates';
 
 export const queryClient = new QueryClient();
+
+queryClient.setDefaultOptions({
+  queries: {
+    staleTime: 10 * minutes,
+  },
+});
 
 export const storage = new MMKV();
 

@@ -7,16 +7,16 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useOuting } from '@/context/OutingContext';
 import { getLocalTime } from '@/helpers/dates';
 
-type LocationStatusBarProps = ViewProps & {
-  currentLocation: string;
-  durationString?: string; // TODO: Replace with an actual string of arrival time
-};
+type LocationStatusBarProps = ViewProps & {};
 
 const LocationStatusBar = (props: LocationStatusBarProps) => {
   const { fonts, gutters, layout, borders, backgrounds } = useTheme();
-  const { activeOuting, startOuting, endOuting } = useOuting();
+  const { activeOuting, startOuting, endOuting, currentPlace } = useOuting();
 
-  const { currentLocation, durationString, style, ...viewProps } = props;
+  const { style, ...viewProps } = props;
+
+  let currentLocation =
+    currentPlace?.name || currentPlace?.address || 'Unrecognized location';
 
   return (
     <View
@@ -35,9 +35,9 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
     >
       {activeOuting ? (
         <>
-          <View style={[layout.row, layout.itemsCenter]}>
+          <View style={[layout.row, layout.itemsCenter, layout.flex_1]}>
             <IconButton icon="big_share" iconColor="white" />
-            <View style={[layout.row]}>
+            <View style={[layout.row, layout.flex_1]}>
               <View style={[gutters.marginHorizontal_8]}>
                 <AfterText fontType="enhanced" style={[fonts.bold]}>
                   {currentLocation}
@@ -55,8 +55,8 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
         </>
       ) : (
         <>
-          <View style={[layout.row]}>
-            <AfterText fontType="minor">{'Currently at '}</AfterText>
+          <View style={[layout.row, layout.wrap, layout.flex_1]}>
+            <AfterText fontType="minor">{'At '}</AfterText>
             <AfterText fontType="minor" style={[fonts.white, fonts.bold]}>
               {currentLocation}
             </AfterText>

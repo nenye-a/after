@@ -1,5 +1,5 @@
 import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
-import { Model, Schema, Types, model } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
 import { PriceLevel, Vibe } from '../engine/types';
 
 export type User = {
@@ -68,6 +68,6 @@ export const userSchema = new Schema<User, UserModel>(
   },
 );
 
-const users = coreDb.model<User, UserModel>(MODEL_NAMES.user, userSchema);
+const users = coreDb.model<User, UserModel>(MODEL_NAMES.users, userSchema);
 
 export default users;

@@ -18,7 +18,7 @@ export const outingSchema = new Schema<Outing>({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: MODEL_NAMES.user,
+    ref: MODEL_NAMES.users,
     index: true,
   },
   name: { type: String, required: true },

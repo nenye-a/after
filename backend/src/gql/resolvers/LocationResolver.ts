@@ -8,11 +8,12 @@ import {
   Query,
   Resolver,
 } from 'type-graphql';
-import { LocationType } from '../types/Location';
+import { GooglePreviewLocationType, LocationType } from '../types/Location';
 import { CoordinatesInput } from '../types/Path';
 import { Context } from '../../context';
 import { getPlacesFromCoordinates } from '../../api/google';
 import { convertGooglePlaceToLocationBase } from '../../helpers/locations';
+import getPreviewLocation from './resolverHelpers/getPreviewLocation';
 
 @Authorized()
 @Resolver(LocationType)
@@ -43,7 +44,7 @@ export class LocationResolver {
    * @param ctx
    * @returns
    */
-  @Query(() => LocationType)
+  @Query(() => LocationType, { nullable: true })
   async getLocationDetails(
     @Arg('locationId', () => ID) locationId: string,
     @Ctx() ctx: Context,
@@ -52,6 +53,40 @@ export class LocationResolver {
       _id: locationId,
       user_id: ctx.user?._id,
     });
+  }
+
+  @Query(() => GooglePreviewLocationType, { nullable: true })
+  async getGooglePreviewLocation(
+    @Arg('coordinates', () => CoordinatesInput) coordinates: CoordinatesInput,
+  ) {
+    let googlePlaceOptions = await getPlacesFromCoordinates(coordinates, [
+      'name',
+      'displayName',
+      'formattedAddress',
+      'location',
+      'addressComponents',
+      'types',
+      'rating',
+      'userRatingCount',
+      'priceLevel',
+      'photos',
+    ]);
+
+    if (googlePlaceOptions) {
+      let googlePlace = googlePlaceOptions.places[0];
+
+      return {
+        google_place_id: googlePlace.name,
+        displayName: googlePlace.displayName.text,
+        address: googlePlace.formattedAddress,
+        coordinates: googlePlace.location,
+        types: googlePlace.types,
+        rating: googlePlace.rating,
+        num_ratings: googlePlace.userRatingCount,
+      };
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -74,36 +109,16 @@ export class LocationResolver {
     });
 
     if (activeOuting && ctx.user) {
-      let googlePlaceOptions = await getPlacesFromCoordinates(coordinates, [
-        'name',
-        'displayName',
-        'formattedAddress',
-        'location',
-        'addressComponents',
-        'types',
-        'rating',
-        'userRatingCount',
-        'priceLevel',
-        'photos',
-      ]);
+      let newLocation = await getPreviewLocation(
+        coordinates,
+        activeOuting._id,
+        ctx,
+      );
 
-      if (googlePlaceOptions) {
-        let googlePlace = googlePlaceOptions.places[0];
+      // TODO: If there is a prior location for this outing, mark that as departed.
 
-        let formattedLocation = await convertGooglePlaceToLocationBase(
-          googlePlace,
-          {
-            userId: ctx.user._id,
-            outingId: activeOuting._id,
-            hydratePhotos: true,
-          },
-        );
-
-        return await ctx.models.locations.create(formattedLocation);
-      } else {
-        return null;
-      }
-    }
+      return await newLocation?.save();
+    } else return null;
   }
 
   /**
@@ -114,7 +129,7 @@ export class LocationResolver {
    * @param ctx
    * @returns
    */
-  @Mutation(() => LocationType)
+  @Mutation(() => LocationType, { nullable: true })
   async endLocationStay(
     @Arg('locationId', () => ID) locationId: string,
     @Ctx() ctx: Context,

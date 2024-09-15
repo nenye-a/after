@@ -15,6 +15,11 @@ import BackgroundGeolocation, {
   MotionChangeEvent,
   Subscription,
 } from 'react-native-background-geolocation';
+import Geolocation, {
+  GeolocationError,
+  GeolocationOptions,
+  GeolocationResponse,
+} from '@react-native-community/geolocation';
 
 const GeolocationConfig: Config = {
   stopOnTerminate: false,
@@ -29,6 +34,7 @@ const GeolocationConfig: Config = {
 const stub = () => {};
 
 export type LocationContextType = {
+  locationFeatureReady: boolean;
   locationTracking: boolean;
   onLocationChange: (
     success: (location: Location) => void,
@@ -41,20 +47,30 @@ export type LocationContextType = {
     callback: (event: MotionActivityEvent) => void,
   ) => Subscription;
   removeLocationListeners: () => void;
-  getCurrentPosition: (
+  // NOTE: React native community geolocation obtains positioning much faster
+  // than the background geolocation service.
+  getCurrentPositionBG: (
     options: CurrentPositionRequest,
   ) => Promise<Location | null>;
+  getCurrentPositionRNCG: (
+    success?: (position: GeolocationResponse) => void,
+    error?: ((error: GeolocationError) => void) | undefined,
+    options?: GeolocationOptions,
+  ) => Promise<GeolocationResponse>;
   startTrackingLocation: () => Promise<boolean>;
   stopTrackingLocation: () => Promise<boolean>;
 };
 
 const LocationContext = createContext<LocationContextType>({
+  locationFeatureReady: false,
   locationTracking: false,
   onLocationChange: (stub) => ({ remove: () => {} }),
   onMotionChange: (stub) => ({ remove: () => {} }),
   onActivityChange: (stub) => ({ remove: () => {} }),
   removeLocationListeners: stub,
-  getCurrentPosition: async () => ({}) as Location,
+  getCurrentPositionBG: async () => ({}) as Location,
+  getCurrentPositionRNCG: async () =>
+    Promise.resolve({} as GeolocationResponse),
   startTrackingLocation: () => Promise.resolve(false),
   stopTrackingLocation: () => Promise.resolve(false),
 });
@@ -65,26 +81,7 @@ type Props = PropsWithChildren & { storage: MMKV };
 
 export default function LocationProvider({ children = null, storage }: Props) {
   const [locationTracking, setTrackingStatus] = useState<boolean>(false);
-
-  useEffect(() => {
-    // Initialize BackgroundGeolocation,
-    BackgroundGeolocation.ready(GeolocationConfig).then(
-      async (state) => {
-        console.log(
-          'BackgroundGeolocation is ready. Current tracking state:',
-          state.enabled,
-        );
-        setTrackingStatus(state.enabled);
-      },
-      async (error) => {
-        console.log('BackgroundGeolocation ready error', error);
-      },
-    );
-
-    return () => {
-      BackgroundGeolocation.removeAllListeners();
-    };
-  }, []);
+  const [locationFeatureReady, setFeatureReady] = useState<boolean>(false);
 
   const startTracking = async () => {
     if (!locationTracking) {
@@ -102,15 +99,61 @@ export default function LocationProvider({ children = null, storage }: Props) {
     } else return true;
   };
 
+  useEffect(() => {
+    // Initialize BackgroundGeolocation,
+    BackgroundGeolocation.ready(GeolocationConfig).then(
+      async (state) => {
+        console.log(
+          'BackgroundGeolocation is ready. Current tracking state:',
+          state.enabled,
+        );
+        setFeatureReady(true);
+      },
+      async (error) => {
+        console.log('BackgroundGeolocation ready error', error);
+      },
+    );
+
+    return () => {
+      BackgroundGeolocation.removeAllListeners();
+    };
+  }, []);
+
+  // Convert getCurrentPosition from BackgroundGeolocation to a promise.
+  const getCurrentPositionRNCG = async (
+    success?: (position: GeolocationResponse) => void,
+    errorHandler?: ((error: GeolocationError) => void) | undefined,
+    options?: GeolocationOptions,
+  ) =>
+    new Promise<GeolocationResponse>((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          success && success(position);
+          resolve(position);
+        },
+        (error) => {
+          errorHandler && errorHandler(error);
+          reject(error);
+        },
+        options,
+      );
+    });
+
   return (
     <LocationContext.Provider
       value={{
+        locationFeatureReady,
         locationTracking,
-        onLocationChange: BackgroundGeolocation.onLocation,
-        onMotionChange: BackgroundGeolocation.onMotionChange,
-        onActivityChange: BackgroundGeolocation.onActivityChange,
-        removeLocationListeners: BackgroundGeolocation.removeAllListeners,
-        getCurrentPosition: BackgroundGeolocation.getCurrentPosition,
+        onLocationChange: (...args) =>
+          BackgroundGeolocation.onLocation(...args),
+        onMotionChange: (...args) =>
+          BackgroundGeolocation.onMotionChange(...args),
+        onActivityChange: (...args) =>
+          BackgroundGeolocation.onActivityChange(...args),
+        removeLocationListeners: (...args) =>
+          BackgroundGeolocation.removeAllListeners(...args),
+        getCurrentPositionBG: BackgroundGeolocation.getCurrentPosition,
+        getCurrentPositionRNCG,
         startTrackingLocation: startTracking,
         stopTrackingLocation: stopTracking,
       }}

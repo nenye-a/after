@@ -18,6 +18,16 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTimeISO
 
+type GooglePreviewLocationType {
+  address: String!
+  coordinates: CoordinatesType!
+  displayName: String!
+  google_place_id: String!
+  num_ratings: Float
+  rating: Float
+  types: [String!]!
+}
+
 type LocationExternalIds {
   google_place_id: String
   here_id: String
@@ -56,10 +66,15 @@ type Mutation {
   createLocationFromPoint(coordinates: CoordinatesInput!): LocationType
   createPath(points: [PathInput!]!): Boolean!
   createUser(data: UserCreateInput!): UserType!
-  endLocationStay(locationId: ID!): LocationType!
+  endLocationStay(locationId: ID!): LocationType
   endOuting: OutingType!
   pauseOuting: OutingType!
-  startOuting(locationName: String!): OutingType!
+  startOuting(coordinates: CoordinatesInput): OutingAndLocationType!
+}
+
+type OutingAndLocationType {
+  location: LocationType
+  outing: OutingType!
 }
 
 type OutingPathType {
@@ -105,9 +120,10 @@ enum PriceLevel {
 }
 
 type Query {
-  getActiveOuting(includeAdditionalInfo: Boolean! = false): OutingType!
+  getActiveOuting(includeAdditionalInfo: Boolean! = false): OutingType
   getAllUsers: [UserType!]!
-  getLocationDetails(locationId: ID!): LocationType!
+  getGooglePreviewLocation(coordinates: CoordinatesInput!): GooglePreviewLocationType
+  getLocationDetails(locationId: ID!): LocationType
   getOuting(includeAdditionalInfo: Boolean! = false, outingId: String!): OutingType!
   getOutingLocations(outingId: ID!): [LocationType!]!
   getOutingPaths(outing_ids: [ID!]): [OutingPathType!]!

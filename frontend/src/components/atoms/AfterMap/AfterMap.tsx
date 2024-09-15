@@ -1,5 +1,6 @@
 // import { useMemo } from 'react';
 import { MapStyle } from '@/constants/mapstyle';
+import { useOuting } from '@/context/OutingContext';
 import { useTheme } from '@/theme';
 import { PropsWithChildren, useRef } from 'react';
 import MapView, { MapViewProps, Region } from 'react-native-maps';
@@ -23,6 +24,7 @@ function AfterMap({
   ...props
 }: Props) {
   const { layout, colors } = useTheme();
+  const { setCurrentCoordinates, addToOutingPath } = useOuting();
 
   const mapRef = useRef<MapView>(null);
 
@@ -35,10 +37,14 @@ function AfterMap({
       // provider="google"
       mapType="mutedStandard"
       showsUserLocation={true}
-      followsUserLocation={true} // NOTE: Can remove if necessary.
-      // shows
+      followsUserLocation={true} // TODO: Make this togglable!
       userInterfaceStyle="dark"
       pitchEnabled={false}
+      onUserLocationChange={(location) => {
+        if (location.nativeEvent.coordinate) {
+          setCurrentCoordinates(location.nativeEvent.coordinate);
+        }
+      }}
       {...props}
       ref={mapRef}
     >
