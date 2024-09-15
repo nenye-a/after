@@ -77,6 +77,11 @@ type OutingAndLocationType {
   outing: OutingType!
 }
 
+type OutingLocationType {
+  locations: [LocationType!]!
+  outing_id: ID!
+}
+
 type OutingPathType {
   outing_id: ID!
   points: [PathType!]!
@@ -126,9 +131,10 @@ type Query {
   getAllUsers: [UserType!]!
   getGooglePreviewLocation(coordinates: CoordinatesInput!): GooglePreviewLocationType
   getLocationDetails(locationId: ID!): LocationType
+  getManyOutingLocations(outingIds: [ID!]!): [OutingLocationType!]!
   getOuting(includeAdditionalInfo: Boolean = false, outingId: String!): OutingType!
   getOutingLocations(outingId: ID!): [LocationType!]!
-  getOutingPaths(outing_ids: [ID!]): [OutingPathType!]!
+  getOutingPaths(outing_ids: [ID!]!): [OutingPathType!]!
   getOutings(includeAdditionalInfo: Boolean = false, status: [String!]): [OutingType!]!
   getUser: UserType!
 }

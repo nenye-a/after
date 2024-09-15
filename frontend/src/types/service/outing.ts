@@ -1,4 +1,5 @@
 import {
+  LocationType,
   OutingType,
   PathType,
 } from '@/services/graphql/after/generated/graphql';
@@ -10,4 +11,5 @@ export type ActiveOutingSummary = Pick<
 
 export type OutingWithDetails = OutingType & {
   path: PathType[];
+  locations: LocationType[];
 };

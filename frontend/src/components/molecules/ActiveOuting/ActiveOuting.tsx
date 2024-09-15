@@ -1,16 +1,7 @@
-import {
-  FlatList,
-  FlatListProps,
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { FlatListProps, Image, StyleSheet, View } from 'react-native';
 import React from 'react';
-import { LocationInfoProps } from '@/types/components/location';
 import { useTheme } from '@/theme';
 
-import ExampleRestaurantImage from '@/theme/assets/images/example_restaurant_image.png';
 import LocationInfo from '../Location/LocationInfo';
 import { Divider, SupportTextWithIcon } from '@/components/atoms';
 

@@ -26,6 +26,7 @@ import {
   CREATE_LOCATION_FROM_POINT,
   DEPART_LOCATION,
   GET_LOCATION_PREVIEW,
+  GET_MANY_OUTING_LOCATIONS,
   GET_OUTING_LOCATIONS,
 } from '@/services/graphql/after/queries/location';
 import { ActiveOutingSummary, OutingWithDetails } from '@/types/service/outing';
@@ -242,15 +243,17 @@ export default function OutingProvider({ children = null, storage }: Props) {
   const { data: pastOutingPathsData } = useQuery({
     queryKey: ['getUserPastOutingPaths'],
     queryFn: async (): Promise<Map<string, PathType[]>> => {
-      let pastOutingPathList = await apiInstance
-        ?.request(GET_OUTING_PATHS, {
-          outingIds: pastOutingsData?.map((outing) => outing._id),
-        })
-        .then((response) => response?.getOutingPaths)
-        .catch((err) => {
-          console.log(err);
-          console.log('Failed to get user past outing paths');
-        });
+      let pastOutingPathList = pastOutingsData
+        ? await apiInstance
+            ?.request(GET_OUTING_PATHS, {
+              outingIds: pastOutingsData?.map((outing) => outing._id),
+            })
+            .then((response) => response?.getOutingPaths)
+            .catch((err) => {
+              console.log(err);
+              console.log('Failed to get user past outing paths');
+            })
+        : null;
 
       if (pastOutingPathList) {
         return pastOutingPathList.reduce((acc, path) => {
@@ -259,6 +262,33 @@ export default function OutingProvider({ children = null, storage }: Props) {
         }, new Map<string, PathType[]>());
       } else {
         return new Map<string, PathType[]>();
+      }
+    },
+    enabled: !!pastOutingsData?.length,
+  });
+
+  const { data: pastOutingLocationssData } = useQuery({
+    queryKey: ['getUserPastLocations'],
+    queryFn: async (): Promise<Map<string, LocationType[]>> => {
+      let pastOutingLocationList = pastOutingsData
+        ? await apiInstance
+            ?.request(GET_MANY_OUTING_LOCATIONS, {
+              outingIds: pastOutingsData?.map((outing) => outing._id),
+            })
+            .then((response) => response?.getManyOutingLocations)
+            .catch((err) => {
+              console.log(err);
+              console.log('Failed to get user past outing locations');
+            })
+        : null;
+
+      if (pastOutingLocationList) {
+        return pastOutingLocationList.reduce((acc, locationList) => {
+          acc.set(locationList.outing_id, locationList.locations);
+          return acc;
+        }, new Map<string, LocationType[]>());
+      } else {
+        return new Map<string, LocationType[]>();
       }
     },
     enabled: !!pastOutingsData?.length,
@@ -607,10 +637,10 @@ export default function OutingProvider({ children = null, storage }: Props) {
   useEffect(() => {
     if (pastOutingPathsData && pastOutingsData) {
       let pastOutingsWithPaths = pastOutingsData.map((outing) => {
-        let path = pastOutingPathsData.get(outing._id) ?? [];
         return {
           ...outing,
-          path,
+          path: pastOutingPathsData.get(outing._id) ?? [],
+          locations: pastOutingLocationssData?.get(outing._id) ?? [],
         };
       });
 

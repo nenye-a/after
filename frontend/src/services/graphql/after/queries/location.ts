@@ -54,6 +54,46 @@ export const GET_OUTING_LOCATIONS = graphql(`
   }
 `);
 
+export const GET_MANY_OUTING_LOCATIONS = graphql(`
+  query GetManyOutingLocations($outingIds: [ID!]!) {
+    getManyOutingLocations(outingIds: $outingIds) {
+      outing_id
+      locations {
+        _id
+        user_id
+        outing_id
+        name
+        address
+        coordinates {
+          latitude
+          longitude
+        }
+        city
+        arrival_time
+        departure_time
+        info {
+          type
+          rating
+          num_ratings
+          price_level
+          image_urls
+          google_photo_names
+          tags
+        }
+        external_ids {
+          google_place_id
+          yelp_id
+          here_id
+        }
+        recommendation_id
+        nickname
+        notes
+        favorite
+      }
+    }
+  }
+`);
+
 export const DEPART_LOCATION = graphql(`
   mutation DepartLocation($locationId: ID!) {
     endLocationStay(locationId: $locationId) {

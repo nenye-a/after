@@ -24,21 +24,15 @@ export class PathResolver {
   @Query(() => [OutingPathType])
   async getOutingPaths(
     @Ctx() ctx: Context,
-    @Arg('outing_ids', () => [ID], { nullable: true }) outing_ids?: string[],
+    @Arg('outing_ids', () => [ID]) outing_ids: string[],
   ) {
     return await ctx.models.pathPoints.aggregate([
       {
         $match: {
           user_id: ctx.user?._id,
-          ...(outing_ids?.length
-            ? {
-                outing_id: {
-                  $in: outing_ids.map(
-                    (outing_id) => new Types.ObjectId(outing_id),
-                  ),
-                },
-              }
-            : {}),
+          outing_id: {
+            $in: outing_ids.map((outing_id) => new Types.ObjectId(outing_id)),
+          },
         },
       },
       {

@@ -1,7 +1,7 @@
 import { graphql } from '../generated';
 
 export const GET_OUTING_PATHS = graphql(`
-  query GetOutingPaths($outingIds: [ID!]) {
+  query GetOutingPaths($outingIds: [ID!]!) {
     getOutingPaths(outing_ids: $outingIds) {
       outing_id
       points {

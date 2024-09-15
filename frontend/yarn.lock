@@ -5504,6 +5504,7 @@ __metadata:
     ky: ^1.2.4
     lodash: ^4.17.21
     prettier: ^3.3.3
+    randomcolor: ^0.6.2
     react: 18.2.0
     react-i18next: ^14.1.0
     react-native: 0.74.1
@@ -13101,6 +13102,13 @@ __metadata:
   dependencies:
     inherits: ~2.0.3
   checksum: ebc23639248e4fe40a789f713c20548e513e053b3dc4924b6cb0ad741e3f264dcff948225c8737834dd4f9ec286dbc06a1a7c13858ea382d9379f4303bcc0916
+  languageName: node
+  linkType: hard
+
+"randomcolor@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "randomcolor@npm:0.6.2"
+  checksum: 539345c0289f7c52ffd8486e61231e19ccc40b1c4ab9c15594f20a2773b71a9317e0cc8b756160fc8a678ace9ed1e96a8ac90346b2c34c64dfd5acad91f9a73d
   languageName: node
   linkType: hard
 
