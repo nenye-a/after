@@ -1,40 +1,31 @@
 // import { useMemo } from 'react';
 import { MapStyle } from '@/constants/mapstyle';
 import { useOuting } from '@/context/OutingContext';
+import { kmToLatLngDeltas } from '@/helpers/numbers';
 import { useTheme } from '@/theme';
 import { PropsWithChildren, useRef } from 'react';
-import MapView, { MapViewProps, Region } from 'react-native-maps';
+import MapView, { MapViewProps } from 'react-native-maps';
 
-// San francisco coordinates is the default region.
-const defaultRegion: Region = {
-  latitude: 37.78825,
-  longitude: -122.4324,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
-};
+type Props = MapViewProps & PropsWithChildren & {};
 
-type Props = MapViewProps &
-  PropsWithChildren & {
-    // TODO: Add custom after map props.
-  };
-
-function AfterMap({
-  children,
-  initialRegion = defaultRegion,
-  ...props
-}: Props) {
-  const { layout, colors } = useTheme();
-  const { setCurrentCoordinates, addToOutingPath } = useOuting();
+function AfterMap({ children, ...props }: Props) {
+  const { layout } = useTheme();
+  const { setCurrentCoordinates, currentCoordinates } = useOuting();
 
   const mapRef = useRef<MapView>(null);
 
   return (
     <MapView
       style={[layout.fullHeight, layout.fullWidth]}
-      initialRegion={initialRegion}
+      region={
+        currentCoordinates
+          ? {
+              ...currentCoordinates,
+              ...kmToLatLngDeltas(0.8, currentCoordinates),
+            }
+          : undefined
+      }
       customMapStyle={MapStyle}
-      // tintColor={colors.blue800}
-      // provider="google"
       mapType="mutedStandard"
       showsUserLocation={true}
       followsUserLocation={true} // TODO: Make this togglable!

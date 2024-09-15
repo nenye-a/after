@@ -17,6 +17,7 @@ import { useUser } from './UserContext';
 import {
   END_OUTING,
   GET_ACTIVE_OUTING,
+  GET_OUTINGS,
   START_OUTING,
 } from '@/services/graphql/after/queries/outing';
 import { useLocation } from './LocationContext';
@@ -27,7 +28,7 @@ import {
   GET_LOCATION_PREVIEW,
   GET_OUTING_LOCATIONS,
 } from '@/services/graphql/after/queries/location';
-import { ActiveOutingSummary } from '@/types/service/outing';
+import { ActiveOutingSummary, OutingWithDetails } from '@/types/service/outing';
 import {
   Coordinates,
   SameLocationDistanceCutoffMeters,
@@ -38,7 +39,10 @@ import {
 } from '@/services/graphql/after/queries/paths';
 import { AppState } from 'react-native';
 import { calculateDistanceMeters } from '@/helpers/numbers';
-import { SAME_OUTING_LOCATION_MINUTE_CUTOFF } from '@/constants/outing';
+import {
+  METER_DISTANCE_FOR_OUTING_PATH,
+  SAME_OUTING_LOCATION_MINUTE_CUTOFF,
+} from '@/constants/outing';
 
 export type Place = {
   google_place_id?: string | null;
@@ -55,6 +59,7 @@ export type OutingContextType = {
   mostRecentLocation: LocationType | null;
   inTransit: boolean;
   isAtMostRecentLocation: boolean;
+  pastOutings: OutingWithDetails[];
   currentCoordinates: Coordinates | null;
   setCurrentCoordinates: (coordinates: Coordinates) => void;
   currentPlace: Place | null;
@@ -76,6 +81,7 @@ const OutingContext = createContext<OutingContextType>({
   mostRecentLocation: null,
   inTransit: false,
   isAtMostRecentLocation: false,
+  pastOutings: [],
   currentCoordinates: null,
   setCurrentCoordinates: () => {},
   currentPlace: null,
@@ -119,8 +125,13 @@ export default function OutingProvider({ children = null, storage }: Props) {
   );
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
   const [isMoving, setIsMoving] = useState<boolean>(false);
+  const [pastOutings, setPastOutings] = useState<OutingWithDetails[]>([]);
 
   const mostRecentLocation = activeOutingLocations[0] ?? null;
+  const mostRecentCoordinates =
+    activeOutingPath.sort(
+      (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime(),
+    )[0] ?? null;
   const inTransit = !mostRecentLocation || !!mostRecentLocation.departure_time;
 
   const setCurrentCoordinates = (coordinates: Coordinates | null) => {
@@ -207,6 +218,50 @@ export default function OutingProvider({ children = null, storage }: Props) {
         return [];
       }
     },
+    enabled: !!activeOuting,
+  });
+
+  const { data: pastOutingsData } = useQuery({
+    queryKey: ['getUserPastOutings'],
+    queryFn: async () => {
+      let response = await apiInstance
+        ?.request(GET_OUTINGS, {
+          status: ['ended'],
+          includeAdditionalInfo: true,
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log('Failed to get user past outings');
+        });
+
+      return response?.getOutings ?? [];
+    },
+    enabled: isAuthorized,
+  });
+
+  const { data: pastOutingPathsData } = useQuery({
+    queryKey: ['getUserPastOutingPaths'],
+    queryFn: async (): Promise<Map<string, PathType[]>> => {
+      let pastOutingPathList = await apiInstance
+        ?.request(GET_OUTING_PATHS, {
+          outingIds: pastOutingsData?.map((outing) => outing._id),
+        })
+        .then((response) => response?.getOutingPaths)
+        .catch((err) => {
+          console.log(err);
+          console.log('Failed to get user past outing paths');
+        });
+
+      if (pastOutingPathList) {
+        return pastOutingPathList.reduce((acc, path) => {
+          acc.set(path.outing_id, path.points);
+          return acc;
+        }, new Map<string, PathType[]>());
+      } else {
+        return new Map<string, PathType[]>();
+      }
+    },
+    enabled: !!pastOutingsData?.length,
   });
 
   const {
@@ -483,6 +538,35 @@ export default function OutingProvider({ children = null, storage }: Props) {
   };
 
   useEffect(() => {
+    // On initial render, get the current location.
+    getCurrentPositionRNCG((position) => {
+      position.coords && setCurrentCoordinates(position.coords);
+    });
+  }, []);
+
+  useEffect(() => {
+    // On resumption of app from background state, refetch the latest
+    // location information.
+    let subscription = AppState.addEventListener(
+      'change',
+      async (nextAppState) => {
+        if (nextAppState === 'active') {
+          // Update the displayed locations and path when the user returns to the app.
+          refetchLocationDetails();
+          refetchOutingPath();
+          refetchOutingLocations();
+        }
+      },
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    // Set the current locations form the active outing.
+    // Maybe don't need this state and can just use the return from the endpoint directly?
     if (activeOutingLocationsData)
       setActiveOutingLocations(activeOutingLocationsData);
   }, [activeOutingLocationsData]);
@@ -494,23 +578,19 @@ export default function OutingProvider({ children = null, storage }: Props) {
   }, [activeOutingPathdata]);
 
   useEffect(() => {
-    getCurrentPositionRNCG((position) => {
-      position.coords && setCurrentCoordinates(position.coords);
-    });
-  }, []);
-
-  useEffect(() => {
     if (activeOutingData?.getActiveOuting) {
       setActiveOuting(activeOutingData.getActiveOuting);
     }
   }, [activeOutingData]);
 
   useEffect(() => {
+    // Set location details to the current place.
     if (locationDetails) {
       setCurrentPlace({
         google_place_id: locationDetails.google_place_id,
         name: locationDetails.displayName,
         address: locationDetails.address,
+        // Don't want to override the arrival time if we're at the same location.
         arrival_time:
           locationDetails.google_place_id ===
           mostRecentLocation?.external_ids.google_place_id
@@ -525,6 +605,21 @@ export default function OutingProvider({ children = null, storage }: Props) {
   }, [locationDetails]);
 
   useEffect(() => {
+    if (pastOutingPathsData && pastOutingsData) {
+      let pastOutingsWithPaths = pastOutingsData.map((outing) => {
+        let path = pastOutingPathsData.get(outing._id) ?? [];
+        return {
+          ...outing,
+          path,
+        };
+      });
+
+      setPastOutings(pastOutingsWithPaths);
+    }
+  }, [pastOutingPathsData, pastOutingsData]);
+
+  useEffect(() => {
+    // Handle arrival and departure of locations when movement is detected from the user.
     onMotionChange((changeEvent) => {
       setCurrentCoordinates(changeEvent.location.coords);
       handleCreateEndLocation(changeEvent.location.coords);
@@ -557,28 +652,19 @@ export default function OutingProvider({ children = null, storage }: Props) {
   }, []);
 
   useEffect(() => {
-    let subscription = AppState.addEventListener(
-      'change',
-      async (nextAppState) => {
-        if (nextAppState === 'active') {
-          // Update the displayed locations and path when the user returns to the app.
-          refetchLocationDetails();
-          refetchOutingPath();
-          refetchOutingLocations();
-        }
-      },
-    );
+    // Add coordinates to the outing path if users have moved a meaningful distance.
+    if (activeOuting && currentCoordinates) {
+      if (mostRecentCoordinates) {
+        let distanceFromLastPoint = calculateDistanceMeters(
+          mostRecentCoordinates.coordinates,
+          currentCoordinates,
+        );
 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    // Every time the user moves, add the new coordinates to the outing path.
-    // TODO: Add filters to somewhat limit this to a certain distance from the last point.
-    if (activeOuting) {
-      currentCoordinates && addToOutingPath([currentCoordinates]);
+        if (distanceFromLastPoint > METER_DISTANCE_FOR_OUTING_PATH)
+          addToOutingPath([currentCoordinates]);
+      } else {
+        addToOutingPath([currentCoordinates]);
+      }
     }
   }, [currentCoordinates]);
 
@@ -590,6 +676,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
         currentCoordinates,
         setCurrentCoordinates,
         mostRecentLocation,
+        pastOutings,
         inTransit,
         isMoving,
         isAtMostRecentLocation:

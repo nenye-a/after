@@ -15,7 +15,7 @@ export class OutingResolver {
   async getOuting(
     @Arg('outingId') outingId: string,
     @Ctx() ctx: Context,
-    @Arg('includeAdditionalInfo', { defaultValue: false })
+    @Arg('includeAdditionalInfo', { defaultValue: false, nullable: true })
     includeAdditionalInfo: boolean,
   ) {
     let outingDetails = await ctx.models.outings.findOne({
@@ -46,7 +46,7 @@ export class OutingResolver {
   @Query(() => OutingType, { nullable: true })
   async getActiveOuting(
     @Ctx() ctx: Context,
-    @Arg('includeAdditionalInfo', { defaultValue: false })
+    @Arg('includeAdditionalInfo', { defaultValue: false, nullable: true })
     includeAdditionalInfo: boolean,
   ) {
     let activeOuting = await ctx.models.outings.findOne({
@@ -77,10 +77,11 @@ export class OutingResolver {
   @Query(() => [OutingType])
   async getOutings(
     @Ctx() ctx: Context,
-    @Arg('includeAdditionalInfo', { defaultValue: false })
+    @Arg('includeAdditionalInfo', { defaultValue: false, nullable: true })
     includeAdditionalInfo: boolean,
     @Arg('status', () => [String], { nullable: true }) status?: OutingStatus[],
   ) {
+    // TODO: Support pagination.
     let allOutings = await ctx.models.outings.find({
       user_id: ctx.user?._id,
       ...(status ? { status: { $in: status } } : {}),

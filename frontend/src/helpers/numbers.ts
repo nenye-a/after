@@ -36,3 +36,35 @@ export function calculateDistanceMeters(
     return _.round(EARTH_RADIUS_KM * c * 1000); // Distance in meters.
   }, [coord1.latitude, coord1.longitude, coord2.latitude, coord2.longitude]);
 }
+
+interface ViewportDimensions {
+  latitudeDelta: number;
+  longitudeDelta: number;
+}
+
+/**
+ * Converts a distance in meters to approximate changes in latitude and longitude degrees.
+ * @param km - The distance in kilometers.
+ * @param baseCoordinate - The base coordinate (latitude and longitude) to calculate from.
+ * @returns An object containing latitudeDelta and longitudeDelta.
+ */
+export function kmToLatLngDeltas(
+  km: number,
+  baseCoordinate: Coordinates,
+): ViewportDimensions {
+  // Earth's radius in meters
+
+  // Convert latitude and longitude to radians
+  const lat = baseCoordinate.latitude * (Math.PI / 180);
+
+  // Calculate latitude change
+  const latDelta = (km / EARTH_RADIUS_KM) * (180 / Math.PI);
+
+  // Calculate longitude change
+  const lngDelta = ((km / EARTH_RADIUS_KM) * (180 / Math.PI)) / Math.cos(lat);
+
+  return {
+    latitudeDelta: latDelta,
+    longitudeDelta: lngDelta,
+  };
+}

@@ -194,7 +194,6 @@ export const formattedDateDifference = function (
       index !== unitDetails.length - 1
         ? Math.floor(difference / timeUnitValue)
         : _.round(difference / timeUnitValue, 0);
-
     difference -= numUnits * timeUnitValue;
     if (!options?.ignoreExcess || numUnits > 0) resultMap.set(name, numUnits);
   });

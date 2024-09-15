@@ -13,6 +13,24 @@ export const GET_ACTIVE_OUTING = graphql(`
   }
 `);
 
+export const GET_OUTINGS = graphql(`
+  query GetOutings($includeAdditionalInfo: Boolean, $status: [String!]) {
+    getOutings(includeAdditionalInfo: $includeAdditionalInfo, status: $status) {
+      _id
+      user_id
+      name
+      status
+      start_date
+      end_date
+      linked_outing_id
+      favorite
+      automatically_ended
+      num_locations
+      num_participants
+    }
+  }
+`);
+
 export const START_OUTING = graphql(`
   mutation StartOuting($coordinates: CoordinatesInput) {
     startOuting(coordinates: $coordinates) {

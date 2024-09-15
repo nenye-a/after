@@ -120,14 +120,14 @@ enum PriceLevel {
 }
 
 type Query {
-  getActiveOuting(includeAdditionalInfo: Boolean! = false): OutingType
+  getActiveOuting(includeAdditionalInfo: Boolean = false): OutingType
   getAllUsers: [UserType!]!
   getGooglePreviewLocation(coordinates: CoordinatesInput!): GooglePreviewLocationType
   getLocationDetails(locationId: ID!): LocationType
-  getOuting(includeAdditionalInfo: Boolean! = false, outingId: String!): OutingType!
+  getOuting(includeAdditionalInfo: Boolean = false, outingId: String!): OutingType!
   getOutingLocations(outingId: ID!): [LocationType!]!
   getOutingPaths(outing_ids: [ID!]): [OutingPathType!]!
-  getOutings(includeAdditionalInfo: Boolean! = false, status: [String!]): [OutingType!]!
+  getOutings(includeAdditionalInfo: Boolean = false, status: [String!]): [OutingType!]!
   getUser: UserType!
 }
 
