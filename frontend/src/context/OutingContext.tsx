@@ -1,4 +1,8 @@
-import { MutationStartOutingArgs } from '@/services/graphql/after/generated/graphql';
+import {
+  LocationType,
+  MutationStartOutingArgs,
+  PathType,
+} from '@/services/graphql/after/generated/graphql';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createContext,
@@ -16,10 +20,17 @@ import {
 } from '@/services/graphql/after/queries/outing';
 import { useLocation } from './LocationContext';
 import { seconds } from '@/helpers/dates';
-import { GET_LOCATION_PREVIEW } from '@/services/graphql/after/queries/location';
+import {
+  CREATE_LOCATION_FROM_POINT,
+  GET_LOCATION_PREVIEW,
+  GET_OUTING_LOCATIONS,
+} from '@/services/graphql/after/queries/location';
 import { ActiveOutingSummary } from '@/types/service/outing';
 import { Coordinates } from '@/types/components/location';
-import { CREATE_PATH } from '@/services/graphql/after/queries/paths';
+import {
+  CREATE_PATH,
+  GET_OUTING_PATHS,
+} from '@/services/graphql/after/queries/paths';
 import { AppState } from 'react-native';
 
 export type Place = {
@@ -29,6 +40,9 @@ export type Place = {
 
 export type OutingContextType = {
   activeOuting: ActiveOutingSummary | null;
+  activeOutingLocations: LocationType[];
+  activeOutingPath: PathType[];
+  mostRecentLocation: LocationType | null;
   currentCoordinates: Coordinates | null;
   setCurrentCoordinates: (coordinates: Coordinates) => void;
   currentPlace: Place | null;
@@ -39,10 +53,14 @@ export type OutingContextType = {
   locationDetailsStatus: string | null;
   refetchLocationDetails: () => void;
   addToOutingPath: (coordinatesList: Coordinates[]) => void;
+  outingDataLoading: boolean;
 };
 
 const OutingContext = createContext<OutingContextType>({
   activeOuting: null,
+  activeOutingLocations: [],
+  activeOutingPath: [],
+  mostRecentLocation: null,
   currentCoordinates: null,
   setCurrentCoordinates: () => {},
   currentPlace: null,
@@ -53,6 +71,7 @@ const OutingContext = createContext<OutingContextType>({
   locationDetailsStatus: null,
   refetchLocationDetails: () => {},
   addToOutingPath: () => {},
+  outingDataLoading: false,
 });
 
 export const useOuting = () => useContext(OutingContext);
@@ -74,6 +93,10 @@ export default function OutingProvider({ children = null, storage }: Props) {
   const [activeOuting, setActiveOuting] = useState<ActiveOutingSummary | null>(
     null,
   );
+  const [activeOutingLocations, setActiveOutingLocations] = useState<
+    LocationType[]
+  >([]);
+  const [activeOutingPath, setActiveOutingPath] = useState<PathType[]>([]);
   const [currentCoordinates, setCoordinates] = useState<Coordinates | null>(
     null,
   );
@@ -93,17 +116,84 @@ export default function OutingProvider({ children = null, storage }: Props) {
     );
   };
 
-  const { data: activeOutingData } = useQuery({
-    queryKey: ['getActiveOuting'],
+  const { data: activeOutingData, isLoading: isActiveOutingLoading } = useQuery(
+    {
+      queryKey: ['getActiveOuting'],
+      queryFn: async () => {
+        return apiInstance?.request(GET_ACTIVE_OUTING).catch((err) => {
+          console.log(err);
+          console.log('Failed to get active outing');
+        });
+      },
+      staleTime: 10 * seconds,
+      enabled: isAuthorized && !!apiInstance && !activeOuting,
+    },
+  );
+
+  const {
+    data: activeOutingLocationsData,
+    isLoading: isOutingLocationsLoading,
+  } = useQuery({
+    queryKey: ['getActiveOutingLocations', activeOuting?._id],
     queryFn: async () => {
-      return apiInstance?.request(GET_ACTIVE_OUTING).catch((err) => {
-        console.log(err);
-        console.log('Failed to get active outing');
-      });
+      let activeLocationsResponse = activeOuting
+        ? await apiInstance
+            ?.request(GET_OUTING_LOCATIONS, {
+              outingId: activeOuting?._id,
+            })
+            .catch((err) => {
+              console.log(err);
+              console.log('Failed to get active outing locations');
+            })
+        : null;
+
+      if (activeLocationsResponse) {
+        return activeLocationsResponse.getOutingLocations;
+      } else {
+        return [];
+      }
     },
     staleTime: 10 * seconds,
-    enabled: isAuthorized && !!apiInstance && !activeOuting,
+    enabled: !!activeOuting,
   });
+
+  const { data: activeOutingPathdata, isLoading: isActivePathLoading } =
+    useQuery({
+      queryKey: ['getActiveOutingPath', activeOuting?._id],
+      queryFn: async () => {
+        let activePathResponse = activeOuting
+          ? await apiInstance
+              ?.request(GET_OUTING_PATHS, {
+                outingIds: [activeOuting._id],
+              })
+              .catch((err) => {
+                console.log(err);
+                console.log('Failed to get active outing path');
+              })
+          : null;
+
+        if (activePathResponse) {
+          return (
+            activePathResponse.getOutingPaths.find(
+              ({ outing_id }) => outing_id === activeOuting?._id,
+            )?.points ?? []
+          );
+        } else {
+          return [];
+        }
+      },
+    });
+
+  useEffect(() => {
+    if (activeOutingLocationsData)
+      setActiveOutingLocations(activeOutingLocationsData);
+  }, [activeOutingLocationsData]);
+
+  useEffect(() => {
+    if (activeOutingPathdata) {
+      setActiveOutingPath(activeOutingPathdata);
+    }
+  }, [activeOutingPathdata]);
 
   useEffect(() => {
     getCurrentPositionRNCG((position) => {
@@ -169,6 +259,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
       }),
     onSuccess: () => {
       setActiveOuting(null);
+      setActiveOutingLocations([]);
     },
   });
 
@@ -197,6 +288,20 @@ export default function OutingProvider({ children = null, storage }: Props) {
       createPathPoints(coordinatesList);
     } else console.log('No active outing to add path points to.');
   };
+
+  const {} = useMutation({
+    mutationFn: async (coordinates: Coordinates) => {
+      return apiInstance
+        ?.request(CREATE_LOCATION_FROM_POINT, { coordinates })
+        .catch((err) => {
+          console.log(err);
+          console.log('Failed to create location from point: ', coordinates);
+        });
+    },
+    onSuccess: () => {
+      // Refetch the outing locations.
+    },
+  });
 
   const startOuting = async () => {
     if (!activeOuting) {
@@ -277,8 +382,11 @@ export default function OutingProvider({ children = null, storage }: Props) {
   return (
     <OutingContext.Provider
       value={{
+        activeOutingLocations,
+        activeOutingPath,
         currentCoordinates,
         setCurrentCoordinates,
+        mostRecentLocation: activeOutingLocations[0] ?? null,
         currentPlace,
         setCurrentPlace,
         activeOuting,
@@ -288,6 +396,10 @@ export default function OutingProvider({ children = null, storage }: Props) {
         locationDetailsStatus,
         refetchLocationDetails,
         addToOutingPath,
+        outingDataLoading:
+          isOutingLocationsLoading ||
+          isActiveOutingLoading ||
+          isActivePathLoading,
       }}
     >
       {children}
