@@ -16,6 +16,8 @@ import { LocationInfoProps } from '@/types/components/location';
 import { convertDateToStringPretty } from '@/helpers/dates';
 
 import Icon from 'react-native-vector-icons/Feather';
+import { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
 
 const outingDetailExample = {
   date: new Date(),
@@ -68,8 +70,11 @@ const OutingDetailScreen = (props: Props) => {
   const { setMapSheetPage } = useMapSheet();
 
   return (
-    <View>
-      <View style={[layout.row, layout.justifyBetween]}>
+    <>
+      <BottomSheetView
+        focusHook={useFocusEffect}
+        style={[layout.row, layout.justifyBetween]}
+      >
         <View>
           <AfterText fontType="minor">
             {convertDateToStringPretty(date)}
@@ -103,8 +108,11 @@ const OutingDetailScreen = (props: Props) => {
           </View>
         </View>
         <IconButton icon="x" onPress={() => setMapSheetPage('Past Outings')} />
-      </View>
-      <View style={[layout.row, gutters.marginVertical_15]}>
+      </BottomSheetView>
+      <BottomSheetView
+        focusHook={useFocusEffect}
+        style={[layout.row, gutters.marginVertical_15]}
+      >
         <PillButton
           style={[layout.flex_1, gutters.marginRight_4]}
           text="Share"
@@ -117,9 +125,12 @@ const OutingDetailScreen = (props: Props) => {
           mode="secondary"
           customIcon={<Icon name="heart" size={20} color={colors.white} />}
         />
-      </View>
-      <Divider />
-      <FlatList
+      </BottomSheetView>
+      <BottomSheetView focusHook={useFocusEffect}>
+        <Divider />
+      </BottomSheetView>
+      <BottomSheetFlatList
+        focusHook={useFocusEffect}
         style={[gutters.marginVertical_15]}
         data={locations ?? []}
         renderItem={({ item: location, index }) => (
@@ -166,7 +177,7 @@ const OutingDetailScreen = (props: Props) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
       />
-    </View>
+    </>
   );
 };
 

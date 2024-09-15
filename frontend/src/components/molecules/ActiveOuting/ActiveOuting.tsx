@@ -24,6 +24,8 @@ import {
   getLocalTime,
 } from '@/helpers/dates';
 import { convertLocationPriceLevel } from '@/helpers/location';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
 
 type ListItemProps = { active?: boolean } & LocationType;
 
@@ -130,7 +132,8 @@ const LocationItem = (props: ListItemProps) => {
 const ActiveOutingList = (props: ActiveOutingProps) => {
   const { activeOutingLocations, inTransit } = useOuting();
   return (
-    <FlatList
+    <BottomSheetFlatList
+      focusHook={useFocusEffect}
       style={[{ marginTop: -15 }]}
       {...props}
       data={activeOutingLocations}

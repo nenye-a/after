@@ -78,8 +78,8 @@ const SheetHomeScreen = (props: Props) => {
 
   return (
     <>
-      <MapSheetUserHeader />
       <BottomSheetView focusHook={useFocusEffect}>
+        <MapSheetUserHeader />
         <TabSelect
           tabOptions={tabOptions}
           activeTab={mapSheetPage}
