@@ -8,15 +8,20 @@ import {
 } from 'react';
 import { MMKV } from 'react-native-mmkv';
 import { useOuting } from './OutingContext';
+import { OutingWithDetails } from '@/types/service/outing';
 
 export type MapSheetContextType = {
   mapSheetPage: MapSheetPage;
   setMapSheetPage: (page: MapSheetPage) => void;
+  currentPastOuting: OutingWithDetails | null;
+  setCurrentPastOuting: (outing: OutingWithDetails | null) => void;
 };
 
 const MapSheetContext = createContext<MapSheetContextType>({
   mapSheetPage: 'Past Outings',
   setMapSheetPage: () => {},
+  currentPastOuting: null,
+  setCurrentPastOuting: () => {},
 });
 
 export const useMapSheet = () => useContext(MapSheetContext);
@@ -29,6 +34,8 @@ export default function MapSheetProvider({ children = null, storage }: Props) {
   const [mapSheetPage, setMapSheetPage] = useState<MapSheetPage>(
     activeOuting ? 'Active Outing' : 'Past Outings',
   );
+  const [currentPastOuting, setCurrentPastOuting] =
+    useState<OutingWithDetails | null>(null);
 
   useEffect(() => {
     if (activeOuting) {
@@ -43,6 +50,8 @@ export default function MapSheetProvider({ children = null, storage }: Props) {
       value={{
         mapSheetPage,
         setMapSheetPage,
+        currentPastOuting,
+        setCurrentPastOuting,
       }}
     >
       {children}

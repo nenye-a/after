@@ -17,21 +17,6 @@ import { useOuting } from '@/context/OutingContext';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useFocusEffect } from '@react-navigation/native';
 
-type Props = {};
-
-// TODO: Move this to a dedicated file containing routes.
-const pageHeadings = [
-  {
-    text: 'Recommendations',
-  },
-  {
-    text: 'Past Outings',
-  },
-  {
-    text: 'Favorites',
-  },
-];
-
 const recommendations = [
   {
     name: 'Bareburger',
@@ -62,7 +47,7 @@ const recommendations = [
   },
 ];
 
-const SheetHomeScreen = (props: Props) => {
+const SheetHomeScreen = () => {
   const { layout, gutters } = useTheme();
   const { activeOuting, activeOutingLocations } = useOuting();
   const { mapSheetPage, setMapSheetPage } = useMapSheet();

@@ -2,7 +2,7 @@
 import { MapStyle } from '@/constants/mapstyle';
 import { useMapSheet } from '@/context/MapSheetContext';
 import { useOuting } from '@/context/OutingContext';
-import { kmToLatLngDeltas } from '@/helpers/numbers';
+import { calculateCoordinateRegion, kmToLatLngDeltas } from '@/helpers/map';
 import { useTheme } from '@/theme';
 import { PropsWithChildren, useMemo, useRef } from 'react';
 import MapView, {
@@ -24,26 +24,28 @@ function AfterMap({ children, ...props }: Props) {
   const { layout, colors, backgrounds, borders, gutters } = useTheme();
   const { setCurrentCoordinates, currentCoordinates, pastOutings } =
     useOuting();
-  const { mapSheetPage } = useMapSheet();
+  const { mapSheetPage, currentPastOuting } = useMapSheet();
 
   const mapRef = useRef<MapView>(null);
 
   const mapOutings = useMemo(
     () =>
-      pastOutings.map((outing) => {
-        let outingColor = randomColor({
-          luminosity: 'bright',
-          format: 'rgba',
-        });
-        return (
-          <>
-            {outing.locations.map((location, index) => {
+      pastOutings
+        .filter(
+          (outing) =>
+            !currentPastOuting || outing._id === currentPastOuting._id,
+        )
+        .map((outing) => {
+          let outingColor = randomColor({
+            luminosity: 'bright',
+            format: 'rgba',
+          });
+          return [
+            outing.locations.map((location, index) => {
               return (
                 <Marker
                   key={location._id}
                   coordinate={location.coordinates}
-                  title={`${index + 1}. ${location.name}`}
-                  description={location.address}
                   pinColor={outingColor}
                 >
                   <Callout tooltip>
@@ -76,8 +78,9 @@ function AfterMap({ children, ...props }: Props) {
                   </Callout>
                 </Marker>
               );
-            })}
+            }),
             <Polyline
+              key={outing._id}
               coordinates={outing.path
                 .sort(
                   (a, b) =>
@@ -87,27 +90,30 @@ function AfterMap({ children, ...props }: Props) {
               strokeColor="white"
               strokeWidth={1}
               lineDashPattern={[2, 5]}
-            />
-          </>
-        );
-      }),
-    [pastOutings],
+            />,
+          ];
+        }),
+    [pastOutings, mapSheetPage, currentPastOuting],
   );
+
+  let region = currentPastOuting?.locations.length
+    ? (calculateCoordinateRegion(
+        [
+          ...currentPastOuting.locations.map((l) => l.coordinates),
+          ...currentPastOuting.path.map((p) => p.coordinates),
+        ].flat(),
+      ) ?? undefined)
+    : currentCoordinates
+      ? {
+          ...currentCoordinates,
+          ...kmToLatLngDeltas(10, currentCoordinates),
+        }
+      : undefined;
 
   return (
     <MapView
       style={[layout.fullHeight, layout.fullWidth]}
-      region={
-        currentCoordinates
-          ? {
-              ...currentCoordinates,
-              ...kmToLatLngDeltas(
-                mapSheetPage === 'Past Outings' ? 5 : 0.8,
-                currentCoordinates,
-              ),
-            }
-          : undefined
-      }
+      region={region}
       customMapStyle={MapStyle}
       mapType="mutedStandard"
       showsUserLocation={true}
@@ -122,7 +128,9 @@ function AfterMap({ children, ...props }: Props) {
       {...props}
       ref={mapRef}
     >
-      {mapSheetPage === 'Past Outings' ? mapOutings : null}
+      {['Past Outings', 'Outing Detail'].includes(mapSheetPage)
+        ? mapOutings.flat()
+        : null}
       {children}
     </MapView>
   );

@@ -39,7 +39,7 @@ import {
   GET_OUTING_PATHS,
 } from '@/services/graphql/after/queries/paths';
 import { AppState } from 'react-native';
-import { calculateDistanceMeters } from '@/helpers/numbers';
+import { calculateDistanceMeters } from '@/helpers/map';
 import {
   METER_DISTANCE_FOR_OUTING_PATH,
   SAME_OUTING_LOCATION_MINUTE_CUTOFF,
@@ -425,123 +425,113 @@ export default function OutingProvider({ children = null, storage }: Props) {
     } else console.log('No active outing to add path points to.');
   };
 
-  const handleCreateEndLocation = useCallback(
-    async (coordinates: Coordinates) => {
-      // Check if we can consider this the same location as prior. If so, check
-      // if we've been here for enough time to consider it a location. If so,
-      // add the location to the outing.
+  const handleCreateEndLocation = async (coordinates: Coordinates) => {
+    // Check if we can consider this the same location as prior. If so, check
+    // if we've been here for enough time to consider it a location. If so,
+    // add the location to the outing.
 
-      // Determine if we're considering if our most recent location is departed, and if we're at a new location.
-      let locationEvaluationState: 'ending' | 'new' =
-        mostRecentLocation &&
-        currentPlace?.google_place_id ===
-          mostRecentLocation?.external_ids.google_place_id
-          ? 'ending'
-          : 'new';
+    // Determine if we're considering if our most recent location is departed, and if we're at a new location.
+    let locationEvaluationState: 'ending' | 'new' =
+      mostRecentLocation &&
+      currentPlace?.google_place_id ===
+        mostRecentLocation?.external_ids.google_place_id
+        ? 'ending'
+        : 'new';
 
-      let shouldCheckLocation = false; // If we should check the location.
+    let shouldCheckLocation = false; // If we should check the location.
 
-      const getPreviewLocation = useCallback(
-        async (coordinates: Coordinates) => {
-          return apiInstance
-            ?.request(GET_LOCATION_PREVIEW, {
-              coordinates,
-            })
-            .then((response) => response?.getGooglePreviewLocation)
-            .catch((err) => {
-              console.log(err);
-              return null;
-            });
-        },
-        [apiInstance],
+    const getPreviewLocation = useCallback(
+      async (coordinates: Coordinates) => {
+        return apiInstance
+          ?.request(GET_LOCATION_PREVIEW, {
+            coordinates,
+          })
+          .then((response) => response?.getGooglePreviewLocation)
+          .catch((err) => {
+            console.log(err);
+            return null;
+          });
+      },
+      [apiInstance],
+    );
+
+    if (locationEvaluationState === 'ending') {
+      let distanceFromLastLocation = calculateDistanceMeters(
+        mostRecentLocation.coordinates,
+        coordinates,
       );
 
-      if (locationEvaluationState === 'ending') {
-        let distanceFromLastLocation = calculateDistanceMeters(
-          mostRecentLocation.coordinates,
-          coordinates,
-        );
-
+      if (
+        distanceFromLastLocation >
+        SameLocationDistanceCutoffMeters.LOW_CONFIDENCE
+      ) {
+        let previewLocation = await getPreviewLocation(coordinates);
         if (
-          distanceFromLastLocation >
-          SameLocationDistanceCutoffMeters.LOW_CONFIDENCE
+          previewLocation?.google_place_id !==
+          mostRecentLocation?.external_ids.google_place_id
         ) {
-          let previewLocation = await getPreviewLocation(coordinates);
-          if (
-            previewLocation?.google_place_id !==
-            mostRecentLocation?.external_ids.google_place_id
-          ) {
-            departLocation(mostRecentLocation._id);
-            // Mark that we've arrived at a new place.
-            if (previewLocation)
-              setCurrentPlace({
-                google_place_id: previewLocation.google_place_id,
-                name: previewLocation.displayName,
-                address: previewLocation.address,
-                arrival_time: new Date(),
-                coordinates: previewLocation.coordinates,
-              });
-          }
-        }
-      } else if (currentPlace && locationEvaluationState === 'new') {
-        let shouldCreateNewLocation = false; // If we should arrive at a new location.
-
-        let minutesSinceArrival = minuteDifference(
-          currentPlace.arrival_time,
-          new Date(),
-          { digits: 0 },
-        );
-
-        let distanceFromCurrentPlace = calculateDistanceMeters(
-          currentPlace.coordinates,
-          coordinates,
-        );
-
-        if (minutesSinceArrival >= SAME_OUTING_LOCATION_MINUTE_CUTOFF) {
-          // We've been here long enough, that if we're at the same location, we should
-          // consider this a new location.
-
-          if (
-            distanceFromCurrentPlace <=
-            SameLocationDistanceCutoffMeters.HIGH_CONFIDENCE
-          ) {
-            // We're at the same location, consider this a new location.
-            shouldCreateNewLocation = true;
-          } else if (
-            distanceFromCurrentPlace <=
-            SameLocationDistanceCutoffMeters.LOW_CONFIDENCE
-          ) {
-            shouldCheckLocation = true;
-          }
-
-          if (shouldCheckLocation) {
-            let previewLocation = await getPreviewLocation(coordinates);
-            if (
-              previewLocation?.google_place_id === currentPlace.google_place_id
-            ) {
-              shouldCreateNewLocation = true;
-            }
-          }
-
-          if (shouldCreateNewLocation) {
-            if (!inTransit) {
-              // If we're not in transit, we should depart the current location.
-              departLocation(mostRecentLocation._id);
-            }
-            createLocationFromPoint(coordinates);
-          }
+          departLocation(mostRecentLocation._id);
+          // Mark that we've arrived at a new place.
+          if (previewLocation)
+            setCurrentPlace({
+              google_place_id: previewLocation.google_place_id,
+              name: previewLocation.displayName,
+              address: previewLocation.address,
+              arrival_time: new Date(),
+              coordinates: previewLocation.coordinates,
+            });
         }
       }
-    },
-    [
-      currentPlace,
-      mostRecentLocation,
-      inTransit,
-      departLocation,
-      createLocationFromPoint,
-      apiInstance,
-    ],
-  );
+    } else if (currentPlace && locationEvaluationState === 'new') {
+      let shouldCreateNewLocation = false; // If we should arrive at a new location.
+
+      let minutesSinceArrival = minuteDifference(
+        currentPlace.arrival_time,
+        new Date(),
+        { digits: 0 },
+      );
+
+      let distanceFromCurrentPlace = calculateDistanceMeters(
+        currentPlace.coordinates,
+        coordinates,
+      );
+
+      if (minutesSinceArrival >= SAME_OUTING_LOCATION_MINUTE_CUTOFF) {
+        // We've been here long enough, that if we're at the same location, we should
+        // consider this a new location.
+
+        if (
+          distanceFromCurrentPlace <=
+          SameLocationDistanceCutoffMeters.HIGH_CONFIDENCE
+        ) {
+          // We're at the same location, consider this a new location.
+          shouldCreateNewLocation = true;
+        } else if (
+          distanceFromCurrentPlace <=
+          SameLocationDistanceCutoffMeters.LOW_CONFIDENCE
+        ) {
+          shouldCheckLocation = true;
+        }
+
+        if (shouldCheckLocation) {
+          let previewLocation = await getPreviewLocation(coordinates);
+          if (
+            previewLocation?.google_place_id === currentPlace.google_place_id
+          ) {
+            shouldCreateNewLocation = true;
+          }
+        }
+
+        if (shouldCreateNewLocation) {
+          if (!inTransit) {
+            // If we're not in transit, we should depart the current location.
+            departLocation(mostRecentLocation._id);
+          }
+          createLocationFromPoint(coordinates);
+        }
+      }
+    }
+  };
 
   const startOuting = async () => {
     if (!activeOuting) {

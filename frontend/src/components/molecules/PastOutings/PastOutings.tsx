@@ -172,9 +172,9 @@ const OutingListItem = (outing: OutingType) => {
 
 type PastOutingProps = {};
 
-const PastOutings = (props: PastOutingProps) => {
+const PastOutings = () => {
   const { layout, gutters, components, colors, fonts } = useTheme();
-  const { setMapSheetPage } = useMapSheet();
+  const { setMapSheetPage, setCurrentPastOuting } = useMapSheet();
 
   const { pastOutings } = useOuting();
 
@@ -223,7 +223,10 @@ const PastOutings = (props: PastOutingProps) => {
                 };
               }
             }}
-            onPress={() => setMapSheetPage('Outing Detail')}
+            onPress={() => {
+              setCurrentPastOuting(item);
+              setMapSheetPage('Outing Detail');
+            }}
           >
             <OutingListItem key={index} {...item} />
           </Pressable>
