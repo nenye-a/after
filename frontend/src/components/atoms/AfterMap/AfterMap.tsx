@@ -16,19 +16,105 @@ import { View } from 'react-native';
 import AfterText from '../AfterText/AfterText';
 import SupportTextWithIcon from '../AfterText/SupportTextWithIcon';
 import Icon from 'react-native-vector-icons/Feather';
-import { generateDurationString } from '@/helpers/dates';
+import { generateDurationString, getLocalTime } from '@/helpers/dates';
 
 type Props = MapViewProps & PropsWithChildren & {};
 
+function AfterTooltip({ children }: PropsWithChildren) {
+  const { backgrounds, borders, gutters } = useTheme();
+  return (
+    <View
+      style={[
+        { borderRadius: 12, maxWidth: 400 },
+        backgrounds.blue700,
+        borders.gray100,
+        borders.w_1,
+        gutters.paddingVertical_4,
+        gutters.paddingHorizontal_8,
+      ]}
+    >
+      {children}
+    </View>
+  );
+}
+
+function AfterPolyline({ coordinates }: { coordinates: any[] }) {
+  return (
+    <Polyline
+      coordinates={coordinates}
+      strokeColor="white"
+      strokeWidth={1}
+      lineDashPattern={[2, 5]}
+    />
+  );
+}
+
 function AfterMap({ children, ...props }: Props) {
   const { layout, colors, backgrounds, borders, gutters } = useTheme();
-  const { setCurrentCoordinates, currentCoordinates, pastOutings } =
-    useOuting();
+  const {
+    setCurrentCoordinates,
+    currentCoordinates,
+    pastOutings,
+    activeOutingLocations,
+    activeOutingPath,
+  } = useOuting();
   const { mapSheetPage, currentPastOuting } = useMapSheet();
 
   const mapRef = useRef<MapView>(null);
 
-  const mapOutings = useMemo(
+  const mapActiveOutingLocations = useMemo(() => {
+    return activeOutingLocations
+      .sort(
+        (a, b) =>
+          new Date(b.arrival_time).getTime() -
+          new Date(a.arrival_time).getTime(),
+      )
+      .map((location, index) => {
+        return (
+          <Marker
+            key={location._id}
+            coordinate={location.coordinates}
+            pinColor={index === 0 ? colors.blue500 : colors.gray100}
+          >
+            <Callout tooltip>
+              <AfterTooltip>
+                <AfterText fontType="regular">
+                  {location.nickname ?? location.name}
+                </AfterText>
+                <SupportTextWithIcon
+                  customIcon={
+                    <Icon name="clock" size={10} color={colors.gray300} />
+                  }
+                  text={
+                    location.departure_time
+                      ? generateDurationString(
+                          location.departure_time,
+                          location.arrival_time,
+                        )
+                      : `Here since ${getLocalTime(location.arrival_time)}`
+                  }
+                />
+              </AfterTooltip>
+            </Callout>
+          </Marker>
+        );
+      });
+  }, [activeOutingLocations]);
+
+  const mapActiveOutingPath = useMemo(() => {
+    return (
+      <AfterPolyline
+        key={activeOutingPath.map((path) => path._id).join('')}
+        coordinates={activeOutingPath
+          .sort(
+            (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime(),
+          )
+          .map((path) => path.coordinates)}
+      />
+    );
+  }, [activeOutingPath]);
+
+  const mapPastOutings = useMemo(
     () =>
       pastOutings
         .filter(
@@ -49,16 +135,7 @@ function AfterMap({ children, ...props }: Props) {
                   pinColor={outingColor}
                 >
                   <Callout tooltip>
-                    <View
-                      style={[
-                        { borderRadius: 12, maxWidth: 400 },
-                        backgrounds.blue700,
-                        borders.gray100,
-                        borders.w_1,
-                        gutters.paddingVertical_4,
-                        gutters.paddingHorizontal_8,
-                      ]}
-                    >
+                    <AfterTooltip>
                       <SupportTextWithIcon
                         customIcon={
                           <Icon name="clock" size={10} color={colors.gray300} />
@@ -74,12 +151,12 @@ function AfterMap({ children, ...props }: Props) {
                       <AfterText fontType="minor">
                         {outing.name} (Spot {index + 1})
                       </AfterText>
-                    </View>
+                    </AfterTooltip>
                   </Callout>
                 </Marker>
               );
             }),
-            <Polyline
+            <AfterPolyline
               key={outing._id}
               coordinates={outing.path
                 .sort(
@@ -87,9 +164,6 @@ function AfterMap({ children, ...props }: Props) {
                     new Date(b.time).getTime() - new Date(a.time).getTime(),
                 )
                 .map((path) => path.coordinates)}
-              strokeColor="white"
-              strokeWidth={1}
-              lineDashPattern={[2, 5]}
             />,
           ];
         }),
@@ -129,8 +203,10 @@ function AfterMap({ children, ...props }: Props) {
       ref={mapRef}
     >
       {['Past Outings', 'Outing Detail'].includes(mapSheetPage)
-        ? mapOutings.flat()
-        : null}
+        ? mapPastOutings.flat()
+        : mapSheetPage === 'Active Outing'
+          ? [...mapActiveOutingLocations, mapActiveOutingPath]
+          : null}
       {children}
     </MapView>
   );

@@ -12,23 +12,21 @@ export function calculateDistanceMeters(
   coord1: Coordinates,
   coord2: Coordinates,
 ): number {
-  return useMemo(() => {
-    const lat1 = toRadians(coord1.latitude);
-    const lon1 = toRadians(coord1.longitude);
-    const lat2 = toRadians(coord2.latitude);
-    const lon2 = toRadians(coord2.longitude);
+  const lat1 = toRadians(coord1.latitude);
+  const lon1 = toRadians(coord1.longitude);
+  const lat2 = toRadians(coord2.latitude);
+  const lon2 = toRadians(coord2.longitude);
 
-    const dLat = lat2 - lat1;
-    const dLon = lon2 - lon1;
+  const dLat = lat2 - lat1;
+  const dLon = lon2 - lon1;
 
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return _.round(EARTH_RADIUS_KM * c * 1000); // Distance in meters.
-  }, [coord1.latitude, coord1.longitude, coord2.latitude, coord2.longitude]);
+  return _.round(EARTH_RADIUS_KM * c * 1000); // Distance in meters.
 }
 
 interface ViewportDimensions {

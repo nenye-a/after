@@ -79,10 +79,15 @@ const ActiveOutingIcon = (props: ViewProps & { active?: boolean }) => {
 };
 
 const LocationItem = (props: ListItemProps) => {
-  const { layout, fonts, gutters, colors } = useTheme();
+  const { layout, gutters, colors } = useTheme();
 
+  let duration = formattedDateDifference(new Date(), props.arrival_time, [
+    'day',
+    'hour',
+    'minute',
+  ]);
   const durationString = props.active
-    ? `Here since ${getLocalTime(props.arrival_time)} (${formattedDateDifference(new Date(), props.arrival_time, ['day', 'hour', 'minute'])})`
+    ? `Here since ${getLocalTime(props.arrival_time)}${duration ? ` (${duration})` : ''}`
     : generateDurationString(props.departure_time, props.arrival_time);
 
   return (

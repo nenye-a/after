@@ -222,7 +222,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
     enabled: !!activeOuting,
   });
 
-  const { data: pastOutingsData } = useQuery({
+  const { data: pastOutingsData, refetch: refetchPastOutings } = useQuery({
     queryKey: ['getUserPastOutings'],
     queryFn: async () => {
       let response = await apiInstance
@@ -240,34 +240,38 @@ export default function OutingProvider({ children = null, storage }: Props) {
     enabled: isAuthorized,
   });
 
-  const { data: pastOutingPathsData } = useQuery({
-    queryKey: ['getUserPastOutingPaths'],
-    queryFn: async (): Promise<Map<string, PathType[]>> => {
-      let pastOutingPathList = pastOutingsData
-        ? await apiInstance
-            ?.request(GET_OUTING_PATHS, {
-              outingIds: pastOutingsData?.map((outing) => outing._id),
-            })
-            .then((response) => response?.getOutingPaths)
-            .catch((err) => {
-              console.log(err);
-              console.log('Failed to get user past outing paths');
-            })
-        : null;
+  const { data: pastOutingPathsData, refetch: refetchPastOutingPath } =
+    useQuery({
+      queryKey: ['getUserPastOutingPaths'],
+      queryFn: async (): Promise<Map<string, PathType[]>> => {
+        let pastOutingPathList = pastOutingsData
+          ? await apiInstance
+              ?.request(GET_OUTING_PATHS, {
+                outingIds: pastOutingsData?.map((outing) => outing._id),
+              })
+              .then((response) => response?.getOutingPaths)
+              .catch((err) => {
+                console.log(err);
+                console.log('Failed to get user past outing paths');
+              })
+          : null;
 
-      if (pastOutingPathList) {
-        return pastOutingPathList.reduce((acc, path) => {
-          acc.set(path.outing_id, path.points);
-          return acc;
-        }, new Map<string, PathType[]>());
-      } else {
-        return new Map<string, PathType[]>();
-      }
-    },
-    enabled: !!pastOutingsData?.length,
-  });
+        if (pastOutingPathList) {
+          return pastOutingPathList.reduce((acc, path) => {
+            acc.set(path.outing_id, path.points);
+            return acc;
+          }, new Map<string, PathType[]>());
+        } else {
+          return new Map<string, PathType[]>();
+        }
+      },
+      enabled: !!pastOutingsData?.length,
+    });
 
-  const { data: pastOutingLocationssData } = useQuery({
+  const {
+    data: pastOutingLocationssData,
+    refetch: refetchPastOutingLocations,
+  } = useQuery({
     queryKey: ['getUserPastLocations'],
     queryFn: async (): Promise<Map<string, LocationType[]>> => {
       let pastOutingLocationList = pastOutingsData
@@ -356,6 +360,9 @@ export default function OutingProvider({ children = null, storage }: Props) {
     onSuccess: () => {
       setActiveOuting(null);
       setActiveOutingLocations([]);
+      refetchPastOutings();
+      refetchPastOutingPath();
+      refetchPastOutingLocations();
     },
   });
 
