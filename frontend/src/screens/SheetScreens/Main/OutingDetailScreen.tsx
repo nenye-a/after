@@ -9,102 +9,78 @@ import {
 import { useTheme } from '@/theme';
 import IconButton from '@/components/atoms/IconButton/IconButton';
 
-import ExampleRestaurantImage from '@/theme/assets/images/example_restaurant_image.png';
 import { useMapSheet } from '@/context/MapSheetContext';
 import LocationInfo from '@/components/molecules/Location/LocationInfo';
-import { LocationInfoProps } from '@/types/components/location';
-import { convertDateToStringPretty } from '@/helpers/dates';
+import {
+  convertDateToStringPretty,
+  generateDurationString,
+} from '@/helpers/dates';
 
 import Icon from 'react-native-vector-icons/Feather';
+import { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
+import { convertLocationPriceLevel } from '@/helpers/location';
 
-const outingDetailExample = {
-  date: new Date(),
-  city: 'New York, NY',
-  name: 'New York By Night',
-  locations: [
-    {
-      image: ExampleRestaurantImage,
-      name: 'Bareburger',
-      type: 'Restaurant',
-      rating: 4.5,
-      numReviews: 1856,
-      costLevel: 3,
-      tags: ['Chill', 'Trending'],
-      durationString: '9:30PM - 12:15AM (2h 45m)',
-    },
-    {
-      image: ExampleRestaurantImage,
-      name: "Max & Mina's Ice Cream",
-      type: 'Restaurant',
-      rating: 4.8,
-      numReviews: 387,
-      costLevel: 3,
-      tags: ['Trending', 'Gen Z Approved'],
-      durationString: '7:50PM - 8:55PM (1h 5m)',
-    },
-    {
-      image: ExampleRestaurantImage,
-      name: 'Doha Bar & Lounge',
-      type: 'Bar & Lounge',
-      rating: 4.4,
-      numReviews: 856,
-      costLevel: 2,
-      tags: ['Best In Class', 'Hip Hop'],
-      durationString: '6:35PM - 7:30PM (55m)',
-    },
-  ],
-  durationString: '6:35 - 12:15AM (5h 40m)',
-  numParticipants: 3,
-  favorite: true,
-};
-
-type Props = {};
-
-const OutingDetailScreen = (props: Props) => {
-  const { name, city, date, locations, durationString, numParticipants } =
-    outingDetailExample;
-
+const OutingDetailScreen = () => {
   const { layout, gutters, fonts, colors } = useTheme();
-  const { setMapSheetPage } = useMapSheet();
+  const { setMapSheetPage, currentPastOuting, setCurrentPastOuting } =
+    useMapSheet();
 
   return (
-    <View>
-      <View style={[layout.row, layout.justifyBetween]}>
-        <View>
+    <>
+      <BottomSheetView
+        focusHook={useFocusEffect}
+        style={[layout.row, layout.justifyBetween]}
+      >
+        <View style={[layout.flex_1]}>
           <AfterText fontType="minor">
-            {convertDateToStringPretty(date)}
+            {convertDateToStringPretty(currentPastOuting?.start_date)}
           </AfterText>
-          <AfterText fontType="header">New York By Night</AfterText>
+          <AfterText fontType="header">{currentPastOuting?.name}</AfterText>
           <View style={[layout.row, gutters.marginTop_4]}>
             <SupportTextWithIcon
               style={[gutters.marginRight_11]}
-              text={durationString}
+              text={generateDurationString(
+                currentPastOuting?.end_date,
+                currentPastOuting?.start_date,
+              )}
               customIcon={
                 <Icon name="clock" size={14} color={colors.gray300} />
               }
             />
             <SupportTextWithIcon
               style={[gutters.marginRight_11]}
-              text={locations.length + ' spots'}
+              text={currentPastOuting?.num_locations + ' spots'}
               customIcon={
                 <Icon name="map-pin" size={14} color={colors.gray300} />
               }
             />
-            <SupportTextWithIcon
-              text={numParticipants.toString()}
-              customIcon={
-                numParticipants > 1 ? (
-                  <Icon name="users" size={14} color={colors.gray300} />
-                ) : (
-                  <Icon name="user" size={14} color={colors.gray300} />
-                )
-              }
-            />
+            {currentPastOuting?.num_participants ? (
+              <SupportTextWithIcon
+                text={currentPastOuting.num_participants.toString()}
+                customIcon={
+                  currentPastOuting.num_participants > 1 ? (
+                    <Icon name="users" size={14} color={colors.gray300} />
+                  ) : (
+                    <Icon name="user" size={14} color={colors.gray300} />
+                  )
+                }
+              />
+            ) : null}
           </View>
         </View>
-        <IconButton icon="x" onPress={() => setMapSheetPage('Past Outings')} />
-      </View>
-      <View style={[layout.row, gutters.marginVertical_15]}>
+        <IconButton
+          icon="x"
+          onPress={() => {
+            setCurrentPastOuting(null);
+            setMapSheetPage('Past Outings');
+          }}
+        />
+      </BottomSheetView>
+      <BottomSheetView
+        focusHook={useFocusEffect}
+        style={[layout.row, gutters.marginVertical_15]}
+      >
         <PillButton
           style={[layout.flex_1, gutters.marginRight_4]}
           text="Share"
@@ -117,11 +93,14 @@ const OutingDetailScreen = (props: Props) => {
           mode="secondary"
           customIcon={<Icon name="heart" size={20} color={colors.white} />}
         />
-      </View>
-      <Divider />
-      <FlatList
+      </BottomSheetView>
+      <BottomSheetView focusHook={useFocusEffect}>
+        <Divider />
+      </BottomSheetView>
+      <BottomSheetFlatList
+        focusHook={useFocusEffect}
         style={[gutters.marginVertical_15]}
-        data={locations ?? []}
+        data={currentPastOuting?.locations ?? []}
         renderItem={({ item: location, index }) => (
           <View
             key={index}
@@ -145,28 +124,45 @@ const OutingDetailScreen = (props: Props) => {
               </AfterText>
             </View>
             <View style={[layout.flex_1]}>
-              <Image
-                source={location.image}
-                style={[
-                  { height: 186, borderRadius: 8, width: 'auto' },
-                  layout.flex_1,
-                ]}
-              />
+              {location.info?.image_urls?.[0] ? (
+                <Image
+                  source={{ uri: location.info?.image_urls?.[0] }}
+                  style={[
+                    { height: 186, borderRadius: 8, width: 'auto' },
+                    layout.flex_1,
+                    gutters.marginBottom_8,
+                  ]}
+                />
+              ) : null}
               <SupportTextWithIcon
-                text={location.durationString}
-                style={[gutters.marginVertical_8]}
+                text={generateDurationString(
+                  location.departure_time,
+                  location.arrival_time,
+                )}
+                style={[gutters.marginBottom_8]}
                 customIcon={
                   <Icon name="clock" size={14} color={colors.gray300} />
                 }
               />
-              <LocationInfo {...location} />
+              <LocationInfo
+                name={location.name}
+                type={location.info.type ?? 'place'}
+                rating={location.info.rating}
+                numReviews={location.info.num_ratings}
+                costLevel={
+                  location.info.price_level
+                    ? convertLocationPriceLevel(location.info.price_level)
+                    : null
+                }
+                tags={location.info.tags ?? []}
+              />
             </View>
           </View>
         )}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
       />
-    </View>
+    </>
   );
 };
 

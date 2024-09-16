@@ -8,12 +8,16 @@ import {
   Query,
   Resolver,
 } from 'type-graphql';
-import { GooglePreviewLocationType, LocationType } from '../types/Location';
+import {
+  GooglePreviewLocationType,
+  LocationType,
+  OutingLocationType,
+} from '../types/Location';
 import { CoordinatesInput } from '../types/Path';
 import { Context } from '../../context';
 import { getPlacesFromCoordinates } from '../../api/google';
-import { convertGooglePlaceToLocationBase } from '../../helpers/locations';
 import getPreviewLocation from './resolverHelpers/getPreviewLocation';
+import { Types } from 'mongoose';
 
 @Authorized()
 @Resolver(LocationType)
@@ -36,6 +40,37 @@ export class LocationResolver {
           (a, b) => a.arrival_time.getTime() - b.arrival_time.getTime(),
         ),
       );
+  }
+
+  @Query(() => [OutingLocationType])
+  async getManyOutingLocations(
+    @Arg('outingIds', () => [ID]) outingIds: string[],
+    @Ctx() ctx: Context,
+  ) {
+    let outingLocationResults = await ctx.models.locations.aggregate([
+      {
+        $match: {
+          outing_id: { $in: outingIds.map((id) => new Types.ObjectId(id)) },
+          user_id: ctx.user?._id,
+        },
+      },
+      { $sort: { arrival_time: 1 } },
+      {
+        $group: {
+          _id: '$outing_id',
+          outing_id: { $first: '$outing_id' },
+          locations: { $push: '$$ROOT' },
+        },
+      },
+      { $project: { _id: 0 } },
+    ]);
+
+    return outingIds.map(
+      (outingId) =>
+        outingLocationResults.find(
+          (result) => result.outing_id.toString() === outingId,
+        ) ?? { outing_id: outingId, locations: [] },
+    );
   }
 
   /**

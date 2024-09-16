@@ -22,7 +22,8 @@ function MapBottomSheet({ children, ...bottomSheetProps }: Props) {
       {...bottomSheetProps}
       style={[gutters.paddingHorizontal_15, style]}
     >
-      <BottomSheetView>{children}</BottomSheetView>
+      {children}
+      {/* <BottomSheetView>{children}</BottomSheetView> */}
     </BottomSheet>
   );
 }

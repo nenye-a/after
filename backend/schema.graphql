@@ -77,6 +77,11 @@ type OutingAndLocationType {
   outing: OutingType!
 }
 
+type OutingLocationType {
+  locations: [LocationType!]!
+  outing_id: ID!
+}
+
 type OutingPathType {
   outing_id: ID!
   points: [PathType!]!
@@ -85,8 +90,10 @@ type OutingPathType {
 type OutingType {
   _id: ID!
   automatically_ended: Boolean
+  city: String
   end_date: DateTimeISO
   favorite: Boolean
+  images: [String!]
   linked_outing_id: String
   name: String!
   num_locations: Float
@@ -120,14 +127,15 @@ enum PriceLevel {
 }
 
 type Query {
-  getActiveOuting(includeAdditionalInfo: Boolean! = false): OutingType
+  getActiveOuting(includeAdditionalInfo: Boolean = false): OutingType
   getAllUsers: [UserType!]!
   getGooglePreviewLocation(coordinates: CoordinatesInput!): GooglePreviewLocationType
   getLocationDetails(locationId: ID!): LocationType
-  getOuting(includeAdditionalInfo: Boolean! = false, outingId: String!): OutingType!
+  getManyOutingLocations(outingIds: [ID!]!): [OutingLocationType!]!
+  getOuting(includeAdditionalInfo: Boolean = false, outingId: String!): OutingType!
   getOutingLocations(outingId: ID!): [LocationType!]!
-  getOutingPaths(outing_ids: [ID!]): [OutingPathType!]!
-  getOutings(includeAdditionalInfo: Boolean! = false, status: [String!]): [OutingType!]!
+  getOutingPaths(outing_ids: [ID!]!): [OutingPathType!]!
+  getOutings(includeAdditionalInfo: Boolean = false, status: [String!]): [OutingType!]!
   getUser: UserType!
 }
 

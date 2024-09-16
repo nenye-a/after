@@ -4,6 +4,7 @@
     "dev:backend": "yarn --cwd backend dev"
   },
   "devDependencies": {
+    "@types/randomcolor": "^0.5.9",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",

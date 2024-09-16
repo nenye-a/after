@@ -1,10 +1,10 @@
 export type LocationInfoProps = {
   name: string;
   type: string;
-  rating: number;
-  numReviews: number;
-  costLevel: number;
-  tags: string[];
+  rating?: number | null;
+  numReviews?: number | null;
+  costLevel?: number | null;
+  tags?: string[];
 };
 
 export type Coordinates = {

@@ -14,21 +14,8 @@ import { mapSheetSubComponentRoutes } from '@/router';
 import { MapSheetPage } from '@/types/components/mapsheet';
 import { TabProps } from '@/types/components/tabs';
 import { useOuting } from '@/context/OutingContext';
-
-type Props = {};
-
-// TODO: Move this to a dedicated file containing routes.
-const pageHeadings = [
-  {
-    text: 'Recommendations',
-  },
-  {
-    text: 'Past Outings',
-  },
-  {
-    text: 'Favorites',
-  },
-];
+import { BottomSheetView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
 
 const recommendations = [
   {
@@ -60,9 +47,9 @@ const recommendations = [
   },
 ];
 
-const SheetHomeScreen = (props: Props) => {
+const SheetHomeScreen = () => {
   const { layout, gutters } = useTheme();
-  const { activeOuting } = useOuting();
+  const { activeOuting, activeOutingLocations } = useOuting();
   const { mapSheetPage, setMapSheetPage } = useMapSheet();
 
   const tabOptions: TabProps[] = mapSheetSubComponentRoutes
@@ -75,25 +62,28 @@ const SheetHomeScreen = (props: Props) => {
     }));
 
   return (
-    <View>
-      {/* TODO: Componentize this as this will be in a page that users can navigate from. */}
-      <MapSheetUserHeader />
-      <TabSelect
-        tabOptions={tabOptions}
-        activeTab={mapSheetPage}
-        style={[gutters.marginVertical_15]}
-      />
-      <Divider />
-      <View style={[gutters.paddingVertical_15]}>
+    <>
+      <BottomSheetView focusHook={useFocusEffect}>
+        <MapSheetUserHeader />
+        <TabSelect
+          tabOptions={tabOptions}
+          activeTab={mapSheetPage}
+          style={[gutters.marginVertical_15]}
+        />
+      </BottomSheetView>
+      <Divider style={[gutters.marginBottom_15]} />
+      {/* <View style={[gutters.paddingVertical_15]}> */}
+      <>
         {mapSheetPage === 'Active Outing' ? (
-          <ActiveOuting data={recommendations} />
+          <ActiveOuting />
         ) : mapSheetPage === 'Recommendations' ? (
           <RecommendationsWithHeader recommendations={recommendations} />
         ) : mapSheetPage === 'Past Outings' ? (
           <PastOutings />
         ) : null}
-      </View>
-    </View>
+      </>
+      {/* </View> */}
+    </>
   );
 };
 

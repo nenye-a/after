@@ -10,6 +10,8 @@ import { PillButtonProps } from '@/types/components/pillbutton';
 import { useMapSheet } from '@/context/MapSheetContext';
 import LocationInfo from '@/components/molecules/Location/LocationInfo';
 import { LocationInfoProps } from '@/types/components/location';
+import { BottomSheetView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = LocationInfoProps & {
   images?: (string | undefined | null)[]; // TODO: Adjust when connecting to BE.
@@ -22,7 +24,7 @@ const RecommendationDetailScreen = (props: Props) => {
   const menuButtonStyle = getMenuButtonStyleProps(useTheme());
 
   return (
-    <View>
+    <BottomSheetView focusHook={useFocusEffect}>
       <View style={[layout.row, layout.justifyBetween]}>
         <LocationInfo {...props} nameStyle="header" />
         <IconButton
@@ -101,7 +103,7 @@ const RecommendationDetailScreen = (props: Props) => {
           Selecting a ride or getting directions will begin a new outing!
         </AfterText>
       </View>
-    </View>
+    </BottomSheetView>
   );
 };
 

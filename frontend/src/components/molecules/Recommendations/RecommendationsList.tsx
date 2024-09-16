@@ -17,6 +17,8 @@ import {
   RecommendationsWithHeaderProps,
 } from '@/types/components/recommendations';
 import { useMapSheet } from '@/context/MapSheetContext';
+import { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
 
 const RecommendationListItem = (props: RecommendationListItemProps) => {
   const { layout, fonts, gutters, colors } = useTheme();
@@ -101,7 +103,8 @@ const RecommendationsList = (props: RecommendationsListProps) => {
   const { data } = props;
   const { setMapSheetPage } = useMapSheet();
   return (
-    <FlatList
+    <BottomSheetFlatList
+      focusHook={useFocusEffect}
       ItemSeparatorComponent={() => <Divider />}
       data={data}
       renderItem={({ item, index }) => (
@@ -132,15 +135,18 @@ const RecommendationsWithHeader = ({
   // TODO: Implement a 0 recommendations view.
 
   return (
-    <View {...viewProps}>
-      <RecommendationsHeader
-        numRecommendations={numRecommendations}
-        style={headerStyle}
-      />
+    <>
+      <BottomSheetView focusHook={useFocusEffect}>
+        <RecommendationsHeader
+          {...viewProps}
+          numRecommendations={numRecommendations}
+          style={headerStyle}
+        />
+      </BottomSheetView>
       {numRecommendations ? (
         <RecommendationsList data={recommendations} />
       ) : null}
-    </View>
+    </>
   );
 };
 

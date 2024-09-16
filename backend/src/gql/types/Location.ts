@@ -115,3 +115,12 @@ export class GooglePreviewLocationType {
   @Field({ nullable: true })
   num_ratings: number;
 }
+
+@ObjectType()
+export class OutingLocationType {
+  @Field((type) => ID)
+  outing_id: string;
+
+  @Field((type) => [LocationType])
+  locations: LocationType[];
+}

@@ -21,9 +21,16 @@ import { useMapSheet } from '@/context/MapSheetContext';
 import { Dropdown } from 'react-native-element-dropdown';
 
 import ExampleRestaurantImage from '@/theme/assets/images/example_restaurant_image.png';
-import { convertDateToStringPretty } from '@/helpers/dates';
+import {
+  convertDateToStringPretty,
+  generateDurationString,
+} from '@/helpers/dates';
 
 import Icon from 'react-native-vector-icons/Feather';
+import { useOuting } from '@/context/OutingContext';
+import { OutingType } from '@/services/graphql/after/generated/graphql';
+import { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from '@react-navigation/native';
 
 const exampleCityList = [
   {
@@ -72,63 +79,8 @@ const exampleCityList = [
   },
 ];
 
-const examplePastOutings = [
-  {
-    images: [ExampleRestaurantImage, ExampleRestaurantImage],
-    date: new Date(),
-    city: 'New York, NY',
-    name: 'New York By Night',
-    numSpots: 4,
-    durationString: '7:50PM (2 hours)',
-    numParticipants: 3,
-    favorite: true,
-  },
-  {
-    images: [ExampleRestaurantImage, ExampleRestaurantImage],
-    date: new Date(),
-    city: 'San Francisco, CA',
-    name: 'Night city Exploration',
-    numSpots: 8,
-    durationString: '10:45PM (4h 32m)',
-    numParticipants: 2,
-    favorite: true,
-  },
-  {
-    images: [ExampleRestaurantImage, ExampleRestaurantImage],
-    date: new Date(),
-    city: 'Los Angeles, CA',
-    name: 'Dine & Unwind at Queens',
-    numSpots: 2,
-    durationString: '8:30PM (1 hour)',
-    numParticipants: 1,
-    favorite: true,
-  },
-];
-
-type OutingListItemProps = {
-  images: ImageSourcePropType[];
-  date: Date;
-  city: string;
-  name: string;
-  numSpots: number;
-  durationString: string;
-  numParticipants: number;
-  favorite?: boolean;
-};
-
-const OutingListItem = (props: OutingListItemProps) => {
+const OutingListItem = (outing: OutingType) => {
   const { layout, fonts, gutters, colors, borders } = useTheme();
-  const {
-    images,
-    date,
-    city,
-    name,
-    numSpots,
-    durationString,
-    numParticipants,
-    favorite,
-  } = props;
-
   const baseImageStyle: StyleProp<ImageStyle> = {
     width: 52,
     height: 52,
@@ -138,7 +90,7 @@ const OutingListItem = (props: OutingListItemProps) => {
     borderWidth: 4,
   };
 
-  let [image1, image2] = images.slice(0, 2);
+  let [imageUri1, imageUri2] = outing.images?.slice(0, 2) ?? [];
   return (
     <View
       style={[layout.row, layout.justifyBetween, gutters.marginVertical_15]}
@@ -146,7 +98,7 @@ const OutingListItem = (props: OutingListItemProps) => {
       <View style={[layout.row, layout.flex_1]}>
         <View style={[layout.row, { width: 60, height: 40 }, layout.relative]}>
           <Image
-            source={image1}
+            source={{ uri: imageUri1 }}
             style={[
               baseImageStyle,
               {
@@ -156,9 +108,9 @@ const OutingListItem = (props: OutingListItemProps) => {
               },
             ]}
           />
-          {image2 ? (
+          {imageUri2 ? (
             <Image
-              source={image2}
+              source={{ uri: imageUri2 }}
               style={[baseImageStyle, { left: 10, zIndex: 1 }]}
             />
           ) : null}
@@ -174,41 +126,43 @@ const OutingListItem = (props: OutingListItemProps) => {
             ]}
           >
             <AfterText fontType="minor">
-              {convertDateToStringPretty(date)}{' '}
+              {convertDateToStringPretty(outing.start_date)}{' '}
             </AfterText>
             <View style={[layout.row, layout.itemsCenter]}>
-              <AfterText fontType="minor">{city}</AfterText>
+              <AfterText fontType="minor">{outing.city}</AfterText>
               <View style={[{ width: 15 }]}>
                 <Icon name="more-vertical" size={20} color={colors.gray300} />
               </View>
             </View>
           </View>
-          <AfterText style={[fonts.bold]}>{name}</AfterText>
+          <AfterText style={[fonts.bold]}>{outing.name}</AfterText>
           <View style={[layout.row, gutters.marginTop_4]}>
             <SupportTextWithIcon
               style={[gutters.marginRight_11]}
-              text={durationString}
+              text={generateDurationString(outing.end_date, outing.start_date)}
               customIcon={
                 <Icon name="clock" size={14} color={colors.gray300} />
               }
             />
             <SupportTextWithIcon
               style={[gutters.marginRight_11]}
-              text={numSpots + ' spots'}
+              text={outing.num_locations + ' spots'}
               customIcon={
                 <Icon name="map-pin" size={14} color={colors.gray300} />
               }
             />
-            <SupportTextWithIcon
-              text={numParticipants.toString()}
-              customIcon={
-                numParticipants > 1 ? (
-                  <Icon name="users" size={14} color={colors.gray300} />
-                ) : (
-                  <Icon name="user" size={14} color={colors.gray300} />
-                )
-              }
-            />
+            {outing.num_participants ? (
+              <SupportTextWithIcon
+                text={outing.num_participants.toString()}
+                customIcon={
+                  outing.num_participants > 1 ? (
+                    <Icon name="users" size={14} color={colors.gray300} />
+                  ) : (
+                    <Icon name="user" size={14} color={colors.gray300} />
+                  )
+                }
+              />
+            ) : null}
           </View>
         </View>
       </View>
@@ -218,13 +172,18 @@ const OutingListItem = (props: OutingListItemProps) => {
 
 type PastOutingProps = {};
 
-const PastOutings = (props: PastOutingProps) => {
+const PastOutings = () => {
   const { layout, gutters, components, colors, fonts } = useTheme();
-  const { setMapSheetPage } = useMapSheet();
+  const { setMapSheetPage, setCurrentPastOuting } = useMapSheet();
+
+  const { pastOutings } = useOuting();
 
   return (
-    <View>
-      <View style={[layout.row, layout.justifyBetween, gutters.marginBottom_8]}>
+    <>
+      <BottomSheetView
+        focusHook={useFocusEffect}
+        style={[layout.row, layout.justifyBetween, gutters.marginBottom_8]}
+      >
         <AfterInput
           viewStyle={[{ flex: 2 }, gutters.marginRight_8]}
           icon="search"
@@ -248,9 +207,13 @@ const PastOutings = (props: PastOutingProps) => {
           activeColor={colors.gray300}
           fontFamily="Inter"
         />
-      </View>
-      <FlatList
-        data={examplePastOutings}
+      </BottomSheetView>
+      <BottomSheetFlatList
+        focusHook={useFocusEffect}
+        data={pastOutings.sort(
+          (a, b) =>
+            new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
+        )}
         renderItem={({ item, index }) => (
           <Pressable
             style={({ pressed }: PressableStateCallbackType) => {
@@ -260,7 +223,10 @@ const PastOutings = (props: PastOutingProps) => {
                 };
               }
             }}
-            onPress={() => setMapSheetPage('Outing Detail')}
+            onPress={() => {
+              setCurrentPastOuting(item);
+              setMapSheetPage('Outing Detail');
+            }}
           >
             <OutingListItem key={index} {...item} />
           </Pressable>
@@ -268,7 +234,7 @@ const PastOutings = (props: PastOutingProps) => {
         ListEmptyComponent={() => <View />}
         ItemSeparatorComponent={() => <Divider />}
       />
-    </View>
+    </>
   );
 };
 

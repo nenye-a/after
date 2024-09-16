@@ -15,7 +15,7 @@ export class OutingResolver {
   async getOuting(
     @Arg('outingId') outingId: string,
     @Ctx() ctx: Context,
-    @Arg('includeAdditionalInfo', { defaultValue: false })
+    @Arg('includeAdditionalInfo', { defaultValue: false, nullable: true })
     includeAdditionalInfo: boolean,
   ) {
     let outingDetails = await ctx.models.outings.findOne({
@@ -25,12 +25,11 @@ export class OutingResolver {
 
     if (outingDetails && includeAdditionalInfo) {
       let detailsMap = await getAdditionalOutingInfo([outingId]);
-      let outingAdditionalDetails = detailsMap.get(outingId);
+      let outingAdditionalDetails = detailsMap.get(outingId) ?? {};
 
       return {
         ...outingDetails.toObject(),
-        num_locations: outingAdditionalDetails?.numLocations ?? 0,
-        num_participants: outingAdditionalDetails?.numParticipants ?? 1,
+        ...outingAdditionalDetails,
       };
     } else {
       return outingDetails;
@@ -46,7 +45,7 @@ export class OutingResolver {
   @Query(() => OutingType, { nullable: true })
   async getActiveOuting(
     @Ctx() ctx: Context,
-    @Arg('includeAdditionalInfo', { defaultValue: false })
+    @Arg('includeAdditionalInfo', { defaultValue: false, nullable: true })
     includeAdditionalInfo: boolean,
   ) {
     let activeOuting = await ctx.models.outings.findOne({
@@ -56,12 +55,12 @@ export class OutingResolver {
 
     if (activeOuting && includeAdditionalInfo) {
       let detailsMap = await getAdditionalOutingInfo([activeOuting._id]);
-      let outingAdditionalDetails = detailsMap.get(activeOuting._id.toString());
+      let outingAdditionalDetails =
+        detailsMap.get(activeOuting._id.toString()) ?? {};
 
       return {
         ...activeOuting.toObject(),
-        num_locations: outingAdditionalDetails?.numLocations ?? 0,
-        num_participants: outingAdditionalDetails?.numParticipants ?? 1,
+        ...outingAdditionalDetails,
       };
     } else {
       return activeOuting;
@@ -77,10 +76,11 @@ export class OutingResolver {
   @Query(() => [OutingType])
   async getOutings(
     @Ctx() ctx: Context,
-    @Arg('includeAdditionalInfo', { defaultValue: false })
+    @Arg('includeAdditionalInfo', { defaultValue: false, nullable: true })
     includeAdditionalInfo: boolean,
     @Arg('status', () => [String], { nullable: true }) status?: OutingStatus[],
   ) {
+    // TODO: Support pagination.
     let allOutings = await ctx.models.outings.find({
       user_id: ctx.user?._id,
       ...(status ? { status: { $in: status } } : {}),
@@ -91,13 +91,14 @@ export class OutingResolver {
         allOutings.map((o) => o._id),
       );
       return allOutings.map((outing) => {
-        let outingDetails = detailsMap.get(outing._id.toString());
+        let outingDetails = detailsMap.get(outing._id.toString()) ?? {};
         return {
           ...outing.toObject(),
-          num_locations: outingDetails?.numLocations ?? 0,
-          num_participants: outingDetails?.numParticipants ?? 1,
+          ...outingDetails,
         };
       });
+    } else {
+      return allOutings ?? [];
     }
   }
 

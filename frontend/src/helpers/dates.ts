@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { capitalize } from 'lodash';
 
 export const years = 1000 * 3600 * 24 * 365;
 export const days = 1000 * 3600 * 24;
@@ -15,7 +15,16 @@ export type DateDifferenceOptions = {
   digits?: number;
 };
 
-export const ORDERED_TIME_UNITS = [
+export type UnitName =
+  | 'year'
+  | 'day'
+  | 'hour'
+  | 'minute'
+  | 'second'
+  | 'millisecond'
+  | 'microsecond';
+
+export const ORDERED_TIME_UNITS: { name: UnitName; value: number }[] = [
   { name: 'year', value: years },
   { name: 'day', value: days },
   { name: 'hour', value: hours },
@@ -26,6 +35,7 @@ export const ORDERED_TIME_UNITS = [
 ];
 
 export function convertDateToStringPretty(date: Date) {
+  date = new Date(date);
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const months = [
     'Jan',
@@ -87,6 +97,9 @@ export const dateDifference = function (
     digits = 2,
   } = {},
 ) {
+  laterDate = new Date(laterDate);
+  earlierDate = new Date(earlierDate);
+
   let difference =
     additionalMilliseconds + (laterDate.getTime() - earlierDate.getTime());
   if (abs) difference = Math.abs(difference);
@@ -155,6 +168,52 @@ export const secondsDifference = function (
   });
 };
 
+export const formattedDateDifference = function (
+  laterDate: Date,
+  earlierDate: Date,
+  includedUnits: UnitName[],
+  asString: boolean = true,
+  options: {
+    delimiter: string;
+    capitalize: boolean;
+    ignoreExcess?: boolean;
+  } = {
+    delimiter: ' ',
+    capitalize: true,
+    ignoreExcess: true,
+  },
+) {
+  let difference = dateDifference(laterDate, earlierDate);
+  let unitDetails = ORDERED_TIME_UNITS.filter(({ name }) =>
+    includedUnits.includes(name),
+  );
+
+  let resultMap = new Map<UnitName, number>();
+
+  unitDetails.forEach(({ name, value: timeUnitValue }, index) => {
+    let numUnits =
+      index !== unitDetails.length - 1
+        ? Math.floor(difference / timeUnitValue)
+        : _.round(difference / timeUnitValue, 0);
+    difference -= numUnits * timeUnitValue;
+    if (!options?.ignoreExcess || numUnits > 0) resultMap.set(name, numUnits);
+  });
+
+  if (asString) {
+    let results = [];
+    for (let [unitName, differenceValue] of resultMap.entries()) {
+      let unitPrePend = ['microsecond', 'millisecond'].includes(unitName)
+        ? unitName.slice(0, 3)
+        : unitName.slice(0, 1);
+      if (options?.capitalize) unitPrePend = _.capitalize(unitPrePend);
+      results.push(`${differenceValue}${unitName[0]}`);
+    }
+    return results.join(options?.delimiter ?? ' ');
+  }
+
+  return resultMap;
+};
+
 export const hourOfDate = function (date = new Date()) {
   let newDate = new Date(
     date.getFullYear(),
@@ -164,4 +223,13 @@ export const hourOfDate = function (date = new Date()) {
   );
 
   return newDate;
+};
+
+export const generateDurationString = (laterDate: Date, earlierDate: Date) => {
+  let duration = formattedDateDifference(laterDate, earlierDate, [
+    'day',
+    'hour',
+    'minute',
+  ]);
+  return `${getLocalTime(earlierDate)} - ${getLocalTime(laterDate)}${duration ? ` (${duration})` : ''}`;
 };
