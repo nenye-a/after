@@ -1,6 +1,5 @@
 import { Coordinates } from '@/types/components/location';
 import _ from 'lodash';
-import { useMemo } from 'react';
 
 const EARTH_RADIUS_KM = 6371; // Earth's radius in kilometers
 
