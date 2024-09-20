@@ -34,11 +34,7 @@ function HomeScreen() {
       <AfterMap />
       <SafeScreen style={[layout.itemsCenter]}>
         <View style={[{ width: '100%' }]}>
-          <LocationStatusBar
-            currentLocation={exampleCurrentLocation}
-            durationString={exampleDurationsTring}
-            style={[]}
-          />
+          <LocationStatusBar />
         </View>
       </SafeScreen>
       <MapBottomSheet snapPoints={['5%', '25%', '50%', '70%', '90%']} index={1}>

@@ -30,6 +30,7 @@ export function calculateDistanceMeters(
 
 interface ViewportDimensions {
   latitudeDelta: number;
+
   longitudeDelta: number;
 }
 
