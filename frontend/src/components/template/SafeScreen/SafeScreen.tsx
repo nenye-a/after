@@ -31,7 +31,7 @@ function SafeScreen({ children, style, ...viewProps }: Props) {
       {...viewProps}
     >
       <StatusBar
-        barStyle={variant === 'dark' ? 'light-content' : 'dark-content'}
+        barStyle={'light-content'}
         backgroundColor={navigationTheme.colors.background}
       />
       {children}
