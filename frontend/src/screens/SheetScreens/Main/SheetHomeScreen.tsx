@@ -11,7 +11,6 @@ import { Divider } from '@/components/atoms';
 import { useTheme } from '@/theme';
 import { useMapSheet } from '@/context/MapSheetContext';
 import { mapSheetSubComponentRoutes } from '@/router';
-import { MapSheetPage } from '@/types/components/mapsheet';
 import { TabProps } from '@/types/components/tabs';
 import { useOuting } from '@/context/OutingContext';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -48,8 +47,8 @@ const recommendations = [
 ];
 
 const SheetHomeScreen = () => {
-  const { layout, gutters } = useTheme();
-  const { activeOuting, activeOutingLocations } = useOuting();
+  const { gutters } = useTheme();
+  const { activeOuting } = useOuting();
   const { mapSheetPage, setMapSheetPage } = useMapSheet();
 
   const tabOptions: TabProps[] = mapSheetSubComponentRoutes
@@ -72,7 +71,6 @@ const SheetHomeScreen = () => {
         />
       </BottomSheetView>
       <Divider style={[gutters.marginBottom_15]} />
-      {/* <View style={[gutters.paddingVertical_15]}> */}
       <>
         {mapSheetPage === 'Active Outing' ? (
           <ActiveOuting />

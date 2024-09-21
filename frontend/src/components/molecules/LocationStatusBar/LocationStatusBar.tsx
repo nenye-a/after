@@ -50,7 +50,8 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
       {activeOuting ? (
         <>
           <View style={[layout.row, layout.itemsCenter, layout.flex_1]}>
-            <IconButton icon="big_share" iconColor="white" />
+            {/* TODO: Implement share button */}
+            {/* <IconButton icon="big_share" iconColor="white" /> */}
             <View style={[layout.row, layout.flex_1]}>
               <View style={[gutters.marginHorizontal_8]}>
                 <AfterText fontType="enhanced" style={[fonts.bold]}>

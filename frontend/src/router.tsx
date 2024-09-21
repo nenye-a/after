@@ -4,7 +4,7 @@ import { RecommendationsWithHeaderProps } from './types/components/recommendatio
 
 export const mapSheetSubComponentRoutes: MapSheetPage[] = [
   'Active Outing',
-  'Recommendations',
+  // 'Recommendations',
   'Past Outings',
   // 'Favorites',
 ];

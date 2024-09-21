@@ -4907,6 +4907,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/fuzzy-search@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "@types/fuzzy-search@npm:2.1.5"
+  checksum: 451560afabc36a3c5a52fc189f4a5704ab8c031cb99d4f7f7d4d51aa48f595532f7829c04d8894c1983335644cd20e987ca376e83e5438170de2f59ee5edf3af
+  languageName: node
+  linkType: hard
+
 "@types/geojson@npm:^7946.0.13":
   version: 7946.0.14
   resolution: "@types/geojson@npm:7946.0.14"
@@ -5476,6 +5483,7 @@ __metadata:
     "@tanstack/react-query": ^5.31.0
     "@testing-library/jest-native": ^5.4.2
     "@testing-library/react-native": ^12.1.2
+    "@types/fuzzy-search": ^2.1.5
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.17.7
     "@types/node": ^18.14.1
@@ -5497,6 +5505,7 @@ __metadata:
     eslint-plugin-prettier: ^5.2.1
     expo: ^51.0.21
     expo-dev-client: ~4.0.20
+    fuzzy-search: ^3.2.1
     graphql: ^16.8.1
     graphql-request: ^6.0.0
     i18next: ^23.11.2
@@ -8999,6 +9008,13 @@ __metadata:
   version: 1.2.3
   resolution: "functions-have-names@npm:1.2.3"
   checksum: c3f1f5ba20f4e962efb71344ce0a40722163e85bee2101ce25f88214e78182d2d2476aa85ef37950c579eb6cf6ee811c17b3101bb84004bb75655f3e33f3fdb5
+  languageName: node
+  linkType: hard
+
+"fuzzy-search@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "fuzzy-search@npm:3.2.1"
+  checksum: 65d50909e69216f830a6e88eade08df00662e2c081edb02063404cc922cc7319ef8958eff781aa4e3e64543a394a912cd8c80abb4c6b158c119e811364e7cfb9
   languageName: node
   linkType: hard
 

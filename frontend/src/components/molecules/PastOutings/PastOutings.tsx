@@ -6,10 +6,11 @@ import {
   Pressable,
   PressableStateCallbackType,
   StyleProp,
+  TextInput,
   View,
   ViewStyle,
 } from 'react-native';
-import React from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   AfterInput,
   AfterText,
@@ -25,59 +26,59 @@ import {
   convertDateToStringPretty,
   generateDurationString,
 } from '@/helpers/dates';
-
 import Icon from 'react-native-vector-icons/Feather';
 import { useOuting } from '@/context/OutingContext';
 import { OutingType } from '@/services/graphql/after/generated/graphql';
 import { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useFocusEffect } from '@react-navigation/native';
+import FuzzySearch from 'fuzzy-search';
 
-const exampleCityList = [
-  {
-    label: 'All Cities',
-    value: 'all-cities',
-  },
-  {
-    label: 'New York',
-    value: 'new-york',
-  },
-  {
-    label: 'Los Angeles',
-    value: 'los-angeles',
-  },
-  {
-    label: 'Chicago',
-    value: 'chicago',
-  },
-  {
-    label: 'Houston',
-    value: 'houston',
-  },
-  {
-    label: 'Phoenix',
-    value: 'phoenix',
-  },
-  {
-    label: 'Philadelphia',
-    value: 'philadelphia',
-  },
-  {
-    label: 'San Antonio',
-    value: 'san-antonio',
-  },
-  {
-    label: 'San Diego',
-    value: 'san-diego',
-  },
-  {
-    label: 'Dallas',
-    value: 'dallas',
-  },
-  {
-    label: 'San Jose',
-    value: 'san-jose',
-  },
-];
+// const exampleCityList = [
+//   {
+//     label: 'All Cities',
+//     value: 'all-cities',
+//   },
+//   {
+//     label: 'New York',
+//     value: 'new-york',
+//   },
+//   {
+//     label: 'Los Angeles',
+//     value: 'los-angeles',
+//   },
+//   {
+//     label: 'Chicago',
+//     value: 'chicago',
+//   },
+//   {
+//     label: 'Houston',
+//     value: 'houston',
+//   },
+//   {
+//     label: 'Phoenix',
+//     value: 'phoenix',
+//   },
+//   {
+//     label: 'Philadelphia',
+//     value: 'philadelphia',
+//   },
+//   {
+//     label: 'San Antonio',
+//     value: 'san-antonio',
+//   },
+//   {
+//     label: 'San Diego',
+//     value: 'san-diego',
+//   },
+//   {
+//     label: 'Dallas',
+//     value: 'dallas',
+//   },
+//   {
+//     label: 'San Jose',
+//     value: 'san-jose',
+//   },
+// ];
 
 const OutingListItem = (outing: OutingType) => {
   const { layout, fonts, gutters, colors, borders } = useTheme();
@@ -91,23 +92,26 @@ const OutingListItem = (outing: OutingType) => {
   };
 
   let [imageUri1, imageUri2] = outing.images?.slice(0, 2) ?? [];
+
   return (
     <View
       style={[layout.row, layout.justifyBetween, gutters.marginVertical_15]}
     >
       <View style={[layout.row, layout.flex_1]}>
         <View style={[layout.row, { width: 60, height: 40 }, layout.relative]}>
-          <Image
-            source={{ uri: imageUri1 }}
-            style={[
-              baseImageStyle,
-              {
-                top: 0,
-                left: 0,
-                zIndex: 2,
-              },
-            ]}
-          />
+          {imageUri1 ? (
+            <Image
+              source={{ uri: imageUri1 }}
+              style={[
+                baseImageStyle,
+                {
+                  top: 0,
+                  left: 0,
+                  zIndex: 2,
+                },
+              ]}
+            />
+          ) : null}
           {imageUri2 ? (
             <Image
               source={{ uri: imageUri2 }}
@@ -173,10 +177,24 @@ const OutingListItem = (outing: OutingType) => {
 type PastOutingProps = {};
 
 const PastOutings = () => {
+  const [searchText, setSearchText] = useState('');
   const { layout, gutters, components, colors, fonts } = useTheme();
   const { setMapSheetPage, setCurrentPastOuting } = useMapSheet();
 
   const { pastOutings } = useOuting();
+
+  const searchedPastOutings = useMemo(
+    () =>
+      new FuzzySearch(
+        pastOutings.sort(
+          (a, b) =>
+            new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
+        ),
+        ['name', 'city', 'locations.name', '_id'],
+        { sort: true },
+      ),
+    [pastOutings],
+  ).search(searchText);
 
   return (
     <>
@@ -189,8 +207,10 @@ const PastOutings = () => {
           icon="search"
           iconColor="white"
           placeholder="Search"
+          onChangeText={setSearchText}
         />
-        <Dropdown
+        {/* TODO: Re-enable city dropdown */}
+        {/* <Dropdown
           placeholder="Select City"
           value={exampleCityList[0]}
           selectedTextStyle={[{ color: colors.white }, fonts.size_14]}
@@ -206,14 +226,11 @@ const PastOutings = () => {
           onChange={() => {}}
           activeColor={colors.gray300}
           fontFamily="Inter"
-        />
+        /> */}
       </BottomSheetView>
       <BottomSheetFlatList
         focusHook={useFocusEffect}
-        data={pastOutings.sort(
-          (a, b) =>
-            new Date(b.start_date).getTime() - new Date(a.start_date).getTime(),
-        )}
+        data={searchedPastOutings}
         renderItem={({ item, index }) => (
           <Pressable
             style={({ pressed }: PressableStateCallbackType) => {

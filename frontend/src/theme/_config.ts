@@ -28,7 +28,7 @@ const colorsDark = {
 
 // const sizes = [12, 16, 24, 32, 40, 80] as const;
 const fontSizes = [10, 12, 14, 16, 24] as const; // Actual Sizes
-const gutterSizes = [4, 8, 11, 15] as const; // Actual Sizes
+const gutterSizes = [4, 8, 11, 15, 24, 32] as const; // Actual Sizes
 
 export const config = {
   colors: colorsDark,
