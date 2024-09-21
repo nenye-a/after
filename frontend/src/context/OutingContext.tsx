@@ -324,7 +324,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
     },
     // Have current place be the shield that prevents us spamming this endpoint
     // and wracking up bills.
-    enabled: isAuthorized && !!currentCoordinates && !currentPlace,
+    enabled: !!apiInstance && !!currentCoordinates && !currentPlace,
   });
 
   const { mutate: createOutingRequest } = useMutation({
