@@ -1,6 +1,6 @@
-FROM node:20.17
+FROM --platform=linux/amd64 node:20.17
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 COPY . ./
 RUN yarn
