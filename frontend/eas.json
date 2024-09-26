@@ -5,14 +5,29 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_ENV": "development",
+        "API_URL": "http://localhost:4000"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_ENV": "staging",
+        "API_URL": "https://aftrapi.nennvoate.com"
+      }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "APP_ENV": "production",
+        "API_URL": "https://aftrapi.nennvoate.com"
+      }
+    }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {}
+    }
   }
 }
