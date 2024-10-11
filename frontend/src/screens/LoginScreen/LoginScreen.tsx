@@ -81,6 +81,16 @@ const LoginScreen = ({ navigation }: RootScreenProps<'LoginScreen'>) => {
             <DocText link="">Terms & Conditions</DocText> and{' '}
             <DocText link="">Privacy Policy</DocText>.
           </AfterText>
+          <AfterText
+            fontType="minor"
+            style={[fonts.alignCenter, gutters.marginBottom_32]}
+          >
+            {[
+              process.env.APP_ENV,
+              process.env.AFTER_GRAPHQL_API,
+              process.env.GOOGLE_MAPS_API_KEY,
+            ].join(', ')}
+          </AfterText>
         </View>
       </SafeScreen>
     </ImageBackground>
