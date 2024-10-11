@@ -11,14 +11,14 @@ import { useOuting } from '@/context/OutingContext';
 
 const NoOutingsScreen = () => {
   const { layout, gutters, fonts, colors } = useTheme();
-  const { auth0User } = useUser();
+  const { auth0User, logout } = useUser();
   const { startOuting } = useOuting();
 
   const name = _.capitalize(auth0User?.nickname ?? auth0User?.name ?? '');
 
   return (
     <BottomSheetView focusHook={useFocusEffect} style={[layout.itemsCenter]}>
-      <Pressable>
+      <Pressable onPress={() => logout()}>
         <Avatar uri={auth0User?.picture} size={72} />
       </Pressable>
       <AfterText

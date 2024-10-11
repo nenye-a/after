@@ -7,7 +7,7 @@ import { useOuting } from '@/context/OutingContext';
 
 function MapSheetUserHeader() {
   const { layout, gutters, fonts } = useTheme();
-  const { auth0User } = useUser();
+  const { auth0User, logout } = useUser();
   const { activeOuting } = useOuting();
 
   const name = _.capitalize(auth0User?.nickname ?? auth0User?.name ?? '');
@@ -15,7 +15,7 @@ function MapSheetUserHeader() {
   return (
     <View style={[layout.row, layout.itemsCenter, layout.justifyBetween]}>
       <View style={[layout.flex_1, layout.row, layout.itemsCenter]}>
-        <Pressable>
+        <Pressable onPress={() => logout()}>
           <Avatar uri={auth0User?.picture} />
         </Pressable>
         <View style={[layout.flex_1, gutters.marginHorizontal_11]}>
