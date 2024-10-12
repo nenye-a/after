@@ -63,11 +63,11 @@ export default function UserProvider({ children, storage }: Props) {
   };
 
   const logout = async () => {
-    await clearSession();
     setAuth0User(null);
+    await clearSession();
+    setApiInstance(null);
     setUserDetails(null);
     setCredentials(null);
-    setApiInstance(null);
   };
 
   const {

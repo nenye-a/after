@@ -9,6 +9,9 @@ import OutingDetailScreen from '../SheetScreens/Main/OutingDetailScreen';
 import LocationStatusBar from '@/components/molecules/LocationStatusBar/LocationStatusBar';
 import { useOuting } from '@/context/OutingContext';
 import NoOutingsScreen from '../SheetScreens/Main/NoOutingsScreen';
+import { useUser } from '@/context/UserContext';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
 
 const exampleDeepDetail = {
   name: 'Bareburger',
@@ -30,6 +33,14 @@ function HomeScreen() {
   const { layout, backgrounds, colors } = useTheme();
   const { mapSheetPage } = useMapSheet();
   const { pastOutings, activeOuting, outingDataLoading } = useOuting();
+  const { isAuthorized } = useUser();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      navigation.navigate('LoginScreen');
+    }
+  }, [isAuthorized]);
 
   const noHistoricalOutings = !pastOutings?.length && !activeOuting;
 

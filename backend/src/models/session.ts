@@ -1,6 +1,5 @@
 import { coreDb, MODEL_NAMES } from '../config/mongoose.db';
-import mongoose, { Model, Schema, Types } from 'mongoose';
-import { User } from './user';
+import mongoose, { Model, Schema } from 'mongoose';
 
 export type Session = {
   _id: mongoose.Types.ObjectId;
@@ -17,29 +16,33 @@ interface SessionModel extends Model<Session> {
   findSession: (token: string) => Promise<Session | null>;
 }
 
-export const sessionModel = new Schema<Session, SessionModel>(
+export const sessionSchema = new Schema<Session, SessionModel>(
   {
     token: { type: String, required: true, unique: true },
     user_id: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: MODEL_NAMES.users,
     },
     time: { type: Date, required: true, default: Date.now },
   },
   {
     statics: {
-      createSession: (
+      createSession: function (
         token: string,
         user_id: mongoose.Types.ObjectId | undefined | null,
-      ) => sessions.create({ token, user_id }),
-      findSession: (token: string) => sessions.findOne({ token }),
+      ) {
+        return this.create({ token, user_id });
+      },
+      findSession: function (token: string) {
+        return this.findOne({ token });
+      },
     },
   },
 );
 
 const sessions = coreDb.model<Session, SessionModel>(
   MODEL_NAMES.sessions,
-  sessionModel,
+  sessionSchema,
 );
 
 export default sessions;

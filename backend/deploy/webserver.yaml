@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aftr-webserver
+  labels:
+    app: aftr
+    service: webserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aftr
+      service: webserver
+  template:
+    metadata:
+      labels:
+        app: aftr
+        service: webserver
+    spec:
+      containers:
+        - name: aftr-images
+          image: us-central1-docker.pkg.dev/after-432118/aftr-images/after-webserver:latest
+          ports:
+            - containerPort: 4000
