@@ -24,13 +24,19 @@ export interface AddressComponent {
   types: string[];
 }
 
+export interface OldAddressComponent {
+  long_name: string;
+  short_name: string;
+  types: string[];
+}
+
 /**
  * Find priority types.
  * @param addressComponents
  * @returns
  */
 export function findFirstMatchingComponent(
-  addressComponents: AddressComponent[],
+  addressComponents: AddressComponent[] | OldAddressComponent[],
   target: 'city' | 'state' | string[] = 'city',
 ): string | null {
   // Define the priority order for city-related types
@@ -46,7 +52,10 @@ export function findFirstMatchingComponent(
           component.types.includes('political'),
       ) ??
       addressComponents.find((component) => component.types.includes(type));
-    if (match) return match.shortText ?? match.longText;
+    if (match)
+      return 'shortText' in match
+        ? (match.shortText ?? match.longText)
+        : (match.short_name ?? match.long_name);
   }
 
   // If all else fails, return null
@@ -117,6 +126,43 @@ export const convertGooglePlaceToLocationBase = async (
     },
     external_ids: {
       google_place_id: place.name,
+    },
+  };
+
+  return formattedLocation;
+};
+
+export const convertGoogleAddressToLocationBase = async (
+  addressDoc: {
+    place_id: string;
+    formatted_address: string;
+    geometry: { location: { lat: number; lng: number } };
+    types: string[];
+    address_components: OldAddressComponent[];
+  },
+  metaDetails?: {
+    userId?: Types.ObjectId;
+    outingId?: Types.ObjectId;
+    hydratePhotos?: boolean;
+  },
+) => {
+  const formattedLocation = {
+    user_id: metaDetails?.userId,
+    outing_id: metaDetails?.outingId,
+    name: addressDoc.formatted_address.split(',')[0],
+    address: addressDoc.formatted_address,
+    coordinates: {
+      latitude: addressDoc.geometry.location.lat,
+      longitude: addressDoc.geometry.location.lng,
+    },
+    city: findFirstMatchingComponent(addressDoc.address_components, 'city'),
+    state: findFirstMatchingComponent(addressDoc.address_components, 'state'),
+    info: {
+      type: addressDoc.types[0],
+      tags: addressDoc.types,
+    },
+    external_ids: {
+      google_place_id: addressDoc.place_id,
     },
   };
 

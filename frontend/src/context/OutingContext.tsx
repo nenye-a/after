@@ -7,7 +7,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createContext,
   PropsWithChildren,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -306,7 +305,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
     queryKey: ['getGooglePreviewLocation'],
     queryFn: async () => {
       let coordinates = await getCurrentPositionRNCG();
-      let locationRequest = await apiInstance
+      let locationResponse = await apiInstance
         ?.request(GET_LOCATION_PREVIEW, {
           coordinates: {
             latitude: coordinates.coords.latitude,
@@ -318,8 +317,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
           console.log(`Failed to get current location`);
         });
 
-      let locationData = locationRequest?.getGooglePreviewLocation;
-      setCurrentCoordinates(coordinates.coords);
+      let locationData = locationResponse?.getGooglePreviewLocation ?? null;
       return locationData;
     },
     // Have current place be the shield that prevents us spamming this endpoint
@@ -447,20 +445,17 @@ export default function OutingProvider({ children = null, storage }: Props) {
 
     let shouldCheckLocation = false; // If we should check the location.
 
-    const getPreviewLocation = useCallback(
-      async (coordinates: Coordinates) => {
-        return apiInstance
-          ?.request(GET_LOCATION_PREVIEW, {
-            coordinates,
-          })
-          .then((response) => response?.getGooglePreviewLocation)
-          .catch((err) => {
-            console.log(err);
-            return null;
-          });
-      },
-      [apiInstance],
-    );
+    const getPreviewLocation = async (coordinates: Coordinates) => {
+      return apiInstance
+        ?.request(GET_LOCATION_PREVIEW, {
+          coordinates,
+        })
+        .then((response) => response?.getGooglePreviewLocation)
+        .catch((err) => {
+          console.log(err);
+          return null;
+        });
+    };
 
     if (locationEvaluationState === 'ending') {
       let distanceFromLastLocation = calculateDistanceMeters(

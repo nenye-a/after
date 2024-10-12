@@ -15,7 +15,7 @@ import {
 } from '../types/Location';
 import { CoordinatesInput } from '../types/Path';
 import { Context } from '../../context';
-import { getPlacesFromCoordinates } from '../../api/google';
+import { getAddress, getPlacesFromCoordinates } from '../../api/google';
 import getPreviewLocation from './resolverHelpers/getPreviewLocation';
 import { Types } from 'mongoose';
 
@@ -107,7 +107,7 @@ export class LocationResolver {
       'photos',
     ]);
 
-    if (googlePlaceOptions) {
+    if (googlePlaceOptions?.places?.length) {
       let googlePlace = googlePlaceOptions.places[0];
 
       return {
@@ -120,6 +120,21 @@ export class LocationResolver {
         num_ratings: googlePlace.userRatingCount,
       };
     } else {
+      let { results } = await getAddress(coordinates);
+      if (results.length) {
+        let addressDetails = results[0];
+        return {
+          google_place_id: addressDetails.place_id,
+          displayName: addressDetails.formatted_address.split(',')[0],
+          address: addressDetails.formatted_address,
+          coordinates: {
+            latitude: addressDetails.geometry.location.lat,
+            longitude: addressDetails.geometry.location.lng,
+          },
+          types: addressDetails.types,
+        };
+      }
+
       return null;
     }
   }

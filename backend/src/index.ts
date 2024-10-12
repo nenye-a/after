@@ -29,16 +29,13 @@ const app = async () => {
 
   const { url } = await startStandaloneServer(server, {
     context: async ({ req, res }) => {
-      console.log('Received request!');
       context.req = req;
       context.res = res;
       return context;
     },
   });
 
-  console.log(`
-🚀 Server ready at: ${url}
-⭐️  See sample queries: http://pris.ly/e/ts/graphql-typegraphql#using-the-graphql-api`);
+  console.log(`🚀 Server ready at: ${url}`);
 };
 
 app();

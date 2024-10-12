@@ -1,4 +1,3 @@
-// import { useMemo } from 'react';
 import { MapStyle } from '@/constants/mapstyle';
 import { useMapSheet } from '@/context/MapSheetContext';
 import { useOuting } from '@/context/OutingContext';

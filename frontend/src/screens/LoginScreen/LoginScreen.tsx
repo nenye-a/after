@@ -83,19 +83,14 @@ const LoginScreen = ({ navigation }: RootScreenProps<'LoginScreen'>) => {
             <DocText link="">Terms & Conditions</DocText> and{' '}
             <DocText link="">Privacy Policy</DocText>.
           </AfterText>
-          <AfterText
-            fontType="minor"
-            style={[fonts.alignCenter, gutters.marginBottom_32]}
-          >
-            {[
-              process.env.APP_ENV,
-              process.env.AFTER_GRAPHQL_API,
-              currentPlace && JSON.stringify(currentPlace),
-              currentCoordinates && JSON.stringify(currentCoordinates),
-            ]
-              .filter(Boolean)
-              .join(', ')}
-          </AfterText>
+          {process.env.APP_ENV === 'development' ? (
+            <AfterText
+              fontType="minor"
+              style={[fonts.alignCenter, gutters.marginBottom_32]}
+            >
+              {[process.env.AFTER_GRAPHQL_API].filter(Boolean).join(', ')}
+            </AfterText>
+          ) : null}
         </View>
       </SafeScreen>
     </ImageBackground>

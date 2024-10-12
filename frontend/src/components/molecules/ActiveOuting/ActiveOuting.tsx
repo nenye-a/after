@@ -90,6 +90,8 @@ const LocationItem = (props: ListItemProps) => {
     ? `Here since ${getLocalTime(props.arrival_time)}${duration ? ` (${duration})` : ''}`
     : generateDurationString(props.departure_time, props.arrival_time);
 
+  let imageUri = props.info.image_urls?.[0];
+
   return (
     <View>
       <View style={[layout.flex_1, layout.row, gutters.marginVertical_15]}>
@@ -97,10 +99,12 @@ const LocationItem = (props: ListItemProps) => {
           active={props.active}
           style={[gutters.marginRight_11]}
         />
-        <Image
-          source={{ uri: props.info.image_urls?.[0] }}
-          style={{ width: 60, height: 60, borderRadius: 8 }}
-        />
+        {imageUri ? (
+          <Image
+            source={{ uri: imageUri }}
+            style={{ width: 60, height: 60, borderRadius: 8 }}
+          />
+        ) : null}
         <View style={[gutters.marginHorizontal_11]}>
           <SupportTextWithIcon
             style={[gutters.marginBottom_4]}
