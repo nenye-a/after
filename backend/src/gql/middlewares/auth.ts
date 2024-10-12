@@ -40,13 +40,19 @@ export const AuthMiddlware: AuthChecker<Context> = async (
       context.user =
         (await context.models.users.findByAuth0Id(user.sub)) ??
         // Create user if not found in our system.
-        (await context.models.users.create({
-          auth0_id: user.sub,
-          email: user.email,
-          first_name: user.nickname ?? user.given_name ?? user.name,
-          last_name: user.family_name,
-          phone: user.phone_number,
-        }));
+        (await context.models.users
+          .create({
+            auth0_id: user.sub,
+            email: user.email,
+            first_name: user.nickname ?? user.given_name ?? user.name,
+            last_name: user.family_name,
+            phone: user.phone_number,
+          })
+          .catch((err) =>
+            err.includes('duplicate key')
+              ? context.models.users.findByAuth0Id(user.sub)
+              : null,
+          ));
       await context.models.sessions.createSession(token, context.user?._id);
       return true;
     } else {

@@ -4,7 +4,6 @@ import { PriceLevel, Vibe } from '../engine/types';
 
 export type User = {
   _id: Types.ObjectId;
-
   // Personal information
   auth0_id: string;
   email: string;
@@ -36,7 +35,7 @@ interface UserModel extends Model<User> {
 export const userSchema = new Schema<User, UserModel>(
   {
     auth0_id: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, index: true },
     first_name: String,
     last_name: String,
     phone: String,

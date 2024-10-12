@@ -27,7 +27,7 @@ const exampleDeepDetail = {
 };
 
 const DEFAULT_SNAP_POINTS = ['5%', '30%', '50%', '70%', '90%'];
-const INITIAL_SNAP_POINT = ['5%', '30%'];
+const INITIAL_SNAP_POINT = ['30%', '30%'];
 
 function HomeScreen() {
   const { layout, backgrounds, colors } = useTheme();
