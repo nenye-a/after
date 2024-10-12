@@ -29,9 +29,9 @@ const app = async () => {
 
   const { url } = await startStandaloneServer(server, {
     context: async ({ req, res }) => {
+      console.log('Received request!');
       context.req = req;
       context.res = res;
-
       return context;
     },
   });

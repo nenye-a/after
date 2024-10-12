@@ -7,9 +7,11 @@ import { SafeScreen } from '@/components/template';
 import { useUser } from '@/context/UserContext';
 import { Image, ImageBackground, Linking, View } from 'react-native';
 import { AftrBrandMark, AuthBackgroundScreen } from '@/theme/assets/brand';
+import { useOuting } from '@/context/OutingContext';
 
 const LoginScreen = ({ navigation }: RootScreenProps<'LoginScreen'>) => {
   const { layout, fonts, gutters, backgrounds } = useTheme();
+  const { currentPlace, currentCoordinates } = useOuting();
   const { isAuthorized, login, logout } = useUser();
 
   const onPress = async () => {
@@ -80,6 +82,19 @@ const LoginScreen = ({ navigation }: RootScreenProps<'LoginScreen'>) => {
             By using this app, you agree to our{' '}
             <DocText link="">Terms & Conditions</DocText> and{' '}
             <DocText link="">Privacy Policy</DocText>.
+          </AfterText>
+          <AfterText
+            fontType="minor"
+            style={[fonts.alignCenter, gutters.marginBottom_32]}
+          >
+            {[
+              process.env.APP_ENV,
+              process.env.AFTER_GRAPHQL_API,
+              currentPlace && JSON.stringify(currentPlace),
+              currentCoordinates && JSON.stringify(currentCoordinates),
+            ]
+              .filter(Boolean)
+              .join(', ')}
           </AfterText>
         </View>
       </SafeScreen>
