@@ -25,10 +25,13 @@ const GeolocationConfig: Config = {
   stopOnTerminate: false,
   desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
   stopTimeout: 3, // 8 minutes before considering device stationary.
-  // TODO: Remove before production
-  debug: true,
-  logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-  // reset: true,
+  ...(process.env.APP_ENV === 'development'
+    ? {
+        debug: true,
+        logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+        reset: true,
+      }
+    : {}),
 };
 
 const stub = () => {};
