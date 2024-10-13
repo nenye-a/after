@@ -26,11 +26,13 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
 
   const { style, ...viewProps } = props;
 
+  let placeOfInterest = currentPlace ?? mostRecentLocation;
+
   const titleText = isMoving
-    ? 'In transit...'
-    : (currentPlace?.name ?? currentPlace?.address ?? 'Unknown Location');
-  const duration = currentPlace?.arrival_time
-    ? calculateDuration(currentPlace?.arrival_time, new Date())
+    ? 'On the move...'
+    : (placeOfInterest?.name ?? placeOfInterest?.address ?? 'Unknown Location');
+  const duration = placeOfInterest?.arrival_time
+    ? calculateDuration(placeOfInterest?.arrival_time, new Date())
     : null;
   const timeText =
     isMoving && mostRecentLocation?.departure_time

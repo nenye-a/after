@@ -131,8 +131,14 @@ export const DEPART_LOCATION = graphql(`
 `);
 
 export const CREATE_LOCATION_FROM_POINT = graphql(`
-  mutation CreateLocationFromPoint($coordinates: CoordinatesInput!) {
-    createLocationFromPoint(coordinates: $coordinates) {
+  mutation CreateLocationFromPoint(
+    $coordinates: CoordinatesInput!
+    $arrivalTime: DateTimeISO
+  ) {
+    createLocationFromPoint(
+      coordinates: $coordinates
+      arrivalTime: $arrivalTime
+    ) {
       _id
       user_id
       outing_id

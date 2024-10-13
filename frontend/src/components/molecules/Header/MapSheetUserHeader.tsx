@@ -15,7 +15,11 @@ function MapSheetUserHeader() {
   return (
     <View style={[layout.row, layout.itemsCenter, layout.justifyBetween]}>
       <View style={[layout.flex_1, layout.row, layout.itemsCenter]}>
-        <Pressable onPress={() => logout()}>
+        <Pressable
+          onPress={() => {
+            logout();
+          }}
+        >
           <Avatar uri={auth0User?.picture} />
         </Pressable>
         <View style={[layout.flex_1, gutters.marginHorizontal_11]}>

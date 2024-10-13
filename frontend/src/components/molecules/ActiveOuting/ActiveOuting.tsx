@@ -130,7 +130,7 @@ const LocationItem = (props: ListItemProps) => {
 };
 
 const ActiveOutingList = (props: ActiveOutingProps) => {
-  const { activeOutingLocations, inTransit } = useOuting();
+  const { activeOutingLocations } = useOuting();
   return (
     <BottomSheetFlatList
       focusHook={useFocusEffect}
@@ -138,11 +138,7 @@ const ActiveOutingList = (props: ActiveOutingProps) => {
       {...props}
       data={activeOutingLocations}
       renderItem={({ item, index }) => (
-        <LocationItem
-          {...item}
-          active={!inTransit && index === 0}
-          key={index}
-        />
+        <LocationItem {...item} active={!item.departure_time} key={index} />
       )}
       // ItemSeparatorComponent={() => <Divider />}
     />

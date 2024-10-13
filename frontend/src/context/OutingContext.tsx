@@ -41,7 +41,7 @@ import { AppState } from 'react-native';
 import { calculateDistanceMeters } from '@/helpers/map';
 import {
   METER_DISTANCE_FOR_OUTING_PATH,
-  SAME_OUTING_LOCATION_MINUTE_CUTOFF,
+  SAME_OUTING_LOCATION_MINUTE_CUTOFFS,
 } from '@/constants/outing';
 
 export type Place = {
@@ -72,6 +72,7 @@ export type OutingContextType = {
   addToOutingPath: (coordinatesList: Coordinates[]) => void;
   outingDataLoading: boolean;
   isMoving: boolean;
+  handleCreateEndLocation: (coordinates: Coordinates) => void;
 };
 
 const OutingContext = createContext<OutingContextType>({
@@ -94,6 +95,7 @@ const OutingContext = createContext<OutingContextType>({
   addToOutingPath: () => {},
   outingDataLoading: false,
   isMoving: false,
+  handleCreateEndLocation: () => {},
 });
 
 export const useOuting = () => useContext(OutingContext);
@@ -127,11 +129,23 @@ export default function OutingProvider({ children = null, storage }: Props) {
   const [isMoving, setIsMoving] = useState<boolean>(false);
   const [pastOutings, setPastOutings] = useState<OutingWithDetails[]>([]);
 
+  const achorKey = 'anchorPoint';
+  const [setAnchorPoint, getAnchorPoint, deleteAnchorPoint] = [
+    (anchorPoint: { time: Date; coordinates: Coordinates }) =>
+      storage.set(achorKey, JSON.stringify(anchorPoint)),
+    (): { time: Date; coordinates: Coordinates } => {
+      let anchorPointString = storage.getString(achorKey);
+      return anchorPointString ? JSON.parse(anchorPointString) : null;
+    },
+    () => storage.delete(achorKey),
+  ];
+
   const mostRecentLocation = activeOutingLocations[0] ?? null;
   const mostRecentCoordinates =
     activeOutingPath.sort(
       (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime(),
     )[0] ?? null;
+
   const inTransit = !mostRecentLocation || !!mostRecentLocation.departure_time;
 
   const setCurrentCoordinates = (coordinates: Coordinates | null) => {
@@ -380,19 +394,31 @@ export default function OutingProvider({ children = null, storage }: Props) {
           console.log('Failed to create outing path points.');
         });
     },
+    onSuccess: () => {
+      // This might not be necessary, but it's here for now.
+      // TODO: Evaluate and remove this comment if this isf ine.
+      refetchOutingPath();
+    },
   });
 
   const {
     mutate: createLocationFromPoint,
     // isPending: locationCreationPending,
   } = useMutation({
-    mutationFn: async (coordinates: Coordinates) => {
+    mutationFn: async ({
+      coordinates,
+      arrivalTime,
+    }: {
+      coordinates: Coordinates;
+      arrivalTime?: Date;
+    }) => {
       return apiInstance
         ?.request(CREATE_LOCATION_FROM_POINT, {
           coordinates: {
             latitude: coordinates.latitude,
             longitude: coordinates.longitude,
           },
+          arrivalTime,
         })
         .catch((err) => {
           console.log(err);
@@ -426,34 +452,27 @@ export default function OutingProvider({ children = null, storage }: Props) {
     } else console.log('No active outing to add path points to.');
   };
 
+  const getPreviewLocation = async (coordinates: Coordinates) => {
+    return apiInstance
+      ?.request(GET_LOCATION_PREVIEW, {
+        coordinates,
+      })
+      .then((response) => response?.getGooglePreviewLocation ?? null)
+      .catch((err) => {
+        console.log(err);
+        return null;
+      });
+  };
+
   const handleCreateEndLocation = async (coordinates: Coordinates) => {
     // Check if we can consider this the same location as prior. If so, check
     // if we've been here for enough time to consider it a location. If so,
     // add the location to the outing.
+    let currentTime = new Date();
 
-    // Determine if we're considering if our most recent location is departed, and if we're at a new location.
-    let locationEvaluationState: 'ending' | 'new' =
-      mostRecentLocation &&
-      currentPlace?.google_place_id ===
-        mostRecentLocation?.external_ids.google_place_id
-        ? 'ending'
-        : 'new';
-
-    let shouldCheckLocation = false; // If we should check the location.
-
-    const getPreviewLocation = async (coordinates: Coordinates) => {
-      return apiInstance
-        ?.request(GET_LOCATION_PREVIEW, {
-          coordinates,
-        })
-        .then((response) => response?.getGooglePreviewLocation)
-        .catch((err) => {
-          console.log(err);
-          return null;
-        });
-    };
-
-    if (locationEvaluationState === 'ending') {
+    if (!inTransit) {
+      // If currently not "in transit", we whould check how close we are to the last
+      // location in the outing.
       let distanceFromLastLocation = calculateDistanceMeters(
         mostRecentLocation.coordinates,
         coordinates,
@@ -463,13 +482,15 @@ export default function OutingProvider({ children = null, storage }: Props) {
         distanceFromLastLocation >
         SameLocationDistanceCutoffMeters.LOW_CONFIDENCE
       ) {
+        // We only depart location if we're confident we're not at the same location, but we'll
+        // go ahead and do a quick check first.
         let previewLocation = await getPreviewLocation(coordinates);
+
         if (
           previewLocation?.google_place_id !==
           mostRecentLocation?.external_ids.google_place_id
         ) {
           departLocation(mostRecentLocation._id);
-          // Mark that we've arrived at a new place.
           if (previewLocation)
             setCurrentPlace({
               google_place_id: previewLocation.google_place_id,
@@ -478,55 +499,65 @@ export default function OutingProvider({ children = null, storage }: Props) {
               arrival_time: new Date(),
               coordinates: previewLocation.coordinates,
             });
+          deleteAnchorPoint();
         }
       }
-    } else if (currentPlace && locationEvaluationState === 'new') {
-      let shouldCreateNewLocation = false; // If we should arrive at a new location.
+    } else if (!isMoving) {
+      // Now! Should we consider this a new location? Let's compare against our anchor point.
+      let anchorPoint = getAnchorPoint();
 
-      let minutesSinceArrival = minuteDifference(
-        currentPlace.arrival_time,
-        new Date(),
-        { digits: 0 },
-      );
+      if (!anchorPoint) {
+        console.log('Setting anchor point.');
+        setAnchorPoint({
+          time: currentTime,
+          coordinates,
+        });
+        return;
+      }
 
-      let distanceFromCurrentPlace = calculateDistanceMeters(
-        currentPlace.coordinates,
+      let distanceFromAnchor = calculateDistanceMeters(
+        anchorPoint.coordinates,
         coordinates,
       );
 
-      if (minutesSinceArrival >= SAME_OUTING_LOCATION_MINUTE_CUTOFF) {
-        // We've been here long enough, that if we're at the same location, we should
-        // consider this a new location.
+      let minutesAtAnchor = minuteDifference(anchorPoint.time, new Date(), {
+        digits: 2,
+      });
 
-        if (
-          distanceFromCurrentPlace <=
-          SameLocationDistanceCutoffMeters.HIGH_CONFIDENCE
-        ) {
-          // We're at the same location, consider this a new location.
-          shouldCreateNewLocation = true;
-        } else if (
-          distanceFromCurrentPlace <=
-          SameLocationDistanceCutoffMeters.LOW_CONFIDENCE
-        ) {
-          shouldCheckLocation = true;
-        }
+      console.log('Anchor Point', anchorPoint);
+      console.log('Distance from Anchor', distanceFromAnchor);
+      console.log('Minutes at Anchor', minutesAtAnchor);
 
-        if (shouldCheckLocation) {
-          let previewLocation = await getPreviewLocation(coordinates);
-          if (
-            previewLocation?.google_place_id === currentPlace.google_place_id
-          ) {
-            shouldCreateNewLocation = true;
-          }
-        }
+      if (
+        distanceFromAnchor >
+        SameLocationDistanceCutoffMeters.VERY_LOW_CONFIDENCE
+      ) {
+        // We're far from the anchor, let's create a new anchor point and wait.
+        setAnchorPoint({
+          time: currentTime,
+          coordinates,
+        });
+        return;
+      } else if (
+        // Moderate to high confidence this is the same location.
+        (minutesAtAnchor >= SAME_OUTING_LOCATION_MINUTE_CUTOFFS.MEDIUM &&
+          distanceFromAnchor <=
+            SameLocationDistanceCutoffMeters.MEDIUM_CONFIDENCE) ||
+        // Low confidence this is the same location, but waiting a bit longer.
+        (minutesAtAnchor >= SAME_OUTING_LOCATION_MINUTE_CUTOFFS.LOW &&
+          distanceFromAnchor <=
+            SameLocationDistanceCutoffMeters.LOW_CONFIDENCE) ||
+        // Very low confidence this is the same location, but waiting even longer. Doing this
+        // to account for the fact that we might be in a large building or area.
+        (minutesAtAnchor >= SAME_OUTING_LOCATION_MINUTE_CUTOFFS.VERY_LOW &&
+          distanceFromAnchor <=
+            SameLocationDistanceCutoffMeters.VERY_LOW_CONFIDENCE)
+      ) {
+        // We've been near the anchor for long enough to consider this a new location, scaled
+        // from our confidence level.
+        createLocationFromPoint({ coordinates, arrivalTime: anchorPoint.time });
 
-        if (shouldCreateNewLocation) {
-          if (!inTransit) {
-            // If we're not in transit, we should depart the current location.
-            departLocation(mostRecentLocation._id);
-          }
-          createLocationFromPoint(coordinates);
-        }
+        deleteAnchorPoint();
       }
     }
   };
@@ -541,7 +572,6 @@ export default function OutingProvider({ children = null, storage }: Props) {
       );
       createOutingRequest({ coordinates });
       startTrackingLocation();
-      addToOutingPath([coordinates]);
     } else
       console.log(
         'User already has an active outing, end first before starting a new one',
@@ -619,6 +649,9 @@ export default function OutingProvider({ children = null, storage }: Props) {
               : currentPlace?.arrival_time,
         coordinates: locationDetails.coordinates,
       });
+    } else {
+      console.log('Attempting to refresh');
+      refetchLocationDetails();
     }
   }, [locationDetails]);
 
@@ -644,13 +677,13 @@ export default function OutingProvider({ children = null, storage }: Props) {
   useEffect(() => {
     // Handle arrival and departure of locations when movement is detected from the user.
     onMotionChange((changeEvent) => {
-      setCurrentCoordinates(changeEvent.location.coords);
       handleCreateEndLocation(changeEvent.location.coords);
+      setCurrentCoordinates(changeEvent.location.coords);
     });
 
     onLocationChange((locaton) => {
-      setCurrentCoordinates(locaton.coords);
       handleCreateEndLocation(locaton.coords);
+      setCurrentCoordinates(locaton.coords);
     });
 
     onActivityChange(({ activity, confidence }) => {
@@ -658,12 +691,12 @@ export default function OutingProvider({ children = null, storage }: Props) {
         switch (activity) {
           case 'running':
           case 'on_bicycle':
-          case 'unknown':
           case 'in_vehicle':
             if (!isMoving) setIsMoving(true);
           case 'still':
           case 'walking':
           case 'on_foot':
+          case 'unknown':
           default:
             if (isMoving) setIsMoving(false);
         }
@@ -673,6 +706,12 @@ export default function OutingProvider({ children = null, storage }: Props) {
       removeLocationListeners();
     };
   }, []);
+
+  useEffect(() => {
+    if (!isMoving) {
+      refetchLocationDetails();
+    }
+  }, [isMoving]);
 
   useEffect(() => {
     // Add coordinates to the outing path if users have moved a meaningful distance.
@@ -718,6 +757,7 @@ export default function OutingProvider({ children = null, storage }: Props) {
           isOutingLocationsLoading ||
           isActiveOutingLoading ||
           isActivePathLoading,
+        handleCreateEndLocation,
       }}
     >
       {children}
