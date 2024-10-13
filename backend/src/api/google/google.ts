@@ -105,7 +105,7 @@ export const getAddress = async (
 ) => {
   return await reverseGeocode(coordinates).then((data) => {
     let results = data?.results;
-    if (!results) return { addres: null, results: [] };
+    if (!results) return { address: null, results: [] };
 
     if (options?.ignoreSubPresmises) {
       results = results.filter(
