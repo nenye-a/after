@@ -50,21 +50,29 @@ export const useUser = () => useContext(UserContext);
 type Props = PropsWithChildren & { storage: MMKV };
 
 export default function UserProvider({ children, storage }: Props) {
-  const { user, clearSession, getCredentials, hasValidCredentials, authorize } =
-    useAuth0();
+  const {
+    user,
+    clearCredentials,
+    getCredentials,
+    hasValidCredentials,
+    authorize,
+  } = useAuth0();
 
   const [auth0User, setAuth0User] = useState<User | null>(user);
   const [userDetails, setUserDetails] = useState<UserType | null>(null);
   const [credentials, setCredentials] = useState<Credentials | null>(null);
   const [apiInstance, setApiInstance] = useState<GraphQLClient | null>(null);
 
+  // @see https://github.com/auth0/react-native-auth0/blob/master/FAQ.md#2-how-can-i-disable-the-ios-login-alert-box
+  // For explanation on the authorization ans session celaring logic.
   const login = async () => {
-    await authorize().catch((err) => console.log(err));
+    await authorize({
+      additionalParameters: { prompt: 'login' },
+    }).catch((err) => console.log(err));
   };
-
   const logout = async () => {
+    await clearCredentials();
     setAuth0User(null);
-    await clearSession();
     setApiInstance(null);
     setUserDetails(null);
     setCredentials(null);
