@@ -24,11 +24,14 @@ import Geolocation, {
 const GeolocationConfig: Config = {
   stopOnTerminate: false,
   desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-  stopTimeout: 8, // 8 minutes before considering device stationary.
-  // TODO: Remove before production
-  debug: true,
-  logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
-  reset: true,
+  stopTimeout: 3, // 8 minutes before considering device stationary.
+  ...(process.env.APP_ENV === 'development'
+    ? {
+        debug: true,
+        logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+        reset: true,
+      }
+    : {}),
 };
 
 const stub = () => {};

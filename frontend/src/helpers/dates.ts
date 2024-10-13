@@ -225,11 +225,10 @@ export const hourOfDate = function (date = new Date()) {
   return newDate;
 };
 
+export const calculateDuration = (laterDate: Date, earlierDate: Date) =>
+  formattedDateDifference(laterDate, earlierDate, ['day', 'hour', 'minute']);
+
 export const generateDurationString = (laterDate: Date, earlierDate: Date) => {
-  let duration = formattedDateDifference(laterDate, earlierDate, [
-    'day',
-    'hour',
-    'minute',
-  ]);
+  let duration = calculateDuration(laterDate, earlierDate);
   return `${getLocalTime(earlierDate)} - ${getLocalTime(laterDate)}${duration ? ` (${duration})` : ''}`;
 };

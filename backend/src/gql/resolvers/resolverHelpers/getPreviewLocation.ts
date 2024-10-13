@@ -1,7 +1,10 @@
 import { Types } from 'mongoose';
-import { getPlacesFromCoordinates } from '../../../api/google';
+import { getAddress, getPlacesFromCoordinates } from '../../../api/google';
 import { Context } from '../../../context';
-import { convertGooglePlaceToLocationBase } from '../../../helpers/locations';
+import {
+  convertGoogleAddressToLocationBase,
+  convertGooglePlaceToLocationBase,
+} from '../../../helpers/locations';
 import { locations } from '../../../models';
 import { Coordinates } from '../../../types/location';
 
@@ -23,7 +26,7 @@ export default async (
     'photos',
   ]);
 
-  if (googlePlaceOptions) {
+  if (googlePlaceOptions?.places?.length) {
     let googlePlace = googlePlaceOptions.places[0];
 
     let formattedLocation = await convertGooglePlaceToLocationBase(
@@ -37,6 +40,22 @@ export default async (
 
     return new locations(formattedLocation);
   } else {
+    let { results } = await getAddress(coordinates);
+    if (results.length) {
+      let addressDetails = results[0];
+
+      let formattedLocation = await convertGoogleAddressToLocationBase(
+        addressDetails,
+        {
+          userId: ctx.user?._id,
+          outingId: outingId,
+          hydratePhotos: true,
+        },
+      );
+
+      return new locations(formattedLocation);
+    }
+
     return null;
   }
 };

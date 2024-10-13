@@ -98,8 +98,10 @@ const OutingListItem = (outing: OutingType) => {
       style={[layout.row, layout.justifyBetween, gutters.marginVertical_15]}
     >
       <View style={[layout.row, layout.flex_1]}>
-        <View style={[layout.row, { width: 60, height: 40 }, layout.relative]}>
-          {imageUri1 ? (
+        {imageUri1 ? (
+          <View
+            style={[layout.row, { width: 60, height: 40 }, layout.relative]}
+          >
             <Image
               source={{ uri: imageUri1 }}
               style={[
@@ -111,15 +113,14 @@ const OutingListItem = (outing: OutingType) => {
                 },
               ]}
             />
-          ) : null}
-          {imageUri2 ? (
-            <Image
-              source={{ uri: imageUri2 }}
-              style={[baseImageStyle, { left: 10, zIndex: 1 }]}
-            />
-          ) : null}
-        </View>
-
+            {imageUri2 ? (
+              <Image
+                source={{ uri: imageUri2 }}
+                style={[baseImageStyle, { left: 10, zIndex: 1 }]}
+              />
+            ) : null}
+          </View>
+        ) : null}
         <View style={[layout.flex_1, gutters.marginHorizontal_11]}>
           <View
             style={[
@@ -173,8 +174,6 @@ const OutingListItem = (outing: OutingType) => {
     </View>
   );
 };
-
-type PastOutingProps = {};
 
 const PastOutings = () => {
   const [searchText, setSearchText] = useState('');

@@ -1,4 +1,3 @@
-// import { useMemo } from 'react';
 import { MapStyle } from '@/constants/mapstyle';
 import { useMapSheet } from '@/context/MapSheetContext';
 import { useOuting } from '@/context/OutingContext';
@@ -187,11 +186,11 @@ function AfterMap({ children, ...props }: Props) {
   return (
     <MapView
       style={[layout.fullHeight, layout.fullWidth]}
-      region={region}
+      initialRegion={region}
       customMapStyle={MapStyle}
       mapType="mutedStandard"
       showsUserLocation={true}
-      followsUserLocation={true} // TODO: Make this togglable!
+      followsUserLocation={false} // TODO: Make this togglable!
       userInterfaceStyle="dark"
       pitchEnabled={false}
       onUserLocationChange={(location) => {

@@ -5,7 +5,11 @@ import { AfterText, PillButton } from '@/components/atoms';
 import IconButton from '@/components/atoms/IconButton/IconButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useOuting } from '@/context/OutingContext';
-import { formattedDateDifference, getLocalTime } from '@/helpers/dates';
+import {
+  calculateDuration,
+  formattedDateDifference,
+  getLocalTime,
+} from '@/helpers/dates';
 
 type LocationStatusBarProps = ViewProps & {};
 
@@ -25,11 +29,14 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
   const titleText = isMoving
     ? 'In transit...'
     : (currentPlace?.name ?? currentPlace?.address ?? 'Unknown Location');
+  const duration = currentPlace?.arrival_time
+    ? calculateDuration(currentPlace?.arrival_time, new Date())
+    : null;
   const timeText =
     isMoving && mostRecentLocation?.departure_time
       ? `Since ${getLocalTime(mostRecentLocation.departure_time)}`
       : currentPlace?.arrival_time
-        ? `Arrived at ${getLocalTime(currentPlace?.arrival_time)} (${formattedDateDifference(new Date(), currentPlace?.arrival_time, ['day', 'hour', 'minute'])})`
+        ? `Arrived at ${getLocalTime(currentPlace?.arrival_time)}${duration ? ` (${duration})` : ''}`
         : null;
 
   return (
@@ -40,9 +47,12 @@ const LocationStatusBar = (props: LocationStatusBarProps) => {
         layout.justifyBetween,
         layout.itemsCenter,
         backgrounds.blue800,
-        { height: activeOuting ? 66 : 48, borderRadius: 99 },
+        { borderRadius: 99 },
         gutters.paddingHorizontal_15,
-        layout.flex_1,
+        // layout.flex_1,
+        activeOuting
+          ? { minHeight: 66, maxHeight: 80 }
+          : { minHeight: 48, maxHeight: 60 },
         activeOuting ? [borders.blue400, borders.w_2] : null,
         style,
       ]}

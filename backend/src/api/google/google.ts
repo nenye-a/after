@@ -105,7 +105,7 @@ export const getAddress = async (
 ) => {
   return await reverseGeocode(coordinates).then((data) => {
     let results = data?.results;
-    if (!results) return null;
+    if (!results) return { address: null, results: [] };
 
     if (options?.ignoreSubPresmises) {
       results = results.filter(
@@ -116,7 +116,7 @@ export const getAddress = async (
       );
     }
 
-    return results[0]?.formatted_address;
+    return { address: results[0]?.formatted_address, results };
   });
 };
 
@@ -256,7 +256,9 @@ export const getPlacesFromCoordinates = async (
     searchParams?: GoogleNearbySearchParams;
   },
 ) => {
-  let address = await getAddress(coordinates, { ignoreSubPresmises: true });
+  let { address } = await getAddress(coordinates, {
+    ignoreSubPresmises: true,
+  });
   if (address) {
     return await googleNearbySearch(
       {
