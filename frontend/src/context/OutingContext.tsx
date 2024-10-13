@@ -267,35 +267,33 @@ export default function OutingProvider({ children = null, storage }: Props) {
       enabled: !!pastOutingsData?.length,
     });
 
-  const {
-    data: pastOutingLocationssData,
-    refetch: refetchPastOutingLocations,
-  } = useQuery({
-    queryKey: ['getUserPastLocations'],
-    queryFn: async (): Promise<Map<string, LocationType[]>> => {
-      let pastOutingLocationList = pastOutingsData
-        ? await apiInstance
-            ?.request(GET_MANY_OUTING_LOCATIONS, {
-              outingIds: pastOutingsData?.map((outing) => outing._id),
-            })
-            .then((response) => response?.getManyOutingLocations)
-            .catch((err) => {
-              console.log(err);
-              console.log('Failed to get user past outing locations');
-            })
-        : null;
+  const { data: pastOutingLocationsData, refetch: refetchPastOutingLocations } =
+    useQuery({
+      queryKey: ['getUserPastLocations'],
+      queryFn: async (): Promise<Map<string, LocationType[]>> => {
+        let pastOutingLocationList = pastOutingsData
+          ? await apiInstance
+              ?.request(GET_MANY_OUTING_LOCATIONS, {
+                outingIds: pastOutingsData?.map((outing) => outing._id),
+              })
+              .then((response) => response?.getManyOutingLocations)
+              .catch((err) => {
+                console.log(err);
+                console.log('Failed to get user past outing locations');
+              })
+          : null;
 
-      if (pastOutingLocationList) {
-        return pastOutingLocationList.reduce((acc, locationList) => {
-          acc.set(locationList.outing_id, locationList.locations);
-          return acc;
-        }, new Map<string, LocationType[]>());
-      } else {
-        return new Map<string, LocationType[]>();
-      }
-    },
-    enabled: !!pastOutingsData?.length,
-  });
+        if (pastOutingLocationList) {
+          return pastOutingLocationList.reduce((acc, locationList) => {
+            acc.set(locationList.outing_id, locationList.locations);
+            return acc;
+          }, new Map<string, LocationType[]>());
+        } else {
+          return new Map<string, LocationType[]>();
+        }
+      },
+      enabled: !!pastOutingsData?.length,
+    });
 
   const {
     status: locationDetailsStatus,
@@ -355,12 +353,10 @@ export default function OutingProvider({ children = null, storage }: Props) {
         console.log(err);
         console.log('Failed to end active outing');
       }),
-    onSuccess: () => {
+    onSuccess: async () => {
+      await refetchPastOutings();
       setActiveOuting(null);
       setActiveOutingLocations([]);
-      refetchPastOutings();
-      refetchPastOutingPath();
-      refetchPastOutingLocations();
     },
   });
 
@@ -627,18 +623,23 @@ export default function OutingProvider({ children = null, storage }: Props) {
   }, [locationDetails]);
 
   useEffect(() => {
-    if (pastOutingPathsData && pastOutingsData) {
+    refetchPastOutingPath();
+    refetchPastOutingLocations();
+  }, [pastOutingsData]);
+
+  useEffect(() => {
+    if (pastOutingsData) {
       let pastOutingsWithPaths = pastOutingsData.map((outing) => {
         return {
           ...outing,
-          path: pastOutingPathsData.get(outing._id) ?? [],
-          locations: pastOutingLocationssData?.get(outing._id) ?? [],
+          path: pastOutingPathsData?.get(outing._id) ?? [],
+          locations: pastOutingLocationsData?.get(outing._id) ?? [],
         };
       });
 
       setPastOutings(pastOutingsWithPaths);
     }
-  }, [pastOutingPathsData, pastOutingsData]);
+  }, [pastOutingPathsData, pastOutingsData, pastOutingLocationsData]);
 
   useEffect(() => {
     // Handle arrival and departure of locations when movement is detected from the user.

@@ -45,9 +45,7 @@ function HomeScreen() {
   const noHistoricalOutings = !pastOutings?.length && !activeOuting;
 
   const LoadingIndicator = (
-    <SafeScreen
-      style={[layout.justifyCenter, layout.itemsCenter, backgrounds.blue800]}
-    >
+    <SafeScreen style={[layout.justifyCenter, layout.itemsCenter]}>
       <ActivityIndicator size="large" color={colors.white} />
     </SafeScreen>
   );
