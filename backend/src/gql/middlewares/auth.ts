@@ -48,16 +48,17 @@ export const AuthMiddlware: AuthChecker<Context> = async (
             last_name: user.family_name,
             phone: user.phone_number,
           })
-          .catch((err) =>
-            err.includes('duplicate key')
-              ? context.models.users.findByAuth0Id(user.sub)
-              : null,
-          ));
+          .catch((err) => {
+            if (err.includes('duplicate key')) {
+              return context.models.users.findByAuth0Id(user.sub);
+            } else {
+              throw err;
+            }
+          }));
       await context.models.sessions.createSession(token, context.user?._id);
       return true;
     } else {
       // No user found -- UNAUTHORIZED. Marking token as invalid.
-
       await context.models.sessions.createSession(token, null);
     }
   }
