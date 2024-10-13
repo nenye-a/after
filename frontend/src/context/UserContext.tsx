@@ -76,6 +76,7 @@ export default function UserProvider({ children, storage }: Props) {
     setApiInstance(null);
     setUserDetails(null);
     setCredentials(null);
+    storage.clearAll();
   };
 
   const {

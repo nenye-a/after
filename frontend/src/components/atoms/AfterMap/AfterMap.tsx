@@ -187,6 +187,7 @@ function AfterMap({ children, ...props }: Props) {
     <MapView
       style={[layout.fullHeight, layout.fullWidth]}
       initialRegion={region}
+      // region={region}
       customMapStyle={MapStyle}
       mapType="mutedStandard"
       showsUserLocation={true}

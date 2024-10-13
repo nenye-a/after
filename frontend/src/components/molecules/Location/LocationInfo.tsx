@@ -7,6 +7,7 @@ import { numberWithCommas } from '@/helpers/numbers';
 import DollarSigns from '@/components/atoms/DollarSigns/DollarSigns';
 import { LocationInfoProps } from '@/types/components/location';
 import { cleanWord } from '@/helpers/text';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 
 type Props = LocationInfoProps & {
   nameStyle?: 'regular' | 'header';
@@ -32,7 +33,9 @@ const LocationInfo = (props: Props) => {
       >
         <SupportTextWithIcon
           style={[gutters.marginRight_11]}
-          icon="burger"
+          customIcon={
+            <Icon name="location-dot" size={12} color={colors.gray300} />
+          }
           iconColor={colors.gray300}
           text={cleanWord(type)}
         />
@@ -52,6 +55,7 @@ const LocationInfo = (props: Props) => {
         style={[gutters.marginTop_4]}
         ItemSeparatorComponent={() => <View style={{ width: 4 }} />}
         horizontal
+        showsHorizontalScrollIndicator={false}
         data={tags?.map((word) => cleanWord(word))}
         renderItem={({ item, index }) => (
           <Pill

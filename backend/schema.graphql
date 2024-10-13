@@ -63,7 +63,7 @@ type LocationType {
 }
 
 type Mutation {
-  createLocationFromPoint(coordinates: CoordinatesInput!): LocationType
+  createLocationFromPoint(arrivalTime: DateTimeISO, coordinates: CoordinatesInput!): LocationType
   createPath(points: [PathInput!]!): Boolean!
   createUser(data: UserCreateInput!): UserType!
   endLocationStay(locationId: ID!): LocationType

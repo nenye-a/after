@@ -152,6 +152,7 @@ export class LocationResolver {
   async createLocationFromPoint(
     @Arg('coordinates', () => CoordinatesInput) coordinates: CoordinatesInput,
     @Ctx() ctx: Context,
+    @Arg('arrivalTime', { nullable: true }) arrivalTime?: Date,
   ) {
     let activeOuting = await ctx.models.outings.findOne({
       user_id: ctx.user?._id,
@@ -165,9 +166,24 @@ export class LocationResolver {
         ctx,
       );
 
-      // TODO: If there is a prior location for this outing, mark that as departed.
+      if (newLocation) {
+        if (arrivalTime) newLocation.arrival_time = arrivalTime;
 
-      return await newLocation?.save();
+        await ctx.models.locations.updateMany(
+          {
+            departure_time: null,
+            outing_id: activeOuting._id,
+          },
+          {
+            $set: {
+              departure_time: new Date(),
+            },
+          },
+        );
+
+        return await newLocation.save();
+      }
+      return null;
     } else return null;
   }
 
