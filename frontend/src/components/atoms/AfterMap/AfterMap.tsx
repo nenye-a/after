@@ -186,12 +186,12 @@ function AfterMap({ children, ...props }: Props) {
   return (
     <MapView
       style={[layout.fullHeight, layout.fullWidth]}
-      // initialRegion={region}
-      region={region}
+      initialRegion={region}
+      // region={region}
       customMapStyle={MapStyle}
       mapType="mutedStandard"
       showsUserLocation={true}
-      followsUserLocation={true} // TODO: Make this togglable!
+      followsUserLocation={false} // TODO: Make this togglable!
       userInterfaceStyle="dark"
       pitchEnabled={false}
       onUserLocationChange={(location) => {
